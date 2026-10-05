@@ -2,7 +2,7 @@
 id: "001"
 title: "Foundation: layout, theme and navigation"
 status: approved
-jira_epic: ""
+jira_epic: "SOC-1"
 depends_on: []
 ---
 
@@ -38,7 +38,7 @@ The forest has fantastic characters with exaggerated expressions: plants, mushro
 - [ ] AC2 — Lilita One (headings) and Source Sans 3 (body) load with `next/font/google` and are exposed as `font-heading` and `font-body`, with no layout shift.
 - [ ] AC3 — The default create-next-app styles, starter page content and unused `public/` SVGs are removed.
 
-**Jira:** —
+**Jira:** [SOC-2](https://soccerfolio.atlassian.net/browse/SOC-2)
 
 ### US-2: Enchanted forest background
 **As a** visitor, **I want** the page to sit inside an enchanted cartoon forest, **so that** the portfolio feels unique and memorable.
@@ -49,7 +49,7 @@ The forest has fantastic characters with exaggerated expressions: plants, mushro
 - [ ] AC3 — The forest is decorative: it has `aria-hidden="true"` and cannot receive focus.
 - [ ] AC4 — The forest is built from inline SVG components or optimized SVG files, with no raster images. Its total weight is ≤ 150 KB (gzipped).
 
-**Jira:** —
+**Jira:** [SOC-3](https://soccerfolio.atlassian.net/browse/SOC-3)
 
 ### US-3: Soccer field container
 **As a** visitor, **I want** all the portfolio content to be on a soccer field, **so that** the soccer theme ties the whole site together.
@@ -61,7 +61,7 @@ The forest has fantastic characters with exaggerated expressions: plants, mushro
 - [ ] AC4 — A reusable `GrassStrip` SVG component (based on the grass in `design_2.ai.pdf`) exists for section title banners.
 - [ ] AC5 — Field markings are decorative (`aria-hidden="true"`), and text on the field meets WCAG AA contrast.
 
-**Jira:** —
+**Jira:** [SOC-4](https://soccerfolio.atlassian.net/browse/SOC-4)
 
 ### US-4: Forest characters
 **As a** curious visitor, **I want** to discover fantastic cartoon characters in the forest, **so that** the site feels alive and fun.
@@ -73,7 +73,7 @@ The forest has fantastic characters with exaggerated expressions: plants, mushro
 - [ ] AC4 — Each character is its own component in `src/components/forest/`, so it can be reused or replaced.
 - [ ] AC5 — Characters are decorative (`aria-hidden="true"`).
 
-**Jira:** —
+**Jira:** [SOC-5](https://soccerfolio.atlassian.net/browse/SOC-5)
 
 ### US-5: Vintage film effect
 **As a** visitor, **I want** a subtle old-film look, **so that** the site feels like a 1930s cartoon.
@@ -84,7 +84,7 @@ The forest has fantastic characters with exaggerated expressions: plants, mushro
 - [ ] AC3 — The overlay is not rendered when `prefers-reduced-motion: reduce` is set.
 - [ ] AC4 — The overlay causes no visible scroll jank (it uses CSS or a static SVG noise texture, not a JavaScript animation loop).
 
-**Jira:** —
+**Jira:** [SOC-6](https://soccerfolio.atlassian.net/browse/SOC-6)
 
 ### US-6: Page shell and sections
 **As a** visitor, **I want** a single scrollable page with clear sections, **so that** I can browse everything easily.
@@ -96,7 +96,7 @@ Use placeholders for future page sections.
 - [ ] AC2 — `layout.tsx` uses semantic `<header>`, `<main>` and `<footer>`, and sets `lang="en"`.
 - [ ] AC3 — Content width inside the field is constrained (max ~1100px) and centered, with responsive padding.
 
-**Jira:** —
+**Jira:** [SOC-7](https://soccerfolio.atlassian.net/browse/SOC-7)
 
 ### US-7: Header navigation (wooden sign)
 **As a** visitor, **I want** a navigation bar, **so that** I can jump to any section.
@@ -108,7 +108,7 @@ Use placeholders for future page sections.
 - [ ] AC4 — The link for the section currently in view is highlighted (e.g. a `cartoon-yellow` underline).
 - [ ] AC5 — Smooth scrolling is disabled when the user has `prefers-reduced-motion` set.
 
-**Jira:** —
+**Jira:** [SOC-8](https://soccerfolio.atlassian.net/browse/SOC-8)
 
 ### US-8: 404 page
 **As a** visitor who followed a broken link, **I want** a friendly 404 page, **so that** I can get back home.
@@ -116,7 +116,7 @@ Use placeholders for future page sections.
 **Acceptance criteria**
 - [ ] AC1 — Unknown routes show a themed `not-found.tsx` page, e.g. "Out of bounds!" with a forest character and a link back to `/`.
 
-**Jira:** —
+**Jira:** [SOC-9](https://soccerfolio.atlassian.net/browse/SOC-9)
 
 ## Content / data model
 ```ts
