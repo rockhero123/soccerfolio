@@ -1,7 +1,7 @@
 ---
 id: "001"
 title: "Foundation: layout, theme and navigation"
-status: draft
+status: approved
 jira_epic: ""
 depends_on: []
 ---
@@ -67,9 +67,9 @@ The forest has fantastic characters with exaggerated expressions: plants, mushro
 **As a** curious visitor, **I want** to discover fantastic cartoon characters in the forest, **so that** the site feels alive and fun.
 
 **Acceptance criteria**
-- [ ] AC1 — At least 6 original static SVG characters in the rubber-hose style, each with an exaggerated face (pie-cut eyes, big expressions): a tree with a face, a mushroom, a flower with eyes, a big-eyed bird, an owl, and a plant.
+- [ ] AC1 — At least 15 original static SVG characters in the rubber-hose style, each with an exaggerated face (pie-cut eyes, big expressions): a tree with a face, a mushroom, a flower with eyes, a big-eyed bird, an owl, and a plant.
 - [ ] AC2 — Characters are placed in the forest around the field, are visible at desktop widths, and never overlap the field content.
-- [ ] AC3 — On mobile, at least 2 characters remain visible in the top and bottom forest bands.
+- [ ] AC3 — On mobile, at least 10 characters remain visible in the top and bottom forest bands.
 - [ ] AC4 — Each character is its own component in `src/components/forest/`, so it can be reused or replaced.
 - [ ] AC5 — Characters are decorative (`aria-hidden="true"`).
 
