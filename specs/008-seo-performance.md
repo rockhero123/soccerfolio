@@ -3,7 +3,7 @@ id: "008"
 title: "SEO, performance and accessibility"
 status: draft
 jira_epic: ""
-depends_on: ["001", "002", "003", "004", "005", "006", "007"]
+depends_on: ["001", "002", "004", "006", "007"]
 ---
 
 # 008 — SEO, performance and accessibility
