@@ -94,6 +94,17 @@ The main idea is a soccer field surrounded by enchanted forest. All the porgfoli
 
 Defined once as Tailwind theme tokens in `src/app/globals.css`. Components must use the tokens, never raw hex values.
 
+### Text color rules (WCAG AA)
+
+| Background | Allowed text | Contrast |
+|------------|--------------|----------|
+| `pitch-dark`, `forest-deep`, `bark` | `chalk` or `parchment` | ≥ 5.5:1 |
+| `pitch`, `mint`, `moss`, `parchment`, `chalk`, `cartoon-yellow` | `ink` | ≥ 6:1 |
+
+- **Never put `chalk` (white) text on `pitch` (bright green).** It is only about 2.7:1 and fails WCAG AA.
+- Section title banners with white text use `pitch-dark`. Bright `pitch` banners use `ink` text.
+- Bright `pitch` remains fine for grass, field areas, borders and decoration.
+
 ## 7. Spec index
 
 Each spec becomes a **Jira Epic**. Each user story (`US-x`) inside a spec becomes a **Jira Story**.
