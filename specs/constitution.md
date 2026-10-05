@@ -52,7 +52,7 @@ A personal portfolio website for Ricardo Martinez, software developer. The visua
 
 ## 6. Git and Jira conventions
 
-- Jira project key: `SOC` (confirm in Step 4).
+- Jira site: `https://soccerfolio.atlassian.net` — project key: `SOC`.
 - Branch names: `feature/SOC-<n>-short-title`, or `fix/SOC-<n>-short-title` for bugs.
 - Commits: Conventional Commits that include the key, e.g. `feat(SOC-12): add hero section`.
 - Do not push directly to `main`. All changes go through a PR.
