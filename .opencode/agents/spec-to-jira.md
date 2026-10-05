@@ -34,6 +34,12 @@ permissions:
     resource: "git pull *"
     effect: allow
   - action: shell
+    resource: "git fetch *"
+    effect: allow
+  - action: shell
+    resource: "git checkout *"
+    effect: allow
+  - action: shell
     resource: "git add specs/*"
     effect: allow
   - action: shell
