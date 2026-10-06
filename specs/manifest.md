@@ -78,8 +78,8 @@ The main idea is a soccer field surrounded by enchanted forest. All the porgfoli
 | `pitch` | `#00B262` | Field grass, primary buttons, section title banners |
 | `pitch-dark` | `#00522D` | Dark grass strips, jerseys, contact zone |
 | `mint` | `#A8F0D8` | Cards on the field |
-| `chalk` | `#FFFBEF` | Field lines, text on dark green |
-| `parchment` | `#F3E7C9` | Vintage paper surfaces, wooden-sign text background |
+| `chalk` | `#FFFBEF` | Text on dark green |
+| `parchment` | `#F3E7C9` | Field lines (with `ink` outlines), vintage paper surfaces, wooden-sign text background |
 | `ink` | `#1E1A16` | Outlines and main text |
 | `forest-deep` | `#2F3B2A` | Darkest forest layer |
 | `moss` | `#A9BF5A` | Moss and light foliage |

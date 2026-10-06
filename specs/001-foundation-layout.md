@@ -55,7 +55,7 @@ The forest has fantastic characters with exaggerated expressions: plants, mushro
 **As a** visitor, **I want** all the portfolio content to be on a soccer field, **so that** the soccer theme ties the whole site together.
 
 **Acceptance criteria**
-- [ ] AC1 — A `SoccerField` component wraps all the content sections and renders field markings in `chalk`: outer boundary, corner arcs, a penalty box and goal area at the top, a halfway line with a center circle and spot, and a penalty box and goal at the bottom (as in `design/main.jpg`).
+- [ ] AC1 — A `SoccerField` component wraps all the content sections and renders bold, cartoon-style field markings in `parchment` with `ink` outlines (no white lines): outer boundary, corner arcs, a penalty box and goal area at the top, a halfway line with a center circle and spot, and a penalty box and goal at the bottom (as in `design/main.jpg`).
 - [ ] AC2 — The field grows with its content: markings stay in proportion and the field never clips sections, at 375px, 768px and 1280px+.
 - [ ] AC3 — The grass uses `pitch`, with subtle mowing stripes, and the contact area at the bottom uses `pitch-dark` (see `main.jpg`).
 - [ ] AC4 — A reusable `GrassStrip` SVG component (based on the grass in `design_2.ai.pdf`) exists for section title banners.
