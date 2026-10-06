@@ -79,6 +79,18 @@
   }
 }
 
+/*
+ * Mowing stripes on the soccer field (spec 001 US-3): horizontal bands of slightly
+ * lighter grass over `bg-pitch` / `bg-pitch-dark`. Lightening keeps text contrast up.
+ */
+@utility bg-mowing {
+  background-image: repeating-linear-gradient(
+    to bottom,
+    transparent 0 3rem,
+    color-mix(in oklab, var(--color-chalk) 8%, transparent) 3rem 6rem
+  );
+}
+
 @layer base {
   body {
     background-color: var(--color-parchment);
