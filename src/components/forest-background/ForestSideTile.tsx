@@ -58,109 +58,134 @@ const nearLeaves: [number, number, number, number, number][] = [
 /**
  * The vertical forest strip used on the left and right of the field, as a repeating
  * SVG pattern. x = 0 is the outer page edge; the dark foreground hugs that edge and
- * the paler layers show through towards the field.
+ * the paler layers show through towards the field. The shared ink filter gives
+ * every layer hand-inked outlines and a watercolour wash.
  */
-export default function ForestSideTile({ id }: { id: string }) {
+export default function ForestSideTile({
+  id,
+  filterId,
+}: {
+  id: string;
+  filterId: string;
+}) {
   return (
     <pattern id={id} width={W} height={H} patternUnits="userSpaceOnUse">
-      <TileWrap dy={H} id={`${id}-distant`}>
-        {distantTrunks.map(([x, width], i) => (
-          <Trunk
-            key={x}
-            x={x}
-            top={-20}
-            bottom={H + 20}
-            width={width}
-            depth="distant"
-            seed={11 + i}
-            sway={i % 2 === 0 ? 5 : -5}
-          />
-        ))}
-        {distantFoliage.map(([cx, cy, rx, ry], i) => (
-          <Foliage
-            key={`${cx}-${cy}`}
-            cx={cx}
-            cy={cy}
-            rx={rx}
-            ry={ry}
-            depth="distant"
-            seed={31 + i}
-          />
-        ))}
-      </TileWrap>
+      <g filter={`url(#${filterId})`}>
+        <TileWrap dy={H} id={`${id}-distant`}>
+          {distantTrunks.map(([x, width], i) => (
+            <Trunk
+              key={x}
+              x={x}
+              top={-20}
+              bottom={H + 20}
+              width={width}
+              depth="distant"
+              seed={11 + i}
+              sway={i % 2 === 0 ? 5 : -5}
+            />
+          ))}
+          {distantFoliage.map(([cx, cy, rx, ry], i) => (
+            <Foliage
+              key={`${cx}-${cy}`}
+              cx={cx}
+              cy={cy}
+              rx={rx}
+              ry={ry}
+              depth="distant"
+              seed={31 + i}
+            />
+          ))}
+        </TileWrap>
 
-      <TileWrap dy={H} id={`${id}-mid`}>
-        <Branch d="M76 260C96 240 110 220 124 192" thickness={12} depth="mid" />
-        <Branch d="M76 680C92 664 104 648 116 622" thickness={10} depth="mid" />
-        <Branch d="M252 480C240 466 228 456 218 438" thickness={12} depth="mid" />
-        <Branch d="M252 170C264 154 272 140 278 124" thickness={14} depth="mid" />
-        <Trunk
-          x={76}
-          top={-30}
-          bottom={H + 30}
-          width={40}
-          depth="mid"
-          seed={51}
-          sway={10}
-          knot
-        />
-        <Trunk
-          x={252}
-          top={-30}
-          bottom={H + 30}
-          width={52}
-          depth="mid"
-          seed={52}
-          sway={-12}
-          knot
-        />
-        {midFoliage.map(([cx, cy, rx, ry], i) => (
-          <Foliage
-            key={`${cx}-${cy}`}
-            cx={cx}
-            cy={cy}
-            rx={rx}
-            ry={ry}
+        <TileWrap dy={H} id={`${id}-mid`}>
+          <Branch
+            d="M76 260C96 240 110 220 124 192"
+            thickness={12}
             depth="mid"
-            seed={61 + i}
           />
-        ))}
-      </TileWrap>
+          <Branch
+            d="M76 680C92 664 104 648 116 622"
+            thickness={10}
+            depth="mid"
+          />
+          <Branch
+            d="M252 480C240 466 228 456 218 438"
+            thickness={12}
+            depth="mid"
+          />
+          <Branch
+            d="M252 170C264 154 272 140 278 124"
+            thickness={14}
+            depth="mid"
+          />
+          <Trunk
+            x={76}
+            top={-30}
+            bottom={H + 30}
+            width={40}
+            depth="mid"
+            seed={51}
+            sway={10}
+            knot
+          />
+          <Trunk
+            x={252}
+            top={-30}
+            bottom={H + 30}
+            width={52}
+            depth="mid"
+            seed={52}
+            sway={-12}
+            knot
+          />
+          {midFoliage.map(([cx, cy, rx, ry], i) => (
+            <Foliage
+              key={`${cx}-${cy}`}
+              cx={cx}
+              cy={cy}
+              rx={rx}
+              ry={ry}
+              depth="mid"
+              seed={61 + i}
+            />
+          ))}
+        </TileWrap>
 
-      <TileWrap dy={H} id={`${id}-near`}>
-        <Trunk
-          x={4}
-          top={-30}
-          bottom={H + 30}
-          width={22}
-          depth="near"
-          seed={71}
-          sway={6}
-        />
-        {nearLeaves.map(([x, y, length, width, angle]) => (
-          <Leaf
-            key={`${x}-${y}`}
-            x={x}
-            y={y}
-            length={length}
-            width={width}
-            angle={angle}
+        <TileWrap dy={H} id={`${id}-near`}>
+          <Trunk
+            x={4}
+            top={-30}
+            bottom={H + 30}
+            width={22}
             depth="near"
+            seed={71}
+            sway={6}
           />
-        ))}
-        {nearFoliage.map(([cx, cy, rx, ry], i) => (
-          <Foliage
-            key={`${cx}-${cy}`}
-            cx={cx}
-            cy={cy}
-            rx={rx}
-            ry={ry}
-            depth="near"
-            seed={81 + i}
-            bumps={8}
-          />
-        ))}
-      </TileWrap>
+          {nearLeaves.map(([x, y, length, width, angle]) => (
+            <Leaf
+              key={`${x}-${y}`}
+              x={x}
+              y={y}
+              length={length}
+              width={width}
+              angle={angle}
+              depth="near"
+            />
+          ))}
+          {nearFoliage.map(([cx, cy, rx, ry], i) => (
+            <Foliage
+              key={`${cx}-${cy}`}
+              cx={cx}
+              cy={cy}
+              rx={rx}
+              ry={ry}
+              depth="near"
+              seed={81 + i}
+              bumps={8}
+            />
+          ))}
+        </TileWrap>
+      </g>
     </pattern>
   );
 }

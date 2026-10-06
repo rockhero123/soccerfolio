@@ -38,18 +38,29 @@
 }
 
 /*
- * Enchanted forest background (spec 001 US-2).
- * Muted forest colours are mixed from the tokens above — no new hex values.
+ * Enchanted forest palette (spec 001 US-2) → bg-forest-mist, fill-forest-mid-leaf, …
+ * Muted, painted forest colours mixed from the tokens above — no new hex values.
+ */
+@theme static {
+  --color-forest-mist: color-mix(in oklab, var(--color-moss) 22%, var(--color-parchment));
+  --color-forest-distant-leaf: color-mix(in oklab, var(--color-moss) 48%, var(--color-parchment));
+  --color-forest-distant-shade: color-mix(in oklab, var(--color-forest-deep) 20%, var(--color-forest-distant-leaf));
+  --color-forest-distant-wood: color-mix(in oklab, var(--color-bark) 32%, var(--color-parchment));
+  --color-forest-distant-line: color-mix(in oklab, var(--color-forest-deep) 38%, var(--color-parchment));
+  --color-forest-mid-leaf: color-mix(in oklab, var(--color-moss) 68%, var(--color-forest-deep));
+  --color-forest-mid-shade: color-mix(in oklab, var(--color-moss) 38%, var(--color-forest-deep));
+  --color-forest-mid-light: color-mix(in oklab, var(--color-moss) 70%, var(--color-parchment));
+  --color-forest-bark-shade: color-mix(in oklab, var(--color-bark) 62%, var(--color-ink));
+  --color-forest-bark-light: color-mix(in oklab, var(--color-bark) 62%, var(--color-parchment));
+  --color-forest-deep-shade: color-mix(in oklab, var(--color-forest-deep) 62%, var(--color-ink));
+  --color-forest-deep-light: color-mix(in oklab, var(--color-forest-deep) 72%, var(--color-moss));
+}
+
+/*
  * `--forest-side` / `--forest-band` size the forest frame; the page content is
  * padded by the same amounts so it sits in the clear centre (the field).
  */
 :root {
-  --forest-mist: color-mix(in oklab, var(--color-moss) 22%, var(--color-parchment));
-  --forest-distant-leaf: color-mix(in oklab, var(--color-moss) 48%, var(--color-parchment));
-  --forest-distant-wood: color-mix(in oklab, var(--color-bark) 32%, var(--color-parchment));
-  --forest-distant-line: color-mix(in oklab, var(--color-forest-deep) 38%, var(--color-parchment));
-  --forest-mid-leaf: color-mix(in oklab, var(--color-moss) 68%, var(--color-forest-deep));
-
   /* Below 1024px: a narrow decorative border with top and bottom bands. */
   --forest-side: 1rem;
   --forest-band: 10rem;

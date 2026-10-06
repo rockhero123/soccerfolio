@@ -84,3 +84,14 @@ export function leafPath(length: number, width: number): string {
   const w = width / 2;
   return `M0 0C${n(w * 1.4)} ${n(-length * 0.3)} ${n(w)} ${n(-length * 0.8)} 0 ${n(-length)}C${n(-w * 0.6)} ${n(-length * 0.75)} ${n(-w * 1.5)} ${n(-length * 0.35)} 0 0Z`;
 }
+
+/** The shaded half of `leafPath`: from the base up the right edge, back down the vein. */
+export function leafShadePath(length: number, width: number): string {
+  const w = width / 2;
+  return `M0 0C${n(w * 1.4)} ${n(-length * 0.3)} ${n(w)} ${n(-length * 0.8)} 0 ${n(-length)}Q${n(w * 0.25)} ${n(-length * 0.5)} 0 0Z`;
+}
+
+/** Linear interpolation helper for seeded layouts. */
+export function between(rand: () => number, min: number, max: number): number {
+  return n(min + rand() * (max - min));
+}

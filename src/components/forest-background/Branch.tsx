@@ -7,15 +7,21 @@ type BranchProps = {
   depth: ForestDepth;
 };
 
-/** A curvy rubber-hose branch: a wide ink stroke under a narrower wood stroke. */
+/**
+ * A curvy rubber-hose branch: a wide ink stroke under a narrower wood stroke.
+ * The ink is `thickness` plus the outline token on each side.
+ */
 export default function Branch({ d, thickness, depth }: BranchProps) {
   const style = layerStyles[depth];
   return (
     <g className="fill-none" strokeLinecap="round">
       <path
         d={d}
+        data-ink="outline"
         className={style.line}
-        strokeWidth={thickness + style.outline * 2}
+        style={{
+          strokeWidth: `calc(${thickness}px + 2 * ${style.outlineVar})`,
+        }}
       />
       <path d={d} className={style.woodStroke} strokeWidth={thickness} />
     </g>

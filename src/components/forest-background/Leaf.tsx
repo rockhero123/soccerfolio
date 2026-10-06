@@ -1,5 +1,10 @@
-import { layerStyles, type ForestDepth } from "./layers";
-import { leafPath } from "./shapes";
+import {
+  detailWidth,
+  INK_WEIGHT_OFFSET,
+  layerStyles,
+  type ForestDepth,
+} from "./layers";
+import { leafPath, leafShadePath } from "./shapes";
 
 type LeafProps = {
   x: number;
@@ -11,21 +16,30 @@ type LeafProps = {
   depth: ForestDepth;
 };
 
-/** A big pointed leaf with a centre vein, anchored at its base. */
+/** A big pointed leaf with a shaded half and a centre vein, anchored at its base. */
 export default function Leaf({ x, y, length, width, angle, depth }: LeafProps) {
   const style = layerStyles[depth];
+  const shape = leafPath(length, width);
   return (
     <g transform={`translate(${x} ${y}) rotate(${angle})`}>
+      {style.inkWeight && (
+        <path
+          d={shape}
+          className={style.inkWeight}
+          transform={INK_WEIGHT_OFFSET}
+        />
+      )}
+      <path d={shape} className={style.leaf} />
+      <path d={leafShadePath(length, width)} className={style.leafShade} />
       <path
-        d={leafPath(length, width)}
-        className={`${style.leaf} ${style.line}`}
-        strokeWidth={style.outline}
+        d={shape}
+        data-ink="outline"
+        className={`fill-none ${style.line} ${style.outline}`}
         strokeLinejoin="round"
       />
       <path
         d={`M0 -4Q${Math.round(width * 0.12)} ${Math.round(-length * 0.5)} 0 ${Math.round(-length * 0.82)}`}
-        className={`fill-none ${style.detail}`}
-        strokeWidth={style.outline * 0.6}
+        className={`fill-none ${style.detail} ${detailWidth}`}
         strokeLinecap="round"
       />
     </g>

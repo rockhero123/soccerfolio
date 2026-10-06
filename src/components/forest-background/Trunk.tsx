@@ -1,4 +1,9 @@
-import { layerStyles, type ForestDepth } from "./layers";
+import {
+  detailWidth,
+  INK_WEIGHT_OFFSET,
+  layerStyles,
+  type ForestDepth,
+} from "./layers";
 import { seededRandom, trunkPath } from "./shapes";
 
 type TrunkProps = {
@@ -14,7 +19,7 @@ type TrunkProps = {
   knot?: boolean;
 };
 
-/** A wavy, ink-outlined tree trunk with hand-drawn bark lines. */
+/** A wavy, ink-outlined tree trunk with painted shading and hand-drawn bark lines. */
 export default function Trunk({
   x,
   top,
@@ -36,19 +41,35 @@ export default function Trunk({
     return `M${Math.round(lx)} ${Math.round(ly)}q${Math.round(sway * 0.6)} ${Math.round(len / 2)} 0 ${Math.round(len)}`;
   });
   const knotY = top + height * (0.3 + rand() * 0.4);
+  const shape = trunkPath(x, top, bottom, width, sway);
 
   return (
     <g>
+      {style.inkWeight && (
+        <path
+          d={shape}
+          className={style.inkWeight}
+          transform={INK_WEIGHT_OFFSET}
+        />
+      )}
+      <path d={shape} className={style.wood} />
       <path
-        d={trunkPath(x, top, bottom, width, sway)}
-        className={`${style.wood} ${style.line}`}
-        strokeWidth={style.outline}
+        d={trunkPath(x + width * 0.27, top, bottom, width * 0.42, sway)}
+        className={style.woodShade}
+      />
+      <path
+        d={trunkPath(x - width * 0.22, top, bottom, width * 0.14, sway)}
+        className={style.woodLight}
+      />
+      <path
+        d={shape}
+        data-ink="outline"
+        className={`fill-none ${style.line} ${style.outline}`}
         strokeLinejoin="round"
       />
       <path
         d={barkLines.join("")}
-        className={`fill-none ${style.line}`}
-        strokeWidth={style.outline * 0.6}
+        className={`fill-none ${style.line} ${detailWidth}`}
         strokeLinecap="round"
       />
       {knot && (
@@ -57,8 +78,7 @@ export default function Trunk({
           cy={Math.round(knotY)}
           rx={Math.round(width * 0.18)}
           ry={Math.round(width * 0.3)}
-          className={`fill-ink ${style.line}`}
-          strokeWidth={style.outline}
+          className={`fill-ink ${style.line} ${style.outline}`}
         />
       )}
     </g>

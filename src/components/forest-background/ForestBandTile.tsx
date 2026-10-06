@@ -2,49 +2,108 @@ import Branch from "./Branch";
 import Foliage from "./Foliage";
 import Leaf from "./Leaf";
 import TileWrap from "./TileWrap";
-
-/** Size of one repeating band tile, in SVG user units (CSS px). */
-export const BAND_TILE = { width: 480, height: 160 } as const;
-
-const W = BAND_TILE.width;
-
-/** Foliage clumps: [cx, cy, rx, ry]. y = 0 is the outer page edge. */
-const distantFoliage: [number, number, number, number][] = [
-  [0, 104, 54, 34],
-  [92, 112, 50, 30],
-  [176, 100, 56, 36],
-  [262, 110, 50, 32],
-  [348, 102, 56, 34],
-  [420, 114, 46, 28],
-];
-
-const midFoliage: [number, number, number, number][] = [
-  [40, 68, 74, 46],
-  [170, 74, 70, 44],
-  [300, 66, 76, 48],
-  [420, 74, 66, 42],
-];
-
-const nearFoliage: [number, number, number, number][] = [
-  [0, 8, 86, 54],
-  [124, 0, 80, 50],
-  [246, 10, 84, 56],
-  [368, 2, 80, 50],
-];
-
-/** Hanging leaves: [x, y, length, width, angle]. */
-const nearLeaves: [number, number, number, number, number][] = [
-  [84, 40, 70, 30, 200],
-  [196, 44, 62, 28, 160],
-  [318, 46, 74, 32, 192],
-  [440, 40, 60, 26, 150],
-];
+import { between, seededRandom } from "./shapes";
 
 /**
- * The horizontal forest band above and below the field, as a repeating SVG pattern.
- * Drawn as a canopy (y = 0 is the outer edge); the bottom band reuses it rotated 180°.
+ * Size of one repeating band tile, in SVG user units (CSS px).
+ * The tile is wider than a 1280px screen, so the band does not visibly repeat there.
+ * It is taller than the 160px band, with an empty strip at the far side, so the
+ * next row of the pattern can never bleed in as a seam on fractional pixel ratios.
  */
-export default function ForestBandTile({ id }: { id: string }) {
+export const BAND_TILE = { width: 1320, height: 240, art: 160 } as const;
+
+const W = BAND_TILE.width;
+const ART = BAND_TILE.art;
+
+type Clump = { cx: number; cy: number; rx: number; ry: number };
+type LeafSpec = {
+  x: number;
+  y: number;
+  length: number;
+  width: number;
+  angle: number;
+};
+
+/**
+ * Spreads `count` items across the tile width with seeded jitter, so neighbours
+ * never line up at a regular rhythm but the tile is still evenly covered.
+ */
+function spread(rand: () => number, count: number): number[] {
+  const step = W / count;
+  return Array.from({ length: count }, (_, i) =>
+    between(rand, i * step + step * 0.1, i * step + step * 0.9),
+  );
+}
+
+/**
+ * Seeded layout of the band, drawn as a canopy: y = 0 is the outer page edge.
+ * Varying sizes, gaps and depths make every stretch of the band look different.
+ */
+function bandLayout(seed: number) {
+  const rand = seededRandom(seed);
+  const distant: Clump[] = spread(rand, 16).map((cx) => ({
+    cx,
+    cy: between(rand, 96, 118),
+    rx: between(rand, 36, 60),
+    ry: between(rand, 24, 36),
+  }));
+  const mid: Clump[] = spread(rand, 11).map((cx) => ({
+    cx,
+    cy: between(rand, 56, 82),
+    rx: between(rand, 52, 84),
+    ry: between(rand, 34, 52),
+  }));
+  const near: Clump[] = spread(rand, 12).map((cx) => {
+    const big = rand() > 0.72;
+    return {
+      cx,
+      cy: between(rand, -6, big ? 22 : 12),
+      rx: big ? between(rand, 92, 112) : between(rand, 62, 86),
+      ry: big ? between(rand, 56, 66) : between(rand, 40, 54),
+    };
+  });
+  const leaves: LeafSpec[] = spread(rand, 10).map((x) => ({
+    x,
+    y: between(rand, 32, 50),
+    length: between(rand, 50, 80),
+    width: between(rand, 22, 32),
+    angle: between(rand, 145, 215),
+  }));
+  const branches = spread(rand, 4).map((x) => {
+    const end = between(rand, 104, 132);
+    const bend = between(rand, -12, 12);
+    return { x, end, bend };
+  });
+  return { distant, mid, near, leaves, branches };
+}
+
+type ForestBandTileProps = {
+  id: string;
+  /** Which page edge the band hugs: a hanging canopy on top, ground bushes at the bottom. */
+  edge: "top" | "bottom";
+  /** Layout seed, so the top and bottom bands are different variants. */
+  seed: number;
+  /** Id of the shared ink filter for band tiles. */
+  filterId: string;
+};
+
+/**
+ * A horizontal forest band above or below the field, as a repeating SVG pattern.
+ * The bottom band is laid out from the bottom edge (not just the top band rotated),
+ * so light and shading still come from above.
+ */
+export default function ForestBandTile({
+  id,
+  edge,
+  seed,
+  filterId,
+}: ForestBandTileProps) {
+  const { distant, mid, near, leaves, branches } = bandLayout(seed);
+  // Canopy coordinates → screen coordinates for this edge.
+  const y = (value: number) => (edge === "top" ? value : ART - value);
+  const angle = (value: number) => (edge === "top" ? value : 180 - value);
+  const clump = (c: Clump) => ({ cx: c.cx, cy: y(c.cy), rx: c.rx, ry: c.ry });
+
   return (
     <pattern
       id={id}
@@ -52,62 +111,56 @@ export default function ForestBandTile({ id }: { id: string }) {
       height={BAND_TILE.height}
       patternUnits="userSpaceOnUse"
     >
-      <TileWrap dx={W} id={`${id}-distant`}>
-        {distantFoliage.map(([cx, cy, rx, ry], i) => (
-          <Foliage
-            key={cx}
-            cx={cx}
-            cy={cy}
-            rx={rx}
-            ry={ry}
-            depth="distant"
-            seed={101 + i}
-            bumps={8}
-          />
-        ))}
-      </TileWrap>
+      <g filter={`url(#${filterId})`}>
+        <TileWrap dx={W} id={`${id}-distant`}>
+          {distant.map((c, i) => (
+            <Foliage
+              key={i}
+              {...clump(c)}
+              depth="distant"
+              seed={seed + 101 + i}
+              bumps={8}
+            />
+          ))}
+        </TileWrap>
 
-      <TileWrap dx={W} id={`${id}-mid`}>
-        <Branch d="M110 30C104 60 118 90 108 128" thickness={5} depth="mid" />
-        <Branch d="M372 30C380 56 366 84 374 116" thickness={5} depth="mid" />
-        {midFoliage.map(([cx, cy, rx, ry], i) => (
-          <Foliage
-            key={cx}
-            cx={cx}
-            cy={cy}
-            rx={rx}
-            ry={ry}
-            depth="mid"
-            seed={121 + i}
-          />
-        ))}
-      </TileWrap>
+        <TileWrap dx={W} id={`${id}-mid`}>
+          {branches.map((b, i) => (
+            <Branch
+              key={i}
+              d={`M${b.x} ${y(30)}C${b.x - b.bend} ${y(60)} ${b.x + b.bend} ${y(90)} ${b.x - b.bend / 2} ${y(b.end)}`}
+              thickness={5}
+              depth="mid"
+            />
+          ))}
+          {mid.map((c, i) => (
+            <Foliage key={i} {...clump(c)} depth="mid" seed={seed + 121 + i} />
+          ))}
+        </TileWrap>
 
-      <TileWrap dx={W} id={`${id}-near`}>
-        {nearLeaves.map(([x, y, length, width, angle]) => (
-          <Leaf
-            key={x}
-            x={x}
-            y={y}
-            length={length}
-            width={width}
-            angle={angle}
-            depth="near"
-          />
-        ))}
-        {nearFoliage.map(([cx, cy, rx, ry], i) => (
-          <Foliage
-            key={cx}
-            cx={cx}
-            cy={cy}
-            rx={rx}
-            ry={ry}
-            depth="near"
-            seed={141 + i}
-            bumps={8}
-          />
-        ))}
-      </TileWrap>
+        <TileWrap dx={W} id={`${id}-near`}>
+          {leaves.map((l, i) => (
+            <Leaf
+              key={i}
+              x={l.x}
+              y={y(l.y)}
+              length={l.length}
+              width={l.width}
+              angle={angle(l.angle)}
+              depth="near"
+            />
+          ))}
+          {near.map((c, i) => (
+            <Foliage
+              key={i}
+              {...clump(c)}
+              depth="near"
+              seed={seed + 141 + i}
+              bumps={8}
+            />
+          ))}
+        </TileWrap>
+      </g>
     </pattern>
   );
 }

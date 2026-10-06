@@ -1,5 +1,5 @@
-import { layerStyles, type ForestDepth } from "./layers";
-import { blobPath, seededRandom } from "./shapes";
+import { INK_WEIGHT_OFFSET, layerStyles, type ForestDepth } from "./layers";
+import { blobPath } from "./shapes";
 
 type FoliageProps = {
   cx: number;
@@ -11,7 +11,11 @@ type FoliageProps = {
   bumps?: number;
 };
 
-/** A bumpy, ink-outlined foliage clump with a few curly highlight strokes. */
+/**
+ * A bumpy, ink-outlined foliage clump, painted like a 1930s background:
+ * a shadowed rim, a lighter body, a soft highlight on top and a hand-inked outline
+ * that gets heavier on the shadow side.
+ */
 export default function Foliage({
   cx,
   cy,
@@ -22,31 +26,42 @@ export default function Foliage({
   bumps = 9,
 }: FoliageProps) {
   const style = layerStyles[depth];
-  const rand = seededRandom(seed * 7 + 3);
-  const curls = depth === "distant" ? 0 : 3;
-  const curlPaths = Array.from({ length: curls }, () => {
-    const x = cx + (rand() - 0.5) * rx * 0.9;
-    const y = cy + (rand() - 0.4) * ry * 0.8;
-    const s = Math.min(rx, ry) * (0.18 + rand() * 0.12);
-    return `M${Math.round(x - s)} ${Math.round(y)}q${Math.round(s)} ${Math.round(-s * 0.9)} ${Math.round(s * 2)} 0`;
-  });
+  const outline = blobPath(cx, cy, rx, ry, bumps, seed);
+  const body = blobPath(
+    cx - rx * 0.04,
+    cy - ry * 0.12,
+    rx * 0.84,
+    ry * 0.8,
+    bumps,
+    seed,
+  );
+  const light = blobPath(
+    cx - rx * 0.2,
+    cy - ry * 0.4,
+    rx * 0.36,
+    ry * 0.24,
+    6,
+    seed + 5,
+  );
 
   return (
     <g>
-      <path
-        d={blobPath(cx, cy, rx, ry, bumps, seed)}
-        className={`${style.leaf} ${style.line}`}
-        strokeWidth={style.outline}
-        strokeLinejoin="round"
-      />
-      {curlPaths.length > 0 && (
+      {style.inkWeight && (
         <path
-          d={curlPaths.join("")}
-          className={`fill-none ${style.detail}`}
-          strokeWidth={style.outline * 0.7}
-          strokeLinecap="round"
+          d={outline}
+          className={style.inkWeight}
+          transform={INK_WEIGHT_OFFSET}
         />
       )}
+      <path d={outline} className={style.leafShade} />
+      <path d={body} className={style.leaf} />
+      <path d={light} className={style.leafLight} />
+      <path
+        d={outline}
+        data-ink="outline"
+        className={`fill-none ${style.line} ${style.outline}`}
+        strokeLinejoin="round"
+      />
     </g>
   );
 }

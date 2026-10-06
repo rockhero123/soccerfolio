@@ -12,7 +12,12 @@ type TileWrapProps = {
  * Draws a layer once and reuses it in the neighbouring tile positions with `<use>`,
  * so shapes that cross a pattern edge wrap around seamlessly.
  */
-export default function TileWrap({ id, dx = 0, dy = 0, children }: TileWrapProps) {
+export default function TileWrap({
+  id,
+  dx = 0,
+  dy = 0,
+  children,
+}: TileWrapProps) {
   return (
     <>
       <g id={id}>{children}</g>
