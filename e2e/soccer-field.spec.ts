@@ -20,7 +20,7 @@ async function addContent(
 ) {
   await page.evaluate(
     ({ selector, h }) => {
-      const content = document.querySelector(selector)!.lastElementChild!;
+      const content = document.querySelector(`${selector} [data-field-content]`)!;
       const filler = document.createElement("section");
       filler.style.height = `${h}px`;
       filler.dataset.testFiller = "true";
@@ -68,16 +68,12 @@ for (const width of [375, 768, 1280]) {
         halfway.y + halfway.height / 2,
         0,
       );
-      // Fallen debris hugs both edges of the field.
-      for (const side of ["left", "right"]) {
-        const strip = await box(page, `${field} [data-field-debris="${side}"]`);
-        expect(strip.width).toBeLessThanOrEqual(f.width * 0.25);
-        expect(strip.height).toBeCloseTo(f.height - 8, -1);
-        expect(
-          side === "left"
-            ? strip.x - f.x
-            : f.x + f.width - (strip.x + strip.width),
-        ).toBeLessThan(8);
+      // Debris is scattered over the whole width of both zones, not just the edges.
+      for (const name of ["play", "contact"] as const) {
+        const scatter = await box(page, `${zone(name)} [data-field-scatter]`);
+        const zoneBox = await box(page, zone(name));
+        expect(scatter.width).toBeCloseTo(zoneBox.width, 0);
+        expect(scatter.height).toBeCloseTo(zoneBox.height, 0);
       }
       // Even with little content, the centre circle clears the penalty areas.
       expect(circle.y).toBeGreaterThan(topArea.y + topArea.height);
@@ -162,7 +158,7 @@ for (const width of [375, 768, 1280]) {
       page,
     }) => {
       await page.evaluate((selector) => {
-        const contact = document.querySelector(selector)!.lastElementChild!;
+        const contact = document.querySelector(`${selector} [data-field-content]`)!;
         const p = document.createElement("p");
         p.textContent = "Contact text on dark grass";
         contact.append(p);
