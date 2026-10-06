@@ -330,6 +330,55 @@ describe("SoccerField — painted to sit in the forest (design notes)", () => {
     }
   });
 
+  it("melts debris into the grass: contact shadow, grass tint, and blur and fade by depth", () => {
+    const { play, contact } = renderField();
+    for (const [zone, grass] of [
+      [play, "--color-pitch"],
+      [contact, "--color-pitch-dark"],
+    ] as const) {
+      const patterns = [
+        ...zone.querySelectorAll("[data-field-scatter] pattern"),
+      ];
+      const depths = patterns.map((pattern) => {
+        const filter = pattern.querySelector("filter")!;
+        const layer = pattern.querySelector(`g[filter="url(#${filter.id})"]`)!;
+        // Soft shadow from the pieces' shape, tinted towards the zone's grass, then blurred.
+        expect(
+          filter.querySelector('feGaussianBlur[in="SourceAlpha"]'),
+        ).not.toBeNull();
+        expect(filter.querySelector("feOffset")).not.toBeNull();
+        const floods = [...filter.querySelectorAll("feFlood")].map((f) =>
+          f.getAttribute("class"),
+        );
+        expect(floods.some((c) => c!.includes(grass))).toBe(true);
+        const blur = filter.querySelector(
+          'feGaussianBlur[in="SourceGraphic"]',
+        )!;
+        return {
+          blur: Number(blur.getAttribute("stdDeviation")),
+          opacity: Number(layer.getAttribute("opacity")),
+        };
+      });
+      // The deeper layer is softer and fainter than the front one.
+      expect(depths[1].blur).toBeGreaterThan(depths[0].blur);
+      expect(depths[1].opacity).toBeLessThan(depths[0].opacity);
+      depths.forEach(({ blur, opacity }) => {
+        expect(blur).toBeLessThanOrEqual(2);
+        expect(opacity).toBeGreaterThanOrEqual(0.5);
+      });
+    }
+  });
+
+  it("draws the deeper, softer layer underneath", () => {
+    const { play } = renderField();
+    const svg = play.querySelector("[data-field-scatter]")!;
+    const order = [...svg.querySelectorAll(":scope > rect")].map((r) =>
+      r.getAttribute("fill"),
+    );
+    expect(order[0]).toMatch(/-1\)$/);
+    expect(order[1]).toMatch(/-0\)$/);
+  });
+
   it("lays debris on top of the lines and below the forest shade and content", () => {
     const { field } = renderField();
     field.querySelectorAll("[data-field-scatter]").forEach((scatter) => {
