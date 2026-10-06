@@ -137,6 +137,7 @@ export const site = {
 - Page structure from top to bottom: wooden-sign header → forest top band → field (top goal → hero → skills around the center circle → projects → contact in dark grass → bottom goal) → forest bottom band.
 - Suggested components: `ForestBackground`, `forest/*` characters, `SoccerField`, `GrassStrip`, `FilmOverlay`, `Header`, `MobileMenu`.
 - Logo: the "RM" blocks from `main.jpg`, redrawn with ink outlines.
+- Field (US-3): the field is painted to sit in the forest — bold `parchment`/`ink` markings, a watercolour wash, forest shade on its edges, and fallen forest debris (leaves, stems, twigs, feathers) drifting onto its left and right edges, in the vintage token palette. Debris is static, decorative and stays clear of the content.
 
 ## Testing notes
 - Vitest: the mobile menu toggles open and closed, and Esc closes it; decorative SVGs have `aria-hidden`; nav links come from `site.nav`.
