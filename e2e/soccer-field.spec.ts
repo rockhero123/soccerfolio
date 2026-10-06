@@ -2,7 +2,8 @@ import AxeBuilder from "@axe-core/playwright";
 import { expect, test, type Page } from "@playwright/test";
 
 const field = '[data-testid="soccer-field"]';
-const zone = (name: "play" | "contact") => `${field} [data-field-zone="${name}"]`;
+const zone = (name: "play" | "contact") =>
+  `${field} [data-field-zone="${name}"]`;
 const marking = (name: string) => `${field} [data-marking="${name}"]`;
 
 async function box(page: Page, selector: string) {
@@ -67,6 +68,17 @@ for (const width of [375, 768, 1280]) {
         halfway.y + halfway.height / 2,
         0,
       );
+      // Fallen debris hugs both edges of the field.
+      for (const side of ["left", "right"]) {
+        const strip = await box(page, `${field} [data-field-debris="${side}"]`);
+        expect(strip.width).toBeLessThanOrEqual(f.width * 0.25);
+        expect(strip.height).toBeCloseTo(f.height - 8, -1);
+        expect(
+          side === "left"
+            ? strip.x - f.x
+            : f.x + f.width - (strip.x + strip.width),
+        ).toBeLessThan(8);
+      }
       // Even with little content, the centre circle clears the penalty areas.
       expect(circle.y).toBeGreaterThan(topArea.y + topArea.height);
       expect(circle.y + circle.height).toBeLessThan(bottomArea.y);
@@ -97,7 +109,10 @@ for (const width of [375, 768, 1280]) {
         expect(b!.y + b!.height).toBeLessThanOrEqual(f.y + f.height);
       }
       // The contact content sits above the bottom penalty area, not under it.
-      const contactFiller = await box(page, `${zone("contact")} [data-test-filler]`);
+      const contactFiller = await box(
+        page,
+        `${zone("contact")} [data-test-filler]`,
+      );
       const bottomArea = await box(page, marking("penalty-area-bottom"));
       expect(contactFiller.y + contactFiller.height).toBeLessThanOrEqual(
         bottomArea.y,
@@ -160,15 +175,18 @@ for (const width of [375, 768, 1280]) {
       // Every marking, paint and texture layer is hidden from assistive tech.
       const exposed = await page.evaluate((selector) => {
         const root = document.querySelector(selector)!;
-        return [...root.querySelectorAll("[data-marking], [data-marking-ink], svg")]
-          .filter((el) => !el.closest('[aria-hidden="true"]')).length;
+        return [
+          ...root.querySelectorAll("[data-marking], [data-marking-ink], svg"),
+        ].filter((el) => !el.closest('[aria-hidden="true"]')).length;
       }, field);
       expect(exposed).toBe(0);
     });
   });
 }
 
-test("visual check screenshots (375px and 1280px)", async ({ page }, testInfo) => {
+test("visual check screenshots (375px and 1280px)", async ({
+  page,
+}, testInfo) => {
   for (const width of [375, 1280]) {
     await page.setViewportSize({ width, height: 900 });
     await page.goto("/");

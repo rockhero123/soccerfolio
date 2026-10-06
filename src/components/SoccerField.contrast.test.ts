@@ -2,6 +2,7 @@ import { readFileSync } from "node:fs";
 import { join } from "node:path";
 import { describe, expect, it } from "vitest";
 import { SHADE_TINT } from "./soccer-field/FieldPaint";
+import { LAWN_LEAF_TONES } from "./soccer-field/FieldScatter";
 
 /**
  * AC5 (spec 001 US-3): text on the field meets WCAG AA (4.5:1) on both stripe
@@ -16,7 +17,9 @@ const css = readFileSync(join(process.cwd(), "src/app/globals.css"), "utf8");
 type RGB = [number, number, number];
 
 function token(name: string): RGB {
-  const hex = css.match(new RegExp(`--color-${name}:\\s*#([0-9a-f]{6});`, "i"))![1];
+  const hex = css.match(
+    new RegExp(`--color-${name}:\\s*#([0-9a-f]{6});`, "i"),
+  )![1];
   return [0, 2, 4].map((i) => parseInt(hex.slice(i, i + 2), 16) / 255) as RGB;
 }
 
@@ -39,9 +42,12 @@ const contrast = (a: RGB, b: RGB) => {
   return (hi + 0.05) / (lo + 0.05);
 };
 
-const stripe = Number(
-  css.match(/color-mix\(in oklab, var\(--color-chalk\) (\d+)%, transparent\)/)![1],
-) / 100;
+const stripe =
+  Number(
+    css.match(
+      /color-mix\(in oklab, var\(--color-chalk\) (\d+)%, transparent\)/,
+    )![1],
+  ) / 100;
 
 describe("SoccerField — AC5: text contrast on the painted grass (WCAG AA)", () => {
   it("ink text on the bright grass, at its darkest (forest tint, no stripe)", () => {
@@ -57,5 +63,17 @@ describe("SoccerField — AC5: text contrast on the painted grass (WCAG AA)", ()
     const lightest = overlay(base, token("chalk"), stripe);
     expect(contrast(token("chalk"), base)).toBeGreaterThanOrEqual(4.5);
     expect(contrast(token("chalk"), lightest)).toBeGreaterThanOrEqual(4.5);
+  });
+
+  it("ink text over the leaves and feathers drifting on the bright grass", () => {
+    const tokenOf = { moss: "moss", autumn: "cartoon-yellow" } as const;
+    for (const tone of LAWN_LEAF_TONES) {
+      expect(tone in tokenOf).toBe(true);
+      const leaf = token(tokenOf[tone as keyof typeof tokenOf]);
+      expect(contrast(token("ink"), leaf)).toBeGreaterThanOrEqual(4.5);
+    }
+    expect(contrast(token("ink"), token("parchment"))).toBeGreaterThanOrEqual(
+      4.5,
+    );
   });
 });
