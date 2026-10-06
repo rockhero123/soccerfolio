@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Lilita_One, Source_Sans_3 } from "next/font/google";
+import ForestBackground from "@/components/ForestBackground";
 import "./globals.css";
 
 const lilitaOne = Lilita_One({
@@ -26,7 +27,13 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       lang="en"
       className={`${lilitaOne.variable} ${sourceSans3.variable} h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col font-body">{children}</body>
+      <body className="relative isolate min-h-full flex flex-col font-body">
+        <ForestBackground />
+        {/* Clear centre of the forest, where the field sits (spec 001 US-2). */}
+        <div className="flex flex-1 flex-col px-(--forest-side) py-(--forest-band)">
+          {children}
+        </div>
+      </body>
     </html>
   );
 }
