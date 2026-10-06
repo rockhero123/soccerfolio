@@ -3,6 +3,7 @@ import { join } from "node:path";
 import { cleanup, render, screen } from "@testing-library/react";
 import { afterEach, describe, expect, it } from "vitest";
 import SoccerField from "./SoccerField";
+import { ZONE_PALETTE } from "./soccer-field/debris/palette";
 
 afterEach(cleanup);
 
@@ -28,6 +29,13 @@ describe("SoccerField — AC1: wraps the content with bold parchment and ink fie
     expect(play).toContainElement(
       screen.getByRole("heading", { name: "Skills" }),
     );
+    // Content sits in its own layer above all the art.
+    for (const zone of [play, contact]) {
+      expect(zone.querySelector("[data-field-content]")).toHaveClass(
+        "relative",
+        "z-10",
+      );
+    }
     expect(contact).toContainElement(screen.getByText("Contact me"));
   });
 
@@ -231,50 +239,103 @@ describe("SoccerField — AC3: grass colours", () => {
 });
 
 describe("SoccerField — painted to sit in the forest (design notes)", () => {
-  it("drops leaves, stems, twigs and feathers along both edges, on top of the lines", () => {
-    const { field } = renderField();
-    const strips = field.querySelectorAll("[data-field-debris]");
-    expect([...strips].map((s) => s.getAttribute("data-field-debris"))).toEqual(
-      ["left", "right"],
-    );
-    for (const strip of strips) {
-      for (const kind of ["leaf", "twig", "stem", "feather"]) {
-        expect(strip.querySelector(`[data-debris="${kind}"]`)).not.toBeNull();
-      }
-      // Above the parchment lines (z 2), below the forest shade (z 4) and content (z 10).
-      expect(strip.closest(".z-\\[3\\]")).not.toBeNull();
-    }
-    expect(field.querySelector("[data-field-shade]")).toHaveClass("z-[4]");
-  });
-
-  it("scatters tufts, clover and a few leaves over the bright grass, only tufts on the dark grass", () => {
-    const { play, contact } = renderField();
-    const lawn = play.querySelector('[data-field-scatter="play"]')!;
-    expect(
-      lawn.querySelectorAll('[data-debris="tuft"]').length,
-    ).toBeGreaterThan(4);
-    expect(lawn.querySelector('[data-debris="clover"]')).not.toBeNull();
-    expect(lawn.querySelector('[data-debris="leaf"]')).not.toBeNull();
-    const dark = contact.querySelector('[data-field-scatter="contact"]')!;
-    const kinds = new Set(
-      [...dark.querySelectorAll("[data-debris]")].map((p) =>
+  const kinds = (el: Element) =>
+    new Set(
+      [...el.querySelectorAll("[data-debris]")].map((p) =>
         p.getAttribute("data-debris"),
       ),
     );
-    expect([...kinds]).toEqual(["tuft"]);
+
+  it("scatters leaves, twigs, stems, feathers, clover and tufts over the bright grass", () => {
+    const { play } = renderField();
+    const lawn = play.querySelector('[data-field-scatter="play"]')!;
+    expect([...kinds(lawn)].sort()).toEqual([
+      "clover",
+      "feather",
+      "leaf",
+      "stem",
+      "tuft",
+      "twig",
+    ]);
   });
 
-  it("colours leaves on the lawn only in tones ink text stays readable on", () => {
+  it("scatters leaves, twigs, stems and tufts over the dark grass", () => {
+    const { contact } = renderField();
+    const dark = contact.querySelector('[data-field-scatter="contact"]')!;
+    expect([...kinds(dark)].sort()).toEqual(["leaf", "stem", "tuft", "twig"]);
+  });
+
+  it("spreads debris over the whole zone, not just the edges", () => {
     const { play } = renderField();
-    const fills = [
-      ...play.querySelectorAll(
-        '[data-field-scatter] [data-debris="leaf"] > path:first-child',
-      ),
-    ].map((p) => p.getAttribute("class"));
-    expect(fills.length).toBeGreaterThan(0);
-    fills.forEach((fill) =>
-      expect(fill).toMatch(/^fill-(moss|cartoon-yellow)$/),
-    );
+    const patterns = play.querySelectorAll("[data-field-scatter] pattern");
+    // Two overlapping layers with unrelated tile sizes, both wider than a desktop field.
+    expect(patterns).toHaveLength(2);
+    const sizes = [...patterns].map((p) => [
+      Number(p.getAttribute("width")),
+      Number(p.getAttribute("height")),
+    ]);
+    sizes.forEach(([w]) => expect(w).toBeGreaterThanOrEqual(760));
+    expect(sizes[0]).not.toEqual(sizes[1]);
+    for (const pattern of patterns) {
+      const width = Number(pattern.getAttribute("width"));
+      const xs = [...pattern.querySelectorAll("g[id] > [data-debris]")].map(
+        (piece) =>
+          Number(
+            piece.getAttribute("transform")!.match(/translate\(([\d.]+)/)![1],
+          ),
+      );
+      // Pieces land across the whole tile width: left, middle and right thirds.
+      for (const third of [0, 1, 2]) {
+        expect(
+          xs.some(
+            (x) => x >= (third * width) / 3 && x < ((third + 1) * width) / 3,
+          ),
+        ).toBe(true);
+      }
+      // Pieces crossing a tile edge continue in all eight neighbouring tiles.
+      expect(pattern.querySelectorAll("use")).toHaveLength(8);
+    }
+  });
+
+  it("colours each zone's debris only from its readable palette", () => {
+    const { play, contact } = renderField();
+    const colours = (el: Element) =>
+      new Set(
+        [...el.querySelectorAll("[data-field-scatter] [class]")]
+          .flatMap((node) => node.getAttribute("class")!.split(" "))
+          .filter(
+            (c) =>
+              /^(fill|stroke)-(?!none|ink$|parchment$)/.test(c) &&
+              !c.includes("["),
+          ),
+      );
+    const zoneColours = (zone: "play" | "contact") => {
+      const p = ZONE_PALETTE[zone];
+      return new Set([
+        ...p.leaves,
+        p.twig,
+        p.stalk,
+        p.leaflet,
+        p.tuft,
+        ...(p.feather ? [p.feather.tip] : []),
+        ...(p.clover ? [p.clover] : []),
+      ]);
+    };
+    for (const [el, zone] of [
+      [play, "play"],
+      [contact, "contact"],
+    ] as const) {
+      const allowed = zoneColours(zone);
+      for (const c of colours(el)) expect(allowed, c).toContain(c);
+    }
+  });
+
+  it("lays debris on top of the lines and below the forest shade and content", () => {
+    const { field } = renderField();
+    field.querySelectorAll("[data-field-scatter]").forEach((scatter) => {
+      expect(scatter.closest(".z-\\[3\\]")).not.toBeNull();
+    });
+    expect(field.querySelector("[data-field-shade]")).toHaveClass("z-[4]");
   });
 
   it("keeps the debris and paint pattern ids unique, with tokens only", () => {
@@ -293,7 +354,7 @@ describe("SoccerField — AC5: decorative markings and readable text", () => {
     const { field } = renderField();
     field
       .querySelectorAll(
-        "[data-marking], [data-marking-ink], [data-field-paint], [data-field-debris], [data-field-scatter]",
+        "[data-marking], [data-marking-ink], [data-field-paint], [data-field-scatter]",
       )
       .forEach((m) => {
         expect(m.closest('[aria-hidden="true"]')).not.toBeNull();

@@ -6,23 +6,25 @@ type FeatherProps = {
   angle: number;
   length: number;
   width: number;
-  /** Colour of the feather tip, like a cartoon bird's plumage. */
-  tip: "red" | "yellow";
+  /** Fill classes of the vane and its coloured tip, from the zone palette. */
+  vane: string;
+  tip: string;
 };
 
 /** A feather vane whose quill sits at the origin and tip points up. */
-function vane(length: number, width: number): string {
+function vanePath(length: number, width: number): string {
   const w = width / 2;
   return `M0 0C${w * 1.3} ${-length * 0.2} ${w * 1.1} ${-length * 0.75} 0 ${-length}C${-w * 1.1} ${-length * 0.75} ${-w * 1.3} ${-length * 0.2} 0 0Z`;
 }
 
-/** A parchment feather with a coloured tip, an ink outline, a quill and a few barb notches. */
+/** A feather with a coloured tip, an ink outline, a quill and a few barb notches. */
 export default function Feather({
   x,
   y,
   angle,
   length,
   width,
+  vane,
   tip,
 }: FeatherProps) {
   const l = length;
@@ -39,14 +41,14 @@ export default function Feather({
       transform={place(x, y, angle)}
       strokeLinecap="round"
     >
-      <path d={vane(l, width)} className="fill-parchment" />
+      <path d={vanePath(l, width)} className={vane} />
       <path
-        d={vane(l * 0.34, width * 0.82)}
+        d={vanePath(l * 0.34, width * 0.82)}
         transform={`translate(0 ${-l * 0.66})`}
-        className={tip === "red" ? "fill-cartoon-red" : "fill-cartoon-yellow"}
+        className={tip}
       />
       <path
-        d={vane(l, width)}
+        d={vanePath(l, width)}
         className={`fill-none ${debrisOutline}`}
         strokeLinejoin="round"
       />

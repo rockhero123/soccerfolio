@@ -1,16 +1,6 @@
 import { leafPath, leafShadePath } from "../../forest-background/shapes";
+import { LEAF_SHADE } from "./palette";
 import { debrisOutline, place } from "./style";
-
-export type LeafTone = "moss" | "green" | "autumn" | "red" | "dry";
-
-/** Vintage leaf colours, from fresh moss to dry autumn leaves (tokens only). */
-const toneFill: Record<LeafTone, string> = {
-  moss: "fill-moss",
-  green: "fill-forest-mid-leaf",
-  autumn: "fill-cartoon-yellow",
-  red: "fill-cartoon-red",
-  dry: "fill-forest-bark-light",
-};
 
 type FallenLeafProps = {
   x: number;
@@ -18,7 +8,8 @@ type FallenLeafProps = {
   angle: number;
   length: number;
   width: number;
-  tone: LeafTone;
+  /** Fill class from the zone palette. */
+  fill: string;
 };
 
 /** A fallen leaf with a painted shady half, an ink outline and a vein. */
@@ -28,16 +19,16 @@ export default function FallenLeaf({
   angle,
   length,
   width,
-  tone,
+  fill,
 }: FallenLeafProps) {
   const shape = leafPath(length, width);
   return (
     <g data-debris="leaf" transform={place(x, y, angle)}>
-      <path d={shape} className={toneFill[tone]} />
+      <path d={shape} className={fill} />
       <path
         d={leafShadePath(length, width)}
         className="fill-ink"
-        fillOpacity={0.18}
+        fillOpacity={LEAF_SHADE}
       />
       <path
         d={shape}
