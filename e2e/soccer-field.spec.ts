@@ -36,7 +36,7 @@ for (const width of [375, 768, 1280]) {
       await page.goto("/");
     });
 
-    test("AC1 — the field wraps the content and shows every chalk marking", async ({
+    test("AC1 — the field wraps the content and shows every field marking", async ({
       page,
     }) => {
       const f = await box(page, field);
@@ -157,11 +157,13 @@ for (const width of [375, 768, 1280]) {
         ["serious", "critical"].includes(v.impact ?? ""),
       );
       expect(serious, JSON.stringify(serious, null, 2)).toEqual([]);
-      // Markings are hidden from assistive tech.
-      const markings = page.locator(`${field} [data-field-markings], ${marking("boundary")}`);
-      for (const m of await markings.all()) {
-        await expect(m).toHaveAttribute("aria-hidden", "true");
-      }
+      // Every marking, paint and texture layer is hidden from assistive tech.
+      const exposed = await page.evaluate((selector) => {
+        const root = document.querySelector(selector)!;
+        return [...root.querySelectorAll("[data-marking], [data-marking-ink], svg")]
+          .filter((el) => !el.closest('[aria-hidden="true"]')).length;
+      }, field);
+      expect(exposed).toBe(0);
     });
   });
 }
