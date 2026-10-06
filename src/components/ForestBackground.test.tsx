@@ -14,16 +14,22 @@ function renderForest() {
   return { container, root };
 }
 
+const TILE_IDS = [
+  "forest-side-tile",
+  "forest-band-top-tile",
+  "forest-band-bottom-tile",
+];
+
 describe("ForestBackground — AC1: original layered SVG forest", () => {
-  it.each(["forest-side-tile", "forest-band-tile"])(
+  it.each(TILE_IDS)(
     "%s has distant, mid and near depth layers, painted back to front",
     (tileId) => {
       const { container } = renderForest();
       const pattern = container.querySelector(`pattern#${tileId}`);
       expect(pattern).not.toBeNull();
-      const layers = [...pattern!.querySelectorAll(":scope > g[id]")].map(
-        (g) => g.id,
-      );
+      const layers = [
+        ...pattern!.querySelectorAll(":scope > g > g[id]"),
+      ].map((g) => g.id);
       expect(layers).toEqual([
         `${tileId}-distant`,
         `${tileId}-mid`,
@@ -40,50 +46,122 @@ describe("ForestBackground — AC1: original layered SVG forest", () => {
   it("draws pale distant trees with mixed, washed-out token colours", () => {
     const { container } = renderForest();
     const distant = container.querySelector("#forest-side-tile-distant")!;
-    expect(distant.querySelector(".fill-\\(--forest-distant-wood\\)")).not.toBeNull();
-    expect(distant.querySelector(".fill-\\(--forest-distant-leaf\\)")).not.toBeNull();
+    expect(distant.querySelector(".fill-forest-distant-wood")).not.toBeNull();
+    expect(distant.querySelector(".fill-forest-distant-leaf")).not.toBeNull();
     expect(distant.querySelector(".fill-forest-deep")).toBeNull();
   });
 
-  it("draws mid trees with bark trunks and thick ink outlines", () => {
+  it("draws mid trees with bark trunks and thick ink outlines (outline token)", () => {
     const { container } = renderForest();
     const mid = container.querySelector("#forest-side-tile-mid")!;
-    const trunk = mid.querySelector("path.fill-bark")!;
-    expect(trunk).toHaveClass("stroke-ink");
-    expect(Number(trunk.getAttribute("stroke-width"))).toBeGreaterThanOrEqual(3);
+    expect(mid.querySelector("path.fill-bark")).not.toBeNull();
+    const outlines = mid.querySelectorAll('path[data-ink="outline"].stroke-ink');
+    expect(outlines.length).toBeGreaterThan(3);
   });
 
-  it("draws dark foreground foliage in forest-deep with 4px ink outlines and moss details", () => {
+  it("draws dark foreground foliage in forest-deep with large ink outlines and moss details", () => {
     const { container } = renderForest();
     const near = container.querySelector("#forest-side-tile-near")!;
-    const clumps = near.querySelectorAll("path.fill-forest-deep.stroke-ink");
-    expect(clumps.length).toBeGreaterThan(3);
-    clumps.forEach((clump) =>
-      expect(clump.getAttribute("stroke-width")).toBe("4"),
+    expect(
+      near.querySelectorAll("path.fill-forest-deep").length,
+    ).toBeGreaterThan(3);
+    const outlines = near.querySelectorAll(
+      'path[data-ink="outline"].stroke-ink.stroke-outline-lg',
     );
+    expect(outlines.length).toBeGreaterThan(3);
     expect(near.querySelector(".stroke-moss")).not.toBeNull();
+  });
+
+  it("takes outline widths from the SOC-2 outline tokens, not hard-coded numbers", () => {
+    const { container } = renderForest();
+    const outlines = container.querySelectorAll('[data-ink="outline"]');
+    expect(outlines.length).toBeGreaterThan(20);
+    outlines.forEach((outline) => {
+      expect(outline).not.toHaveAttribute("stroke-width");
+      const usesToken =
+        outline.matches(".stroke-outline, .stroke-outline-lg") ||
+        /var\(--stroke-width-outline(-lg)?\)/.test(
+          outline.getAttribute("style") ?? "",
+        );
+      expect(usesToken).toBe(true);
+    });
+  });
+
+  it("inks outlines unevenly: a wobble filter and heavier shadow-side ink shapes", () => {
+    const { container } = renderForest();
+    for (const tileId of TILE_IDS) {
+      const pattern = container.querySelector(`pattern#${tileId}`)!;
+      const filterRef = pattern
+        .querySelector(":scope > g")!
+        .getAttribute("filter")!;
+      const filterId = filterRef.match(/^url\(#(.+)\)$/)![1];
+      const filter = container.querySelector(`filter#${filterId}`)!;
+      expect(filter.querySelector("feDisplacementMap")).not.toBeNull();
+    }
+    expect(
+      container.querySelectorAll("#forest-side-tile-near path.fill-ink[transform]")
+        .length,
+    ).toBeGreaterThan(3);
+  });
+
+  it("paints a static watercolour wash and grain inside the shapes only", () => {
+    const { container } = renderForest();
+    container.querySelectorAll("filter").forEach((filter) => {
+      expect(
+        filter.querySelectorAll("feTurbulence").length,
+      ).toBeGreaterThanOrEqual(3);
+      filter
+        .querySelectorAll("feTurbulence")
+        .forEach((noise) => expect(noise).toHaveAttribute("stitchTiles", "stitch"));
+      const last = filter.lastElementChild!;
+      expect(last.tagName).toBe("feComposite");
+      expect(last).toHaveAttribute("operator", "atop");
+    });
+  });
+
+  it("varies the top and bottom bands so the tiling does not look regular", () => {
+    const { container } = renderForest();
+    const top = container.querySelector("pattern#forest-band-top-tile")!;
+    const bottom = container.querySelector("pattern#forest-band-bottom-tile")!;
+    // The tile is wider than a 1280px screen, so it never repeats there.
+    expect(Number(top.getAttribute("width"))).toBeGreaterThan(1280);
+    const shapes = (p: Element) =>
+      [...p.querySelectorAll("path")].map((path) => path.getAttribute("d"));
+    expect(shapes(top)).not.toEqual(shapes(bottom));
+  });
+
+  it("does not draw curly moss strokes on foliage that could read as faces", () => {
+    const { container } = renderForest();
+    container
+      .querySelectorAll("[id$='-near'] path.stroke-moss")
+      .forEach((detail) =>
+        // Moss details are only leaf veins, which start at the leaf base.
+        expect(detail.getAttribute("d")).toMatch(/^M0 -4Q/),
+      );
   });
 
   it("uses design tokens only — no raw hex colours in the markup", () => {
     const html = renderToStaticMarkup(<ForestBackground />);
     expect(html).not.toMatch(/#[0-9a-fA-F]{3,8}\b(?![-\w])/);
-    expect(html).not.toMatch(/(fill|stroke)="(?!url\(|none)/);
+    expect(html).not.toMatch(/(fill|stroke|flood-color)="(?!url\(|none)/);
   });
 
-  it("mixes its muted colours from the moss, bark and forest-deep tokens", () => {
+  it("defines its muted colours as @theme tokens mixed from moss, bark and forest-deep", () => {
     const css = readFileSync(join(process.cwd(), "src/app/globals.css"), "utf8");
+    const theme = [...css.matchAll(/@theme static\s*\{([^}]*)\}/g)]
+      .map((m) => m[1])
+      .join("\n");
     const mix = (name: string) =>
-      css.match(new RegExp(`--${name}:\\s*([^;]+);`))?.[1] ?? "";
+      theme.match(new RegExp(`--color-${name}:\\s*([^;]+);`))?.[1] ?? "";
     expect(mix("forest-distant-wood")).toContain("var(--color-bark)");
     expect(mix("forest-distant-leaf")).toContain("var(--color-moss)");
     expect(mix("forest-mid-leaf")).toContain("var(--color-forest-deep)");
-    for (const name of [
-      "forest-mist",
-      "forest-distant-leaf",
-      "forest-distant-wood",
-      "forest-distant-line",
-      "forest-mid-leaf",
-    ]) {
+    const names = [...theme.matchAll(/--color-(forest-[\w-]+):/g)]
+      .map((m) => m[1])
+      .filter((name) => name !== "forest-deep");
+    expect(names.length).toBeGreaterThanOrEqual(5);
+    for (const name of names) {
+      expect(mix(name)).toMatch(/^color-mix\(/);
       expect(mix(name)).not.toMatch(/#[0-9a-f]/i);
     }
   });
