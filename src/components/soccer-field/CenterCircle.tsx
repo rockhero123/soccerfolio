@@ -6,7 +6,10 @@ type CenterCircleProps = { layer: LineLayer; className?: string };
  * The centre circle and centre spot. The viewBox is square, so the circle
  * stays round at any size; the halfway line itself is drawn by `SoccerField`.
  */
-export default function CenterCircle({ layer, className = "" }: CenterCircleProps) {
+export default function CenterCircle({
+  layer,
+  className = "",
+}: CenterCircleProps) {
   return (
     <svg
       viewBox="0 0 200 200"

@@ -2,7 +2,9 @@ import type { ReactNode } from "react";
 import GrassStrip from "./GrassStrip";
 import CenterCircle from "./soccer-field/CenterCircle";
 import CornerArc from "./soccer-field/CornerArc";
+import FieldDebris from "./soccer-field/FieldDebris";
 import FieldPaint from "./soccer-field/FieldPaint";
+import FieldScatter from "./soccer-field/FieldScatter";
 import { markingAttrs, type LineLayer } from "./soccer-field/lines";
 import PenaltyArea from "./soccer-field/PenaltyArea";
 
@@ -60,6 +62,8 @@ const boundaryLine: Record<LineLayer, string> = {
  * - a mown `pitch` playing zone and a `pitch-dark` contact zone behind a grass edge,
  *   both with a static watercolour wash
  * - bold `parchment` markings with `ink` outlines
+ * - fallen forest debris (leaves, stems, twigs, feathers) drifting onto its left and right
+ *   edges, and grass tufts, clover and a few leaves scattered over the lawn
  * - forest shade falling on the field edges, so the field blends into the forest
  *
  * The field grows with its content. Lines that must stretch (boundary, halfway line)
@@ -77,8 +81,13 @@ export default function SoccerField({ children, contact }: SoccerFieldProps) {
         data-field-zone="play"
         className={`relative flex flex-1 flex-col bg-pitch bg-mowing text-ink ${playMinHeight}`}
       >
-        <div aria-hidden="true" data-field-markings="" className={markingsLayer}>
+        <div
+          aria-hidden="true"
+          data-field-markings=""
+          className={markingsLayer}
+        >
           <FieldPaint tone="lighten" />
+          <FieldScatter zone="play" />
         </div>
         {LAYERS.map((layer) => (
           <div
@@ -113,8 +122,13 @@ export default function SoccerField({ children, contact }: SoccerFieldProps) {
         data-field-zone="contact"
         className="relative bg-pitch-dark bg-mowing text-chalk"
       >
-        <div aria-hidden="true" data-field-markings="" className={markingsLayer}>
+        <div
+          aria-hidden="true"
+          data-field-markings=""
+          className={markingsLayer}
+        >
           <FieldPaint tone="darken" />
+          <FieldScatter zone="contact" />
           <GrassStrip className="absolute inset-x-0 bottom-full h-6 fill-pitch-dark md:h-8" />
         </div>
         {LAYERS.map((layer) => (
@@ -160,11 +174,21 @@ export default function SoccerField({ children, contact }: SoccerFieldProps) {
         </div>
       ))}
 
+      {/* Fallen debris lies on top of the lines, below the shade and the content. */}
+      <div
+        aria-hidden="true"
+        data-field-markings=""
+        className="pointer-events-none absolute inset-0 z-[3] select-none"
+      >
+        <FieldDebris side="left" />
+        <FieldDebris side="right" />
+      </div>
+
       {/* Forest shade falling on the edges of the field. */}
       <div
         aria-hidden="true"
         data-field-shade=""
-        className="pointer-events-none absolute inset-0 z-[3] rounded-[inherit] shadow-[inset_0_0_3rem_color-mix(in_oklab,var(--color-forest-deep)_70%,transparent)]"
+        className="pointer-events-none absolute inset-0 z-[4] rounded-[inherit] shadow-[inset_0_0_3rem_color-mix(in_oklab,var(--color-forest-deep)_70%,transparent)]"
       />
     </div>
   );
