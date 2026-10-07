@@ -20,7 +20,9 @@ async function addContent(
 ) {
   await page.evaluate(
     ({ selector, h }) => {
-      const content = document.querySelector(`${selector} [data-field-content]`)!;
+      const content = document.querySelector(
+        `${selector} [data-field-content]`,
+      )!;
       const filler = document.createElement("section");
       filler.style.height = `${h}px`;
       filler.dataset.testFiller = "true";
@@ -158,7 +160,9 @@ for (const width of [375, 768, 1280]) {
       page,
     }) => {
       await page.evaluate((selector) => {
-        const contact = document.querySelector(`${selector} [data-field-content]`)!;
+        const contact = document.querySelector(
+          `${selector} [data-field-content]`,
+        )!;
         const p = document.createElement("p");
         p.textContent = "Contact text on dark grass";
         contact.append(p);
@@ -169,11 +173,17 @@ for (const width of [375, 768, 1280]) {
       );
       expect(serious, JSON.stringify(serious, null, 2)).toEqual([]);
       // Every marking, paint and texture layer is hidden from assistive tech.
+      // Only meaningful images in the content (role="img" with a label, like the
+      // hero portrait) may be exposed.
       const exposed = await page.evaluate((selector) => {
         const root = document.querySelector(selector)!;
         return [
           ...root.querySelectorAll("[data-marking], [data-marking-ink], svg"),
-        ].filter((el) => !el.closest('[aria-hidden="true"]')).length;
+        ].filter(
+          (el) =>
+            !el.closest('[aria-hidden="true"]') &&
+            !el.closest('svg[role="img"][aria-label]'),
+        ).length;
       }, field);
       expect(exposed).toBe(0);
     });

@@ -26,11 +26,11 @@ The first screen: who Ricardo is and what he does. A hand-drawn cartoon portrait
 **As a** recruiter, **I want** to see a cartoon portrait of Ricardo in the hero, **so that** I get a visual sense of who I'm looking at.
 
 **Context**
-Art brief, adapted from the owner's prompt: draw the person in `design/profile_reference.jpeg` as a vintage cartoon soccer player in the classic rubber-hose style (mood: Cuphead, Pizza Tower, Rocko's Modern Life, early Ed, Edd n Eddy; manifest §6). Clearly keep his identity: short dark hair, trimmed beard and moustache, dark eyes, strong eyebrows. He wears a soccer shirt with the Colombia flag (yellow, blue and red). Style references are mood only; never trace them.
+Art brief, adapted from the owner's prompt: draw the person in `design/profile_reference.jpeg` as a vintage cartoon soccer player in the classic rubber-hose style (mood: Cuphead, Pizza Tower, Rocko's Modern Life, early Ed, Edd n Eddy; manifest §6). Clearly keep his identity: short dark hair, a moustache and a partial beard along the jaw, dark eyes, strong eyebrows, big ears. He wears the yellow Colombia national-team shirt with a round collar and has a roguish, toothy smirk. A sunburst, speed lines and smoke puffs show he is fast. Style references are mood only; never trace them.
 
 **Acceptance criteria**
 - [ ] AC1 — A `CartoonPortrait` component renders an original, hand-coded, static SVG portrait of Ricardo in the rubber-hose style (bold `ink` outlines, pie-cut eyes, manifest palette) that keeps the recognisable features listed in the art brief.
-- [ ] AC2 — He wears a soccer shirt showing the Colombia flag, using `cartoon-yellow`, `cartoon-blue` and `cartoon-red` (manifest §6).
+- [ ] AC2 — He wears the yellow Colombia shirt (`cartoon-yellow`, manifest §6).
 - [ ] AC3 — The portrait is clipped to a circle, and the top of the head (the hair) breaks out of the circle above its edge.
 - [ ] AC4 — The portrait is meaningful, not decorative: it has `role="img"` and an accessible name from `src/content/hero.ts` (e.g. "Cartoon portrait of Ricardo Martinez as a vintage soccer player in a Colombia shirt").
 - [ ] AC5 — It uses design tokens only (no raw hex) and contains no raster images.
@@ -83,7 +83,7 @@ export const hero = {
 - The mirror glass is a light surface (for example `mint` or `chalk`), so the name and role use `ink` text.
 
 ## Testing notes
-- Vitest: the `<h1>` shows "Richi" and has the accessible name "Ricardo Martinez (Richi)"; the role and intro render from the content files; the portrait has `role="img"` and its label; the shirt uses the flag tokens; tokens only.
+- Vitest: the `<h1>` shows "Richi" and has the accessible name "Ricardo Martinez (Richi)"; the role and intro render from the content files; the portrait has `role="img"` and its label; the shirt is `cartoon-yellow`; tokens only.
 - Playwright: at 1280px the hair breaks out above the portrait circle; the mirror and sign sit side by side at 1280px and stack at 375px; the page title contains "Software Engineer"; an axe check finds no serious issues.
 
 ## Open questions

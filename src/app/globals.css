@@ -57,6 +57,15 @@
 }
 
 /*
+ * Hero portrait palette (spec 002 US-1) → fill-skin, fill-skin-shade.
+ * Warm skin tones mixed from the tokens above — no new hex values.
+ */
+@theme static {
+  --color-skin: color-mix(in oklab, var(--color-bark) 40%, var(--color-parchment));
+  --color-skin-shade: color-mix(in oklab, var(--color-bark) 62%, var(--color-parchment));
+}
+
+/*
  * `--forest-side` / `--forest-band` size the forest frame; the page content is
  * padded by the same amounts so it sits in the clear centre (the field).
  */
