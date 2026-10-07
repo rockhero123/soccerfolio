@@ -64,11 +64,15 @@
   /* Below 1024px: a narrow decorative border with top and bottom bands. */
   --forest-side: 1rem;
   --forest-band: 10rem;
+  /* Room under the fixed header sign, so section headings are never hidden. */
+  --header-offset: 6rem;
 }
 
 @media (min-width: 48rem) {
   :root {
     --forest-side: 1.5rem;
+    /* A taller band, so the header sign never covers the forest characters. */
+    --forest-band: 12.5rem;
   }
 }
 
@@ -92,6 +96,17 @@
 }
 
 @layer base {
+  html {
+    scroll-padding-top: var(--header-offset);
+  }
+
+  /* Smooth scrolling to sections, unless the visitor prefers reduced motion. */
+  @media (prefers-reduced-motion: no-preference) {
+    html {
+      scroll-behavior: smooth;
+    }
+  }
+
   body {
     background-color: var(--color-parchment);
     color: var(--color-ink);

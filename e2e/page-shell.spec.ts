@@ -86,6 +86,8 @@ for (const width of [375, 1280]) {
   }) => {
     await page.setViewportSize({ width, height: 800 });
     for (const id of sections) {
+      // A deep link: open the page fresh at each #hash.
+      await page.goto("about:blank");
       await page.goto(`/#${id}`);
       const heading = page.locator(`section#${id} h2`);
       await expect(heading).toBeInViewport();
