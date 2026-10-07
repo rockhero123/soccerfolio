@@ -9,42 +9,54 @@ depends_on: ["001"]
 # 002 — Hero
 
 ## Summary
-The first screen: who Ricardo is, what he does, and the two main actions (view projects, contact).
+The first screen: who Ricardo is and what he does. A hand-drawn cartoon portrait of Ricardo as a vintage soccer player sits in an enchanted mirror with his nickname and role, next to a wooden sign with a short introduction.
 
 ## Goals
 - Communicate name, role and value proposition in a few seconds (manifest G1).
+- Make the first impression memorable and on-theme: a rubber-hose cartoon of Ricardo in a Colombia shirt.
 
 ## Non-goals
-- Heavy animations or video backgrounds.
+- Heavy animations or video backgrounds. The portrait and mirror are static.
+- Call-to-action buttons and social links. Contact lives in the Contact section (spec 007).
+- Raster or AI-generated artwork. The portrait is hand-coded SVG (manifest §6).
 
 ## User stories
 
-### US-1: Hero introduction
-**As a** recruiter, **I want** to see name, role and a short pitch right away, **so that** I know immediately if the profile is relevant.
+### US-1: Cartoon profile portrait
+**As a** recruiter, **I want** to see a cartoon portrait of Ricardo in the hero, **so that** I get a visual sense of who I'm looking at.
+
+**Context**
+Art brief, adapted from the owner's prompt: draw the person in `design/profile_reference.jpeg` as a vintage cartoon soccer player in the classic rubber-hose style (mood: Cuphead, Pizza Tower, Rocko's Modern Life, early Ed, Edd n Eddy; manifest §6). Clearly keep his identity: short dark hair, trimmed beard and moustache, dark eyes, strong eyebrows. He wears a soccer shirt with the Colombia flag (yellow, blue and red). Style references are mood only; never trace them.
 
 **Acceptance criteria**
-- [ ] AC1 — The hero shows a greeting, the full name as the only `<h1>` on the page, the role, and a one- or two-sentence tagline. All text comes from `src/content/hero.ts`.
-- [ ] AC2 — The hero fills at least the first viewport on desktop and is fully visible without scrolling at 375×667.
-- [ ] AC3 — An optional profile photo uses `next/image` with `priority` and descriptive alt text.
+- [ ] AC1 — A `CartoonPortrait` component renders an original, hand-coded, static SVG portrait of Ricardo in the rubber-hose style (bold `ink` outlines, pie-cut eyes, manifest palette) that keeps the recognisable features listed in the art brief.
+- [ ] AC2 — He wears a soccer shirt showing the Colombia flag, using `cartoon-yellow`, `cartoon-blue` and `cartoon-red` (manifest §6).
+- [ ] AC3 — The portrait is clipped to a circle, and the top of the head (the hair) breaks out of the circle above its edge.
+- [ ] AC4 — The portrait is meaningful, not decorative: it has `role="img"` and an accessible name from `src/content/hero.ts` (e.g. "Cartoon portrait of Ricardo Martinez as a vintage soccer player in a Colombia shirt").
+- [ ] AC5 — It uses design tokens only (no raw hex) and contains no raster images.
 
 **Jira:** —
 
-### US-2: Call-to-action buttons
-**As a** visitor, **I want** clear buttons, **so that** I can go straight to projects or contact.
+### US-2: Enchanted mirror profile card
+**As a** visitor, **I want** the portrait shown in a magical frame with Ricardo's name and role, **so that** I know immediately who he is and what he does.
 
 **Acceptance criteria**
-- [ ] AC1 — A primary button "View my work" scrolls to `#projects`.
-- [ ] AC2 — A secondary button "Contact me" scrolls to `#contact`.
-- [ ] AC3 — Both buttons have visible focus and hover states and meet WCAG AA contrast.
+- [ ] AC1 — The portrait sits inside a rounded rectangle drawn as an **enchanted mirror**: an ornate cartoon frame with an `ink` outline, a glass surface with painted shine, and tall grass (`GrassStrip`) along its bottom edge, like the section title banners.
+- [ ] AC2 — Below the portrait, inside the mirror, the nickname "Richi" is shown in bold (`font-heading`), and below it the role "Software Engineer" in regular weight (`font-body`).
+- [ ] AC3 — The nickname is the page's only `<h1>`. It shows "Richi", and its accessible name is "Ricardo Martinez (Richi)", so screen readers and search engines get the full name. The visible text stays part of the accessible name (WCAG 2.5.3).
+- [ ] AC4 — The role is "Software Engineer" everywhere: `site.role` in `src/content/site.ts` and the page `<title>` use it. Name, nickname and role come from `src/content/hero.ts` / `src/content/site.ts`.
+- [ ] AC5 — Text on the mirror meets WCAG AA and uses an allowed text pair from manifest §6. It stays ≥ 4.5:1 under the film overlay.
 
 **Jira:** —
 
-### US-3: Social links
-**As a** technical lead, **I want** GitHub and LinkedIn links in the hero, **so that** I can check the profile quickly.
+### US-3: Profile introduction sign
+**As a** recruiter, **I want** a short introduction next to the portrait, **so that** I quickly learn Ricardo's background and interests.
 
 **Acceptance criteria**
-- [ ] AC1 — Icon links to GitHub and LinkedIn open in a new tab with `rel="noopener noreferrer"`.
-- [ ] AC2 — Each icon link has an accessible name (e.g. `aria-label="GitHub profile"`).
+- [ ] AC1 — An introduction paragraph is shown on a wooden plank in the same style as the section title banners (`WoodPlank`), with the text engraved in the wood (`parchment` on `bark`, manifest §6).
+- [ ] AC2 — The text comes from `src/content/hero.ts` (`intro`).
+- [ ] AC3 — From 768px the sign sits next to the enchanted mirror. Below 768px it stacks under the mirror. Nothing overflows at 375px, 768px or 1280px+.
+- [ ] AC4 — The engraved text is readable: at least 1.125rem, line height ≥ 1.5, and WCAG AA contrast on every part of the plank. It stays ≥ 4.5:1 under the film overlay.
 
 **Jira:** —
 
@@ -52,23 +64,30 @@ The first screen: who Ricardo is, what he does, and the two main actions (view p
 ```ts
 // src/content/hero.ts
 export const hero = {
-  greeting: "Hi, I'm",
   name: "Ricardo Martinez",
-  role: "TODO e.g. Full-Stack Software Developer",
-  tagline: "TODO one or two sentences about what you build",
-  photo: { src: "/images/profile.jpg", alt: "Portrait of Ricardo Martinez" }, // optional
+  nickname: "Richi",
+  // role comes from site.role ("Software Engineer")
+  intro: "TODO — final introduction text from the owner",
+  portrait: {
+    label:
+      "Cartoon portrait of Ricardo Martinez as a vintage soccer player in a Colombia shirt",
+  },
 };
 ```
-Social links are defined once in `src/content/social.ts` and shared with spec 007.
 
 ## Design notes
-- Layout: `TODO` (text left and photo right, or centered?) — see `design/`.
-- Mobile: elements stack vertically.
+- All artwork matches the design guidelines in `manifest.md` §6: hand-coded SVG, rubber-hose style, bold ink outlines and the token palette.
+- The hero section keeps its "Introduction" title banner from spec 001 (US-6). The mirror and sign replace the placeholder card.
+- The portrait reference photo is `design/profile_reference.jpeg`. Use it for likeness only; it is never shipped.
+- Layout: mirror and sign side by side from 768px (mirror first), stacked below 768px.
+- The mirror glass is a light surface (for example `mint` or `chalk`), so the name and role use `ink` text.
 
 ## Testing notes
-- Vitest: renders the name in an `<h1>`, the role and the tagline; buttons have the correct `href`.
-- Playwright: "View my work" scrolls to the projects section.
+- Vitest: the `<h1>` shows "Richi" and has the accessible name "Ricardo Martinez (Richi)"; the role and intro render from the content files; the portrait has `role="img"` and its label; the shirt uses the flag tokens; tokens only.
+- Playwright: at 1280px the hair breaks out above the portrait circle; the mirror and sign sit side by side at 1280px and stack at 375px; the page title contains "Software Engineer"; an axe check finds no serious issues.
 
 ## Open questions
-- [ ] Final role title and tagline text.
-- [ ] Include a profile photo?
+- [ ] Final introduction text (US-3). Until the owner provides it, `hero.intro` holds placeholder copy.
+- [x] Profile photo? A hand-coded SVG cartoon portrait instead of a photo (owner decision).
+- [x] Name and role: "Richi" shown, "Ricardo Martinez (Richi)" as the `<h1>` name; role "Software Engineer" (owner decision).
+- [x] CTA buttons and social links: dropped from the hero (owner decision).

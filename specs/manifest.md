@@ -59,7 +59,8 @@ The main idea is a soccer field surrounded by enchanted forest. All the porgfoli
 |------|----------------------|
 | `main.jpg`, `design_2.ai.pdf` | Original layout and soccer metaphor: "RM" logo, profile card, skills as **jerseys** in a team lineup, field markings (penalty boxes, center circle), **grass strips** under section titles, projects grid with filters, contact in a dark-grass zone ending with a goal, project detail modal |
 | `c1`–`c5` | Cuphead-style enchanted forest: watercolor backgrounds, muted greens and browns, mossy ledges, light rays, characters with faces |
-| `profile.jpg` | Ricardo's avatar (used in spec 002) |
+| `profile.jpg` | Old flat avatar from the mockup (superseded) |
+| `profile_reference.jpeg` | Photo of Ricardo: likeness reference for the hand-drawn SVG cartoon portrait (spec 002). Never shipped. |
 
 `c2`–`c5` are screenshots of copyrighted game art. They are **mood references only**. Never ship them or trace them; all artwork in the site must be original.
 
@@ -86,6 +87,7 @@ The main idea is a soccer field surrounded by enchanted forest. All the porgfoli
 | `bark` | `#7A5236` | Tree trunks, wooden sign |
 | `cartoon-red` | `#C8312B` | Accent (mushroom caps, highlights) |
 | `cartoon-yellow` | `#E8B630` | Accent (flowers, eyes, active nav link) |
+| `cartoon-blue` | `#2C5491` | Accent (the blue of the Colombia flag on the hero portrait's shirt) |
 | Heading font | **Lilita One** (Google Fonts, via `next/font`) | Bold vintage-cartoon headings |
 | Body font | **Source Sans 3** (Google Fonts, via `next/font`) | Body text (same family as the mockup) |
 | Theme | Light only | Matches the cartoon look |
