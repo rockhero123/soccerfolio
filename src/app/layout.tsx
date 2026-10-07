@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Lilita_One, Source_Sans_3 } from "next/font/google";
+import FilmOverlay from "@/components/FilmOverlay";
 import ForestBackground from "@/components/ForestBackground";
 import "./globals.css";
 
@@ -33,6 +34,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
         <div className="flex flex-1 flex-col px-(--forest-side) py-(--forest-band)">
           {children}
         </div>
+        <FilmOverlay />
       </body>
     </html>
   );
