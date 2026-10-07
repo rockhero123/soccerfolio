@@ -5,7 +5,7 @@
 export const site = {
   name: "Ricardo Martinez",
   shortName: "RM",
-  role: "Software Developer",
+  role: "Software Engineer",
   nav: [
     { label: "Skills", href: "#skills" },
     { label: "Projects", href: "#projects" },
