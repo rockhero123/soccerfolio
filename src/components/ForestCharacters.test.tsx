@@ -69,6 +69,28 @@ describe("Forest characters — AC1: at least 15 original rubber-hose characters
   );
 
   it.each(characters)(
+    "$file pulls an exaggerated, Cuphead-boss expression",
+    ({ Character }) => {
+      const { container } = render(<Character />);
+      const has = (part: string) =>
+        container.querySelector(`[data-part="${part}"]`) !== null;
+      // At least two dramatic features: fangs, a gaping maw, scowling or
+      // terrified brows, heavy lids or bloodshot eyes.
+      const features = ["teeth", "maw", "brow", "lid", "veins"].filter(has);
+      expect(features.length).toBeGreaterThanOrEqual(2);
+      // Pupils shrink to a manic pinprick (well under the default size).
+      const eyes = [...container.querySelectorAll('[data-part="pie-eye"]')];
+      const pinprick = eyes.some((eye) => {
+        const white = eye.querySelector("ellipse")!;
+        const pupil = eye.querySelector("path.fill-ink")!.getAttribute("d")!;
+        const rx = Number(pupil.match(/A([\d.]+)/)![1]);
+        return rx <= Number(white.getAttribute("rx")) * 0.4;
+      });
+      expect(pinprick).toBe(true);
+    },
+  );
+
+  it.each(characters)(
     "$file is drawn with bold ink outlines in token colours only",
     ({ Character }) => {
       const { container } = render(<Character />);
