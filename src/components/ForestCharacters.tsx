@@ -35,8 +35,9 @@ export default function ForestCharacters() {
         data-forest-characters="top"
         className="absolute inset-x-0 top-0 flex h-(--forest-band) items-end justify-evenly px-2 pb-3"
       >
-        <Owl className={tall} />
+        {/* The acorn hangs from the very top, so it stays at the edge, clear of the header sign. */}
         <Acorn className="h-14 self-start md:h-20 lg:h-24" />
+        <Owl className={tall} />
         <Bird className={tall} />
         <Bee className={wide} />
         <Caterpillar className={wide} />

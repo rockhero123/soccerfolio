@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Lilita_One, Source_Sans_3 } from "next/font/google";
 import FilmOverlay from "@/components/FilmOverlay";
 import ForestBackground from "@/components/ForestBackground";
+import SiteHeader from "@/components/SiteHeader";
 import { site } from "@/content/site";
 import "./globals.css";
 
@@ -38,6 +39,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
           >
             Skip to content
           </a>
+          <SiteHeader />
         </header>
         {/* Clear centre of the forest, where the field sits (spec 001 US-2). */}
         <div className="flex flex-1 flex-col gap-6 px-(--forest-side) py-(--forest-band)">
