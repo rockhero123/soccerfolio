@@ -104,6 +104,7 @@ Defined once as Tailwind theme tokens in `src/app/globals.css`. Components must 
 - **Never put `chalk` (white) text on `pitch` (bright green).** It is only about 2.7:1 and fails WCAG AA.
 - Section title banners with white text use `pitch-dark`. Bright `pitch` banners use `ink` text.
 - Bright `pitch` remains fine for grass, field areas, borders and decoration.
+- **Text on the field always sits on a surface** (a title banner, card, pill or wooden sign), never directly on the painted grass. The grass art (tint, debris, shadows) and the vintage film overlay leave no contrast headroom there. Every pair in the table above stays ≥ 4.5:1 under the film overlay's darkest point.
 
 ## 7. Spec index
 
