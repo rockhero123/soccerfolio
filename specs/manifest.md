@@ -115,7 +115,7 @@ Each spec becomes a **Jira Epic**. Each user story (`US-x`) inside a spec become
 | ID | Spec | Status | Jira Epic |
 |----|------|--------|-----------|
 | 001 | [Foundation: layout, theme and navigation](./001-foundation-layout.md) | approved | [SOC-1](https://soccerfolio.atlassian.net/browse/SOC-1) |
-| 002 | [Hero](./002-hero.md) | draft | — |
+| 002 | [Hero](./002-hero.md) | approved | [SOC-10](https://soccerfolio.atlassian.net/browse/SOC-10) |
 | 004 | [Skills](./004-skills.md) | draft | — |
 | 006 | [Projects](./006-projects.md) | draft | — |
 | 007 | [Contact and footer](./007-contact.md) | draft | — |

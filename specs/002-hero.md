@@ -1,8 +1,8 @@
 ---
 id: "002"
 title: "Hero"
-status: draft
-jira_epic: ""
+status: approved
+jira_epic: "SOC-10"
 depends_on: ["001"]
 ---
 
@@ -35,7 +35,7 @@ Art brief, adapted from the owner's prompt: draw the person in `design/profile_r
 - [ ] AC4 — The portrait is meaningful, not decorative: it has `role="img"` and an accessible name from `src/content/hero.ts` (e.g. "Cartoon portrait of Ricardo Martinez as a vintage soccer player in a Colombia shirt").
 - [ ] AC5 — It uses design tokens only (no raw hex) and contains no raster images.
 
-**Jira:** —
+**Jira:** [SOC-11](https://soccerfolio.atlassian.net/browse/SOC-11)
 
 ### US-2: Enchanted mirror profile card
 **As a** visitor, **I want** the portrait shown in a magical frame with Ricardo's name and role, **so that** I know immediately who he is and what he does.
@@ -47,7 +47,7 @@ Art brief, adapted from the owner's prompt: draw the person in `design/profile_r
 - [ ] AC4 — The role is "Software Engineer" everywhere: `site.role` in `src/content/site.ts` and the page `<title>` use it. Name, nickname and role come from `src/content/hero.ts` / `src/content/site.ts`.
 - [ ] AC5 — Text on the mirror meets WCAG AA and uses an allowed text pair from manifest §6. It stays ≥ 4.5:1 under the film overlay.
 
-**Jira:** —
+**Jira:** [SOC-12](https://soccerfolio.atlassian.net/browse/SOC-12)
 
 ### US-3: Profile introduction sign
 **As a** recruiter, **I want** a short introduction next to the portrait, **so that** I quickly learn Ricardo's background and interests.
@@ -58,7 +58,7 @@ Art brief, adapted from the owner's prompt: draw the person in `design/profile_r
 - [ ] AC3 — From 768px the sign sits next to the enchanted mirror. Below 768px it stacks under the mirror. Nothing overflows at 375px, 768px or 1280px+.
 - [ ] AC4 — The engraved text is readable: at least 1.125rem, line height ≥ 1.5, and WCAG AA contrast on every part of the plank. It stays ≥ 4.5:1 under the film overlay.
 
-**Jira:** —
+**Jira:** [SOC-13](https://soccerfolio.atlassian.net/browse/SOC-13)
 
 ## Content / data model
 ```ts
