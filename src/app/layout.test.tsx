@@ -73,7 +73,9 @@ describe("RootLayout page shell (US-6 AC2)", () => {
     expect(header).toBeGreaterThan(-1);
     expect(main).toBeGreaterThan(header);
     expect(footer).toBeGreaterThan(main);
-    expect(html).toMatch(/<main[^>]*id="main"[^>]*>[\s\S]*<p>child<\/p>[\s\S]*<\/main>/);
+    expect(html).toMatch(
+      /<main[^>]*id="main"[^>]*>[\s\S]*<p>child<\/p>[\s\S]*<\/main>/,
+    );
   });
 
   it("starts the header with a skip link to the main content", () => {
@@ -90,6 +92,10 @@ describe("RootLayout page shell (US-6 AC2)", () => {
 });
 
 describe("RootLayout metadata (AC3)", () => {
+  it("titles the page with the name and the role Software Engineer (spec 002 US-2 AC4)", () => {
+    expect(metadata.title).toBe("Ricardo Martinez — Software Engineer");
+  });
+
   it("replaces the create-next-app metadata", () => {
     expect(metadata.title).not.toMatch(/create next app/i);
     expect(metadata.description).not.toMatch(/create next app/i);

@@ -66,6 +66,16 @@
 }
 
 /*
+ * Metallic silver for the hero's enchanted mirror (spec 002 US-2) →
+ * fill-silver, from-silver-light, … Mixed from ink and chalk — no new hex values.
+ */
+@theme static {
+  --color-silver-light: color-mix(in oklab, var(--color-ink) 8%, var(--color-chalk));
+  --color-silver: color-mix(in oklab, var(--color-ink) 30%, var(--color-chalk));
+  --color-silver-shade: color-mix(in oklab, var(--color-ink) 52%, var(--color-chalk));
+}
+
+/*
  * `--forest-side` / `--forest-band` size the forest frame; the page content is
  * padded by the same amounts so it sits in the clear centre (the field).
  */
