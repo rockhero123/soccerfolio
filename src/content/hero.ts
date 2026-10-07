@@ -4,6 +4,6 @@
 export const hero = {
   portrait: {
     label:
-      "Cartoon portrait of Ricardo Martinez as a speedy vintage soccer player in a Colombia shirt, grinning and waving",
+      "Cartoon portrait of Ricardo Martinez as a speedy vintage soccer player in a yellow Colombia shirt, with a roguish grin",
   },
 } as const;
