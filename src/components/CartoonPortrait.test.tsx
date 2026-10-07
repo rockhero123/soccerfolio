@@ -34,44 +34,42 @@ describe("CartoonPortrait — AC1: an original rubber-hose SVG portrait of Ricar
     );
   });
 
-  it("has huge pie-cut eyes, raised brows, an enormous toothy grin, beard, moustache, short hair and big ears", () => {
+  it("keeps his features: huge pie-cut eyes, strong brows, short hair, moustache, partial beard, ears", () => {
     const { svg, part } = renderPortrait();
     const eyes = svg.querySelectorAll('[data-part="pie-eye"]');
     expect(eyes).toHaveLength(2);
-    eyes.forEach((eye) => {
+    eyes.forEach((eye) =>
       expect(eye.querySelector("path.fill-ink")!.getAttribute("d")).toMatch(
         /A[\d.]+ [\d.]+ 0 1 1 /,
-      );
-      // Tall cartoon eyes.
-      const white = eye.querySelector("ellipse")!;
-      expect(Number(white.getAttribute("ry"))).toBeGreaterThan(
-        Number(white.getAttribute("rx")),
-      );
-    });
+      ),
+    );
     expect(svg.querySelectorAll('[data-part="brow"]')).toHaveLength(2);
-    for (const name of [
-      "beard",
-      "moustache",
-      "hair",
-      "grin",
-      "teeth",
-      "tongue",
-    ]) {
+    for (const name of ["hair", "moustache", "beard", "head"]) {
       expect(part(name), name).not.toBeNull();
     }
-    expect(part("tongue")).toHaveClass("fill-cartoon-red");
     expect(svg.querySelectorAll("ellipse.fill-skin")).toHaveLength(2);
   });
 
-  it("looks fast and epic: a sunburst, speed lines, excitement marks, smoke and a waving glove", () => {
+  it("draws the two brows as exact mirror images", () => {
+    const { svg } = renderPortrait();
+    const [left, right] = [...svg.querySelectorAll('[data-part="brow"]')];
+    expect(left.getAttribute("d")).toBe(right.getAttribute("d"));
+    expect(left.parentElement).toHaveAttribute(
+      "transform",
+      "translate(236 0) scale(-1 1)",
+    );
+  });
+
+  it("pulls a roguish smirk: clenched teeth with one corner raised", () => {
     const { part } = renderPortrait();
-    for (const name of [
-      "sunburst",
-      "speed-lines",
-      "excitement",
-      "smoke",
-      "glove",
-    ]) {
+    expect(part("grin")).toHaveClass("fill-parchment");
+    expect(part("teeth")).not.toBeNull();
+    expect(part("smirk")).not.toBeNull();
+  });
+
+  it("looks fast and epic: a sunburst, speed lines, excitement marks and smoke", () => {
+    const { part } = renderPortrait();
+    for (const name of ["sunburst", "speed-lines", "excitement", "smoke"]) {
       expect(part(name), name).not.toBeNull();
     }
     expect(
@@ -86,28 +84,11 @@ describe("CartoonPortrait — AC1: an original rubber-hose SVG portrait of Ricar
   });
 });
 
-describe("CartoonPortrait — AC2: a Colombia soccer shirt", () => {
-  it("shows yellow, blue and red flag bands inside the shirt", () => {
-    const { svg, part } = renderPortrait();
+describe("CartoonPortrait — AC2: the yellow Colombia shirt", () => {
+  it("wears a cartoon-yellow shirt with a round collar", () => {
+    const { part } = renderPortrait();
     expect(part("shirt")).toHaveClass("fill-cartoon-yellow");
-    const flag = part("flag");
-    const bands = [...flag.querySelectorAll("rect")].map((r) =>
-      r.getAttribute("class"),
-    );
-    expect(bands).toEqual(["fill-cartoon-blue", "fill-cartoon-red"]);
-    // The bands are clipped to the shirt shape.
-    const clip = flag.getAttribute("clip-path")!;
-    const shirtClip = svg.querySelector(`clipPath${clip.slice(4, -1)} path`)!;
-    expect(shirtClip.getAttribute("d")).toBe(part("shirt").getAttribute("d"));
-  });
-
-  it("defines cartoon-blue in globals.css with the manifest §6 value", () => {
-    const manifest = read("specs/manifest.md").match(
-      /\| `cartoon-blue` \| `(#[0-9A-Fa-f]{6})`/,
-    )![1];
-    expect(read("src/app/globals.css")).toContain(
-      `--color-cartoon-blue: ${manifest.toLowerCase()};`,
-    );
+    expect(part("collar")).not.toBeNull();
   });
 });
 
@@ -116,17 +97,11 @@ describe("CartoonPortrait — AC3: clipped to a circle, with the hair breaking o
     const { svg, part } = renderPortrait();
     const circle = svg.querySelector("clipPath circle")!;
     expect(
-      [
-        circle.getAttribute("cx"),
-        circle.getAttribute("cy"),
-        circle.getAttribute("r"),
-      ].map(Number),
+      ["cx", "cy", "r"].map((a) => Number(circle.getAttribute(a))),
     ).toEqual([PORTRAIT_CIRCLE.cx, PORTRAIT_CIRCLE.cy, PORTRAIT_CIRCLE.r]);
-    for (const name of ["shirt", "beard", "moustache"]) {
-      expect(
-        part(name).closest(`[clip-path="url(#${circle.parentElement!.id})"]`),
-        name,
-      ).not.toBeNull();
+    const clip = `[clip-path="url(#${circle.parentElement!.id})"]`;
+    for (const name of ["shirt", "beard", "moustache", "head"]) {
+      expect(part(name).closest(clip), name).not.toBeNull();
     }
   });
 
@@ -134,10 +109,9 @@ describe("CartoonPortrait — AC3: clipped to a circle, with the hair breaking o
     const { svg, part } = renderPortrait();
     const hair = part("hair");
     expect(hair.closest("[clip-path]")).toBeNull();
-    // Drawn after the circle outline, so it sits on top of it.
-    const frame = part("frame");
     expect(
-      frame.compareDocumentPosition(hair) & Node.DOCUMENT_POSITION_FOLLOWING,
+      part("frame").compareDocumentPosition(hair) &
+        Node.DOCUMENT_POSITION_FOLLOWING,
     ).toBeTruthy();
     expect(topOf(hair.getAttribute("d")!)).toBeLessThan(
       PORTRAIT_CIRCLE.cy - PORTRAIT_CIRCLE.r - 10,
@@ -145,12 +119,10 @@ describe("CartoonPortrait — AC3: clipped to a circle, with the hair breaking o
     expect(svg).toHaveClass("overflow-visible");
   });
 
-  it("lets the smoke and the waving glove burst out of the circle too", () => {
+  it("lets the smoke burst out of the circle too", () => {
     const { part } = renderPortrait();
     const { cx, cy, r } = PORTRAIT_CIRCLE;
-    for (const name of ["smoke", "glove"]) {
-      expect(part(name).closest("[clip-path]"), name).toBeNull();
-    }
+    expect(part("smoke").closest("[clip-path]")).toBeNull();
     const outside = [...part("smoke").querySelectorAll("circle")].some((c) => {
       const [x, y, size] = ["cx", "cy", "r"].map((a) =>
         Number(c.getAttribute(a)),

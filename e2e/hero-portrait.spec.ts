@@ -37,21 +37,13 @@ test("AC4 — the portrait is announced as one image with its label", async ({
   );
 });
 
-test("AC2 — the shirt shows the three Colombia flag colours", async ({
-  page,
-}) => {
+test("AC2 — he wears the yellow Colombia shirt", async ({ page }) => {
   await page.goto("/");
   const portrait = page.getByRole("img", { name: label });
   await expect(portrait.locator('[data-portrait-part="shirt"]')).toHaveCSS(
     "fill",
     "rgb(232, 182, 48)",
   );
-  await expect(
-    portrait.locator('[data-portrait-part="flag"] rect').nth(0),
-  ).toHaveCSS("fill", "rgb(44, 84, 145)");
-  await expect(
-    portrait.locator('[data-portrait-part="flag"] rect').nth(1),
-  ).toHaveCSS("fill", "rgb(200, 49, 43)");
 });
 
 test("an axe scan finds no serious issues with the portrait", async ({
