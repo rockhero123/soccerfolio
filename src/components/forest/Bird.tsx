@@ -1,5 +1,6 @@
+import Brow from "./parts/Brow";
 import CharacterSvg from "./parts/CharacterSvg";
-import { detail } from "./parts/ink";
+import { detail, noStroke } from "./parts/ink";
 import PieEye from "./parts/PieEye";
 
 /** A round little songbird with huge pie-cut eyes and a chirpy beak. */
@@ -21,9 +22,20 @@ export default function Bird({ className }: { className?: string }) {
         className="fill-bark"
       />
       <path d="M48 24Q51 12 59 18" className={`fill-none ${detail}`} />
-      <PieEye cx={57} cy={38} rx={9} ry={11} look={[2, 1]} />
-      <PieEye cx={75} cy={40} rx={8} ry={10} look={[2, 1]} />
-      <path d="M79 50L97 55L79 61Z" className="fill-cartoon-yellow" />
+      <Brow from={[63, 24]} to={[49, 18]} thick={4} />
+      <Brow from={[70, 26]} to={[85, 21]} thick={4} />
+      <PieEye cx={57} cy={37} rx={10} ry={12} pupil={0.25} veins />
+      <PieEye cx={76} cy={39} rx={9} ry={11} pupil={0.25} veins look={[1, 0]} />
+      <path d="M78 46L97 52L78 63Z" className="fill-ink" />
+      <ellipse
+        cx={86}
+        cy={57}
+        rx={5}
+        ry={3}
+        className={`fill-cartoon-red ${noStroke}`}
+      />
+      <path d="M78 46L99 49L80 53Z" className="fill-cartoon-yellow" />
+      <path d="M80 58L96 65L78 63Z" className="fill-cartoon-yellow" />
     </CharacterSvg>
   );
 }

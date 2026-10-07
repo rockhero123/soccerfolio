@@ -1,5 +1,6 @@
 import CharacterSvg from "./parts/CharacterSvg";
 import { detail, noStroke } from "./parts/ink";
+import Maw from "./parts/Maw";
 import PieEye from "./parts/PieEye";
 
 /** A tiny, polka-dotted ladybug with a big grin on her black head. */
@@ -31,11 +32,24 @@ export default function Ladybug({ className }: { className?: string }) {
           className={`fill-ink ${noStroke}`}
         />
       ))}
-      <PieEye cx={75} cy={40} rx={5} ry={6.5} look={[1, 0]} />
-      <PieEye cx={86} cy={41} rx={4.5} ry={6} look={[1, 0]} />
-      <path
-        d="M73 51Q80 57 88 50"
-        className={`fill-none stroke-parchment ${detail}`}
+      <PieEye cx={73} cy={39} rx={6} ry={7.5} pupil={0.25} veins />
+      <PieEye
+        cx={85}
+        cy={40}
+        rx={5}
+        ry={6.5}
+        pupil={0.25}
+        veins
+        look={[1, 0]}
+      />
+      <Maw
+        cx={79}
+        cy={49}
+        width={18}
+        curve={2}
+        open={4}
+        teeth={[4, 3]}
+        fang={4}
       />
     </CharacterSvg>
   );

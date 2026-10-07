@@ -1,6 +1,7 @@
+import Brow from "./parts/Brow";
 import CharacterSvg from "./parts/CharacterSvg";
-import Cheek from "./parts/Cheek";
-import { detail, noStroke } from "./parts/ink";
+import { noStroke } from "./parts/ink";
+import Maw from "./parts/Maw";
 import PieEye from "./parts/PieEye";
 
 /** A bashful hedgehog peeking out from a back of rubbery spikes. */
@@ -30,10 +31,25 @@ export default function Hedgehog({ className }: { className?: string }) {
         className="fill-forest-bark-light"
       />
       <circle cx={115} cy={65} r={4.5} className={`fill-ink ${noStroke}`} />
-      <PieEye cx={92} cy={55} rx={5} ry={7} look={[1, 1]} />
-      <path d="M86 45Q92 42 98 46" className={`fill-none ${detail}`} />
-      <path d="M98 67Q104 71 109 66" className={`fill-none ${detail}`} />
-      <Cheek cx={94} cy={65} r={3.5} />
+      <PieEye
+        cx={92}
+        cy={55}
+        rx={6.5}
+        ry={8.5}
+        pupil={0.3}
+        veins
+        lid={{ angle: 25, drop: 0.35, fill: "fill-forest-bark-light" }}
+      />
+      <Brow from={[97, 46]} to={[83, 41]} thick={4} />
+      <Maw
+        cx={103}
+        cy={65}
+        width={24}
+        curve={2}
+        open={6}
+        teeth={[3, 2]}
+        fang={5}
+      />
     </CharacterSvg>
   );
 }

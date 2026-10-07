@@ -1,7 +1,8 @@
 import { leafPath } from "../forest-background/shapes";
+import Brow from "./parts/Brow";
 import CharacterSvg from "./parts/CharacterSvg";
-import Cheek from "./parts/Cheek";
-import { detail, stalkCasing, stalkCore } from "./parts/ink";
+import { stalkCasing, stalkCore } from "./parts/ink";
+import Maw from "./parts/Maw";
 import PieEye from "./parts/PieEye";
 
 /** A giddy little plant: a round bud with a face, leaf arms and a leafy top. */
@@ -38,11 +39,28 @@ export default function Sprout({ className }: { className?: string }) {
         ry={20}
         className="fill-forest-mid-light"
       />
-      <PieEye cx={42} cy={66} rx={5} ry={7} look={[-1, 1]} />
-      <PieEye cx={58} cy={66} rx={5} ry={7} look={[-1, 1]} />
-      <path d="M41 77Q50 90 59 77Z" className={`fill-cartoon-red ${detail}`} />
-      <Cheek cx={35} cy={76} r={3.5} />
-      <Cheek cx={65} cy={76} r={3.5} />
+      <Brow from={[47, 58]} to={[33, 52]} thick={4} />
+      <Brow from={[53, 58]} to={[67, 52]} thick={4} />
+      <PieEye cx={42} cy={65} rx={6} ry={8} pupil={0.28} veins />
+      <PieEye
+        cx={58}
+        cy={64}
+        rx={6.5}
+        ry={8.5}
+        pupil={0.25}
+        veins
+        look={[1, 0]}
+      />
+      <Maw
+        cx={50}
+        cy={75}
+        width={34}
+        curve={-1}
+        open={10}
+        teeth={[5, 4]}
+        fang={6}
+        tongue
+      />
     </CharacterSvg>
   );
 }

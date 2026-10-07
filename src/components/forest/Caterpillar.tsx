@@ -1,6 +1,7 @@
+import Brow from "./parts/Brow";
 import CharacterSvg from "./parts/CharacterSvg";
-import Cheek from "./parts/Cheek";
 import { detail, noStroke } from "./parts/ink";
+import Maw from "./parts/Maw";
 import PieEye from "./parts/PieEye";
 
 /** A wiggly caterpillar: bouncy moss segments and a beaming yellow head. */
@@ -26,11 +27,28 @@ export default function Caterpillar({ className }: { className?: string }) {
       <circle cx={77} cy={4} r={3} className={`fill-ink ${noStroke}`} />
       <circle cx={117} cy={6} r={3} className={`fill-ink ${noStroke}`} />
       <circle cx={96} cy={38} r={22} className="fill-cartoon-yellow" />
-      <PieEye cx={89} cy={34} rx={5} ry={7} look={[1, 0]} />
-      <PieEye cx={103} cy={34} rx={5} ry={7} look={[1, 0]} />
-      <path d="M85 46Q96 58 107 46Z" className={`fill-cartoon-red ${detail}`} />
-      <Cheek cx={82} cy={44} r={3.5} />
-      <Cheek cx={110} cy={44} r={3.5} />
+      <Brow from={[93, 24]} to={[81, 19]} thick={4} />
+      <Brow from={[99, 24]} to={[111, 19]} thick={4} />
+      <PieEye cx={88} cy={32} rx={6.5} ry={8.5} pupil={0.25} veins />
+      <PieEye
+        cx={104}
+        cy={32}
+        rx={6.5}
+        ry={8.5}
+        pupil={0.25}
+        veins
+        look={[1, 1]}
+      />
+      <Maw
+        cx={96}
+        cy={45}
+        width={34}
+        curve={0}
+        open={10}
+        teeth={[5, 4]}
+        fang={6}
+        tongue
+      />
     </CharacterSvg>
   );
 }

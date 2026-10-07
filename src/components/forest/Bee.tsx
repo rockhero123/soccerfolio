@@ -1,6 +1,8 @@
 import { useId } from "react";
+import Brow from "./parts/Brow";
 import CharacterSvg from "./parts/CharacterSvg";
 import { detail, noStroke } from "./parts/ink";
+import Maw from "./parts/Maw";
 import PieEye from "./parts/PieEye";
 
 /** A plump, buzzing bee with striped fuzz and see-through wings. */
@@ -45,9 +47,33 @@ export default function Bee({ className }: { className?: string }) {
       />
       <circle cx={79} cy={11} r={2.5} className={`fill-ink ${noStroke}`} />
       <circle cx={93} cy={18} r={2.5} className={`fill-ink ${noStroke}`} />
-      <PieEye cx={72} cy={44} rx={5.5} ry={7.5} look={[1, 0]} />
-      <PieEye cx={84} cy={46} rx={5} ry={7} look={[1, 0]} />
-      <path d="M72 58Q79 64 86 56" className={`fill-none ${detail}`} />
+      <Brow from={[77, 33]} to={[65, 29]} thick={3.5} />
+      <Brow from={[82, 35]} to={[93, 31]} thick={3.5} />
+      <PieEye
+        cx={72}
+        cy={43}
+        rx={6.5}
+        ry={8.5}
+        pupil={0.3}
+        lid={{ angle: 20, drop: 0.35, fill: "fill-cartoon-yellow" }}
+      />
+      <PieEye
+        cx={85}
+        cy={45}
+        rx={6}
+        ry={8}
+        pupil={0.3}
+        lid={{ angle: -20, drop: 0.35, fill: "fill-cartoon-yellow" }}
+      />
+      <Maw
+        cx={79}
+        cy={56}
+        width={20}
+        curve={0}
+        open={5}
+        teeth={[3, 3]}
+        fang={4.5}
+      />
     </CharacterSvg>
   );
 }

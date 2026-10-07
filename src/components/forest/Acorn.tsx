@@ -1,5 +1,7 @@
+import Brow from "./parts/Brow";
 import CharacterSvg from "./parts/CharacterSvg";
-import { detail, noStroke } from "./parts/ink";
+import { detail } from "./parts/ink";
+import Maw from "./parts/Maw";
 import PieEye from "./parts/PieEye";
 
 /** A surprised acorn dangling from the canopy on its stalk. */
@@ -20,18 +22,18 @@ export default function Acorn({ className }: { className?: string }) {
         className={`fill-none ${detail}`}
         strokeOpacity={0.6}
       />
-      <PieEye cx={28} cy={64} rx={4.5} ry={6.5} look={[0, -1]} />
-      <PieEye cx={42} cy={64} rx={4.5} ry={6.5} look={[0, -1]} />
-      <path
-        d="M22 54Q28 50 32 54M38 54Q42 50 48 54"
-        className={`fill-none ${detail}`}
-      />
-      <ellipse
+      <Brow from={[32, 49]} to={[20, 54]} thick={3.5} />
+      <Brow from={[38, 49]} to={[50, 54]} thick={3.5} />
+      <PieEye cx={28} cy={62} rx={6} ry={8} pupil={0.25} veins />
+      <PieEye cx={42} cy={62} rx={6} ry={8} pupil={0.25} veins />
+      <Maw
         cx={35}
-        cy={81}
-        rx={4}
-        ry={5}
-        className={`fill-ink ${noStroke}`}
+        cy={75}
+        width={16}
+        curve={-2}
+        open={11}
+        teeth={[2, 0]}
+        fang={4}
       />
     </CharacterSvg>
   );

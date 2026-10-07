@@ -1,6 +1,5 @@
 import CharacterSvg from "./parts/CharacterSvg";
-import Cheek from "./parts/Cheek";
-import { detail } from "./parts/ink";
+import Maw from "./parts/Maw";
 import PieEye from "./parts/PieEye";
 
 /** A grinning frog with bulging eyes and a mouth from cheek to cheek. */
@@ -12,14 +11,34 @@ export default function Frog({ className }: { className?: string }) {
       <path d="M8 76C4 50 24 30 55 30S106 50 102 76Z" className="fill-moss" />
       <ellipse cx={30} cy={78} rx={10} ry={4} className="fill-moss" />
       <ellipse cx={80} cy={78} rx={10} ry={4} className="fill-moss" />
-      <PieEye cx={34} cy={24} rx={9} ry={10} look={[-1, 1]} />
-      <PieEye cx={76} cy={24} rx={9} ry={10} look={[-1, 1]} />
-      <path
-        d="M24 50Q55 74 86 50Q55 62 24 50Z"
-        className={`fill-cartoon-red ${detail}`}
+      <PieEye
+        cx={34}
+        cy={24}
+        rx={10}
+        ry={11}
+        pupil={0.25}
+        veins
+        look={[-3, 0]}
       />
-      <Cheek cx={19} cy={52} r={5} />
-      <Cheek cx={91} cy={52} r={5} />
+      <PieEye
+        cx={76}
+        cy={24}
+        rx={10}
+        ry={11}
+        pupil={0.25}
+        veins
+        look={[3, 2]}
+      />
+      <Maw
+        cx={55}
+        cy={46}
+        width={70}
+        curve={2}
+        open={17}
+        teeth={[7, 6]}
+        fang={8}
+        tongue
+      />
     </CharacterSvg>
   );
 }

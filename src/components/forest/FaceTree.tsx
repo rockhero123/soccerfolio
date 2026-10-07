@@ -1,7 +1,8 @@
 import { blobPath, leafPath, trunkPath } from "../forest-background/shapes";
+import Brow from "./parts/Brow";
 import CharacterSvg from "./parts/CharacterSvg";
-import Cheek from "./parts/Cheek";
-import { detail, noStroke, stalkCasing, stalkCore } from "./parts/ink";
+import { noStroke, stalkCasing, stalkCore } from "./parts/ink";
+import Maw from "./parts/Maw";
 import PieEye from "./parts/PieEye";
 
 /** A jolly old tree with a face, bushy brows and rubber-hose branch arms. */
@@ -34,19 +35,36 @@ export default function FaceTree({ className }: { className?: string }) {
         d={blobPath(58, 38, 40, 26, 7, 23)}
         className={`fill-moss ${noStroke}`}
       />
-      <PieEye cx={54} cy={112} rx={8} ry={11} look={[1, 1]} />
-      <PieEye cx={78} cy={112} rx={8} ry={11} look={[1, 1]} />
-      <path d="M42 96Q54 88 64 98M68 98Q78 88 90 96" className="fill-none" />
-      <path d="M48 136Q66 160 84 136Q66 146 48 136Z" className="fill-ink" />
-      <rect
-        x={61}
-        y={139}
-        width={8}
-        height={7}
-        className={`fill-parchment ${detail}`}
+      <PieEye
+        cx={54}
+        cy={110}
+        rx={9}
+        ry={12}
+        pupil={0.25}
+        veins
+        lid={{ angle: 20, drop: 0.3, fill: "fill-bark" }}
       />
-      <Cheek cx={42} cy={130} r={5} />
-      <Cheek cx={90} cy={130} r={5} />
+      <PieEye
+        cx={78}
+        cy={110}
+        rx={9}
+        ry={12}
+        pupil={0.25}
+        veins
+        lid={{ angle: -20, drop: 0.3, fill: "fill-bark" }}
+      />
+      <Brow from={[63, 97]} to={[39, 88]} thick={7} />
+      <Brow from={[69, 97]} to={[93, 88]} thick={7} />
+      <Maw
+        cx={66}
+        cy={133}
+        width={44}
+        curve={-3}
+        open={14}
+        teeth={[5, 5]}
+        fang={9}
+        tongue
+      />
       <ellipse
         cx={82}
         cy={172}

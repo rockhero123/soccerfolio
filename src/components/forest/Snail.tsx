@@ -1,6 +1,6 @@
 import CharacterSvg from "./parts/CharacterSvg";
-import Cheek from "./parts/Cheek";
 import { detail } from "./parts/ink";
+import Maw from "./parts/Maw";
 import PieEye from "./parts/PieEye";
 
 /** A slow, smiling snail with a swirly shell and eyes on wobbly stalks. */
@@ -20,10 +20,26 @@ export default function Snail({ className }: { className?: string }) {
         d="M50 50m0-6a6 6 0 1 1-6 6a12 12 0 1 1 12 12a18 18 0 1 1-18-18a24 24 0 1 1 24 24"
         className={`fill-none ${detail}`}
       />
-      <PieEye cx={93} cy={14} rx={6} ry={7.5} look={[1, 1]} />
-      <PieEye cx={117} cy={16} rx={6} ry={7.5} look={[1, 1]} />
-      <path d="M94 62Q101 69 108 60" className={`fill-none ${detail}`} />
-      <Cheek cx={104} cy={54} r={3.5} />
+      <PieEye cx={93} cy={14} rx={8} ry={9.5} pupil={0.25} veins />
+      <PieEye
+        cx={117}
+        cy={16}
+        rx={6}
+        ry={7.5}
+        pupil={0.3}
+        veins
+        look={[1, 1]}
+      />
+      <Maw
+        cx={101}
+        cy={59}
+        width={22}
+        curve={1}
+        open={7}
+        teeth={[3, 2]}
+        fang={5}
+        tongue
+      />
     </CharacterSvg>
   );
 }

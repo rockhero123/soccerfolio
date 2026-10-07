@@ -1,6 +1,7 @@
 import { leafPath } from "../forest-background/shapes";
 import CharacterSvg from "./parts/CharacterSvg";
 import { detail } from "./parts/ink";
+import Maw from "./parts/Maw";
 import PieEye from "./parts/PieEye";
 
 /** A sleepy-eyed pinecone in a coat of scales, with a leafy top. */
@@ -28,13 +29,31 @@ export default function Pinecone({ className }: { className?: string }) {
         className="fill-bark"
       />
       <path d={scales} className={`fill-none ${detail}`} />
-      <PieEye cx={28} cy={50} rx={5} ry={6} look={[0, 2]} />
-      <PieEye cx={42} cy={50} rx={5} ry={6} look={[0, 2]} />
-      <path
-        d="M22 46Q28 43 33 47M37 47Q42 43 48 46"
-        className={`fill-none ${detail}`}
+      <PieEye
+        cx={28}
+        cy={50}
+        rx={6}
+        ry={7}
+        pupil={0.3}
+        lid={{ angle: 15, drop: 0.45, fill: "fill-bark" }}
       />
-      <path d="M29 62Q35 67 41 62" className={`fill-none ${detail}`} />
+      <PieEye
+        cx={42}
+        cy={50}
+        rx={6}
+        ry={7}
+        pupil={0.3}
+        lid={{ angle: -15, drop: 0.45, fill: "fill-bark" }}
+      />
+      <Maw
+        cx={35}
+        cy={61}
+        width={28}
+        curve={3}
+        open={5}
+        teeth={[4, 0]}
+        fang={5}
+      />
     </CharacterSvg>
   );
 }

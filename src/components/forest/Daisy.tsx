@@ -1,7 +1,7 @@
 import { leafPath } from "../forest-background/shapes";
 import CharacterSvg from "./parts/CharacterSvg";
-import Cheek from "./parts/Cheek";
-import { detail, stalkCasing, stalkCore } from "./parts/ink";
+import { stalkCasing, stalkCore } from "./parts/ink";
+import Maw from "./parts/Maw";
 import PieEye from "./parts/PieEye";
 
 /** A daisy with eyes: parchment petals around a sunny, smiling face. */
@@ -33,11 +33,31 @@ export default function Daisy({ className }: { className?: string }) {
         />
       ))}
       <circle cx={45} cy={44} r={18} className="fill-cartoon-yellow" />
-      <PieEye cx={38} cy={41} rx={4.5} ry={6.5} look={[0, 1]} />
-      <PieEye cx={52} cy={41} rx={4.5} ry={6.5} look={[0, 1]} />
-      <path d="M37 51Q45 60 53 51" className={`fill-none ${detail}`} />
-      <Cheek cx={33} cy={50} r={3} />
-      <Cheek cx={57} cy={50} r={3} />
+      <PieEye
+        cx={38}
+        cy={38}
+        rx={5.5}
+        ry={7}
+        pupil={0.3}
+        lid={{ angle: 20, drop: 0.3, fill: "fill-cartoon-yellow" }}
+      />
+      <PieEye
+        cx={52}
+        cy={38}
+        rx={5.5}
+        ry={7}
+        pupil={0.3}
+        lid={{ angle: -20, drop: 0.3, fill: "fill-cartoon-yellow" }}
+      />
+      <Maw
+        cx={45}
+        cy={47}
+        width={28}
+        curve={2}
+        open={8}
+        teeth={[4, 4]}
+        fang={5}
+      />
     </CharacterSvg>
   );
 }

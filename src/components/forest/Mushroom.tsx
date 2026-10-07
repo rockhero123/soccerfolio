@@ -1,6 +1,7 @@
+import Brow from "./parts/Brow";
 import CharacterSvg from "./parts/CharacterSvg";
-import Cheek from "./parts/Cheek";
 import { detail } from "./parts/ink";
+import Maw from "./parts/Maw";
 import PieEye from "./parts/PieEye";
 
 /** A cheerful toadstool with a spotted red cap and a big open smile. */
@@ -29,11 +30,28 @@ export default function Mushroom({ className }: { className?: string }) {
           className={`fill-parchment ${detail}`}
         />
       ))}
-      <PieEye cx={43} cy={79} rx={6} ry={8} look={[1, 1]} />
-      <PieEye cx={57} cy={79} rx={6} ry={8} look={[1, 1]} />
-      <path d="M41 91Q50 104 59 91Z" className={`fill-cartoon-red ${detail}`} />
-      <Cheek cx={36} cy={91} />
-      <Cheek cx={64} cy={91} />
+      <Brow from={[47, 66]} to={[33, 62]} thick={4} />
+      <Brow from={[53, 64]} to={[65, 58]} thick={4} />
+      <PieEye cx={42} cy={77} rx={7} ry={9} pupil={0.3} veins />
+      <PieEye
+        cx={58}
+        cy={75}
+        rx={5}
+        ry={6.5}
+        pupil={0.35}
+        veins
+        look={[1, 1]}
+      />
+      <Maw
+        cx={50}
+        cy={89}
+        width={30}
+        curve={-2}
+        open={10}
+        teeth={[4, 3]}
+        fang={6}
+        tongue
+      />
     </CharacterSvg>
   );
 }
