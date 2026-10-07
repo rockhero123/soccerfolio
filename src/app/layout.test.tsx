@@ -1,4 +1,5 @@
 import { isValidElement, type ReactElement } from "react";
+import { renderToStaticMarkup } from "react-dom/server";
 import { describe, expect, it, vi } from "vitest";
 
 const fontCalls = vi.hoisted(() => ({
@@ -51,6 +52,40 @@ describe("RootLayout fonts (AC2)", () => {
     expect(html.props.className).toContain("source-variable");
     const body = html.props.children as ReactElement<{ className: string }>;
     expect(body.props.className).toContain("font-body");
+  });
+});
+
+describe("RootLayout page shell (US-6 AC2)", () => {
+  const markup = () =>
+    renderToStaticMarkup(
+      RootLayout({
+        children: <p>child</p>,
+        params: Promise.resolve({}),
+      } as Parameters<typeof RootLayout>[0]),
+    );
+
+  it("uses semantic <header>, <main> and <footer>, in that order, with lang=en", () => {
+    const html = markup();
+    expect(html).toMatch(/^<html lang="en"/);
+    const header = html.indexOf("<header");
+    const main = html.indexOf("<main");
+    const footer = html.indexOf("<footer");
+    expect(header).toBeGreaterThan(-1);
+    expect(main).toBeGreaterThan(header);
+    expect(footer).toBeGreaterThan(main);
+    expect(html).toMatch(/<main[^>]*id="main"[^>]*>[\s\S]*<p>child<\/p>[\s\S]*<\/main>/);
+  });
+
+  it("starts the header with a skip link to the main content", () => {
+    expect(markup()).toMatch(
+      /<header><a href="#main"[^>]*>Skip to content<\/a>/,
+    );
+  });
+
+  it("closes the page with a footer sign on a parchment surface", () => {
+    expect(markup()).toMatch(
+      /<footer[^>]*><p class="[^"]*bg-parchment[^"]*text-ink/,
+    );
   });
 });
 
