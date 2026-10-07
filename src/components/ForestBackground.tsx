@@ -1,3 +1,4 @@
+import ForestCharacters from "./ForestCharacters";
 import ForestBandTile, { BAND_TILE } from "./forest-background/ForestBandTile";
 import ForestSideTile, { SIDE_TILE } from "./forest-background/ForestSideTile";
 import InkFilter from "./forest-background/InkFilter";
@@ -87,6 +88,8 @@ export default function ForestBackground() {
       >
         <rect width="100%" height="100%" fill={`url(#${BAND_BOTTOM_ID})`} />
       </svg>
+
+      <ForestCharacters />
     </div>
   );
 }
