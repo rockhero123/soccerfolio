@@ -14,7 +14,7 @@ export default function Home() {
   return (
     <SoccerField
       contact={
-        <PageSection id={contact.id} title={contact.title} tone="bright">
+        <PageSection id={contact.id} title={contact.title}>
           <PlaceholderCard>
             <p className="font-body text-lg">
               Contact details are coming soon.
