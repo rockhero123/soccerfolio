@@ -12,6 +12,13 @@ const PLANK =
 export const engraved =
   "text-parchment [text-shadow:-1px_-2px_0_var(--color-ink),1px_1.5px_0_var(--color-forest-bark-light)]";
 
+/**
+ * The same engraving for running text: a dark cut edge above and a shadowed
+ * groove below, so the letters look carved into the wood and stay crisp.
+ */
+export const engravedText =
+  "text-parchment [text-shadow:-1px_-1.5px_0_var(--color-ink),1px_1.5px_0_var(--color-forest-bark-shade)]";
+
 /** A round nail head hammered into the plank. */
 function Nail({ side }: { side: "left" | "right" }) {
   return (
