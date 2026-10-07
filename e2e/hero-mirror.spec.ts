@@ -15,9 +15,10 @@ test("AC1 — the portrait sits in an enchanted mirror with grass at its foot", 
   const box = (await frame.boundingBox())!;
   const grass = (await frame.locator("[data-grass-strip]").boundingBox())!;
   expect(grass.y + grass.height).toBeCloseTo(box.y + box.height, 0);
-  await expect(frame.locator(".bg-cartoon-yellow")).toHaveCSS(
-    "background-color",
-    "rgb(232, 182, 48)",
+  // A polished silver frame: a metallic gradient.
+  await expect(frame.locator(".bg-silver")).toHaveCSS(
+    "background-image",
+    /linear-gradient/,
   );
 });
 
