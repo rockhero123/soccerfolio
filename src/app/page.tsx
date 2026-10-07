@@ -1,3 +1,4 @@
+import CartoonPortrait from "@/components/CartoonPortrait";
 import PageSection from "@/components/PageSection";
 import PlaceholderCard from "@/components/PlaceholderCard";
 import SoccerField from "@/components/SoccerField";
@@ -26,6 +27,7 @@ export default function Home() {
       <div className="flex flex-col gap-16">
         <PageSection id={hero.id} title={hero.title}>
           <PlaceholderCard>
+            <CartoonPortrait className="mx-auto mt-4 mb-2 w-44 md:w-52" />
             <h1 className="font-heading text-4xl">{site.name}</h1>
             <p className="mt-2 font-body text-lg">{site.role}</p>
           </PlaceholderCard>

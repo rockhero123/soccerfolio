@@ -19,6 +19,7 @@
   --color-bark: #7a5236;
   --color-cartoon-red: #c8312b;
   --color-cartoon-yellow: #e8b630;
+  --color-cartoon-blue: #2c5491;
 
   /* Outline width → border-outline / border-outline-lg, stroke-outline / stroke-outline-lg */
   --border-width-outline: 3px;
@@ -54,6 +55,15 @@
   --color-forest-bark-light: color-mix(in oklab, var(--color-bark) 62%, var(--color-parchment));
   --color-forest-deep-shade: color-mix(in oklab, var(--color-forest-deep) 62%, var(--color-ink));
   --color-forest-deep-light: color-mix(in oklab, var(--color-forest-deep) 72%, var(--color-moss));
+}
+
+/*
+ * Hero portrait palette (spec 002 US-1) → fill-skin, fill-skin-shade.
+ * Warm skin tones mixed from the tokens above — no new hex values.
+ */
+@theme static {
+  --color-skin: color-mix(in oklab, var(--color-bark) 40%, var(--color-parchment));
+  --color-skin-shade: color-mix(in oklab, var(--color-bark) 62%, var(--color-parchment));
 }
 
 /*
