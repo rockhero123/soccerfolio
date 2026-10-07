@@ -81,6 +81,9 @@ const boundaryLine: Record<LineLayer, string> = {
  *   scattered at random over both zones, lying on top of the lines
  * - forest shade falling on the field edges, so the field blends into the forest
  *
+ * Content in both zones is centred and at most 1100px wide (spec 001 US-6), with
+ * responsive padding that also keeps it clear of the markings.
+ *
  * The field grows with its content. Lines that must stretch (boundary, halfway line)
  * are CSS boxes; shapes that must keep their proportions (penalty areas, centre
  * circle, corner arcs) are SVGs with a fixed viewBox, sized by width only.
@@ -129,7 +132,7 @@ export default function SoccerField({ children, contact }: SoccerFieldProps) {
           data-field-content=""
           className={`relative z-10 flex flex-1 flex-col ${clearTopPenalty} pb-16 ${contentPadding}`}
         >
-          {children}
+          <div className="mx-auto w-full max-w-[68.75rem]">{children}</div>
         </div>
         {scatterLayer("play")}
       </div>
@@ -165,7 +168,7 @@ export default function SoccerField({ children, contact }: SoccerFieldProps) {
           data-field-content=""
           className={`relative z-10 pt-12 ${clearBottomPenalty} ${contentPadding}`}
         >
-          {contact}
+          <div className="mx-auto w-full max-w-[68.75rem]">{contact}</div>
         </div>
         {scatterLayer("contact")}
       </div>
