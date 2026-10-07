@@ -41,7 +41,8 @@ test.describe("AC1 — design tokens", () => {
 
   test("token utilities resolve to the token values", async ({ page }) => {
     await page.goto("/");
-    const card = page.locator(".bg-mint").first();
+    // A card that uses the mint, outline and card-radius token utilities.
+    const card = page.locator(".bg-mint.rounded-card").first();
     await expect(card).toHaveCSS("background-color", "rgb(168, 240, 216)");
     await expect(card).toHaveCSS("border-top-width", "3px");
     await expect(card).toHaveCSS("border-top-color", "rgb(30, 26, 22)");
