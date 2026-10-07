@@ -5,7 +5,9 @@ import { renderToStaticMarkup } from "react-dom/server";
 import { afterEach, describe, expect, it } from "vitest";
 import { hero } from "@/content/hero";
 import { site } from "@/content/site";
+import { contrast, overlay, token } from "@/test/contrast";
 import EnchantedMirror from "./EnchantedMirror";
+import { GRAIN, VIGNETTE } from "./FilmOverlay";
 
 afterEach(cleanup);
 
@@ -97,6 +99,39 @@ describe("EnchantedMirror — AC2/AC3: nickname and role", () => {
     expect(
       h1.compareDocumentPosition(role) & Node.DOCUMENT_POSITION_FOLLOWING,
     ).toBeTruthy();
+  });
+});
+
+describe("EnchantedMirror — the role on a shiny metal nameplate (owner design)", () => {
+  it("engraves the role on a riveted silver plate with an ink outline", () => {
+    const { frame } = renderMirror();
+    const plate = frame.querySelector('[data-mirror="role"]')!;
+    expect(plate).toHaveClass(
+      "bg-linear-to-b",
+      "from-silver-light",
+      "to-silver",
+      "border-ink",
+      "text-ink",
+    );
+    // Only the two lighter silvers sit behind the text (ink stays ≥ 7.9:1).
+    expect(plate.className).not.toMatch(/silver-shade/);
+    expect(plate.querySelectorAll('[data-mirror="rivet"]')).toHaveLength(2);
+    plate
+      .querySelectorAll('[data-mirror="rivet"]')
+      .forEach((r) => expect(r).toHaveAttribute("aria-hidden", "true"));
+    expect(plate).toHaveClass("whitespace-nowrap");
+  });
+
+  it("keeps ink text at AA or better on the plate's silvers, even under the film overlay", () => {
+    const ink = token("ink");
+    for (const name of ["silver-light", "silver"]) {
+      const metal = token(name);
+      expect(contrast(ink, metal), name).toBeGreaterThanOrEqual(7);
+      const dark = (c: typeof ink) => overlay(c, ink, VIGNETTE + GRAIN);
+      expect(contrast(dark(ink), dark(metal)), name).toBeGreaterThanOrEqual(
+        4.5,
+      );
+    }
   });
 });
 

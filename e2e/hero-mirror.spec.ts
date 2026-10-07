@@ -58,6 +58,24 @@ test("AC4 — the page title uses the role Software Engineer", async ({
   await expect(page).toHaveTitle("Ricardo Martinez — Software Engineer");
 });
 
+for (const width of [320, 375, 768, 1280]) {
+  test(`at ${width}px the role nameplate stays on one line inside the glass`, async ({
+    page,
+  }) => {
+    await page.setViewportSize({ width, height: 900 });
+    await page.goto("/");
+    const plate = page.locator(`${mirror} [data-mirror="role"]`);
+    const p = (await plate.boundingBox())!;
+    const glass = (await page.locator(`${mirror} .bg-mint`).boundingBox())!;
+    expect(p.x).toBeGreaterThanOrEqual(glass.x);
+    expect(p.x + p.width).toBeLessThanOrEqual(glass.x + glass.width);
+    const lineHeight = await plate.evaluate((el) =>
+      parseFloat(getComputedStyle(el).lineHeight),
+    );
+    expect(p.height).toBeLessThan(lineHeight * 2);
+  });
+}
+
 for (const width of [375, 768, 1280]) {
   test(`at ${width}px the mirror fits on screen`, async ({ page }) => {
     await page.setViewportSize({ width, height: 900 });

@@ -54,7 +54,7 @@ describe("Home page — AC1: sections on the soccer field", () => {
   it("puts placeholder text on surfaces, never straight on the grass (manifest §6)", () => {
     const { field } = renderHome();
     field.querySelectorAll("section p, section h1").forEach((text) => {
-      expect(text.closest(".bg-mint, [data-title-banner]")).not.toBeNull();
+      expect(text.closest(".bg-mint, [data-title-banner], [data-intro-sign]")).not.toBeNull();
     });
   });
 
