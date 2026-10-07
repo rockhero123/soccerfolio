@@ -74,11 +74,28 @@ export default function EnchantedMirror({ portrait }: { portrait: ReactNode }) {
               <span className="sr-only">{`${hero.name} (${hero.nickname})`}</span>
               <span aria-hidden="true">{hero.nickname}</span>
             </h1>
+            {/* The role is engraved on a small, shiny metal nameplate. Only the two
+                lighter silvers sit behind the text, so ink stays ≥ 7.9:1. */}
             <p
               data-mirror="role"
-              className="mt-2 font-body text-lg font-normal md:text-xl"
+              className="relative mt-3 rounded-[0.6rem] border-outline border-ink bg-silver-light bg-linear-to-b from-silver-light to-silver px-6 py-1 font-body text-lg whitespace-nowrap max-[359px]:px-5 max-[359px]:text-base md:px-7 font-normal text-ink shadow-[3px_3px_0_var(--color-ink)] [text-shadow:0_1px_0_var(--color-chalk)] md:text-xl"
             >
+              <span
+                aria-hidden="true"
+                data-mirror="rivet"
+                className="absolute top-1/2 left-2 size-2 -translate-y-1/2 rounded-full border border-ink bg-silver-shade"
+              />
               {hero.role}
+              <span
+                aria-hidden="true"
+                data-mirror="rivet"
+                className="absolute top-1/2 right-2 size-2 -translate-y-1/2 rounded-full border border-ink bg-silver-shade"
+              />
+              {/* Polished metal: a bright highlight along the top edge, clear of the text. */}
+              <span
+                aria-hidden="true"
+                className="pointer-events-none absolute inset-x-3 top-[3px] h-[2px] rounded-full bg-chalk/80"
+              />
             </p>
           </div>
         </div>
