@@ -87,7 +87,6 @@ The main idea is a soccer field surrounded by enchanted forest. All the porgfoli
 | `bark` | `#7A5236` | Tree trunks, wooden sign |
 | `cartoon-red` | `#C8312B` | Accent (mushroom caps, highlights) |
 | `cartoon-yellow` | `#E8B630` | Accent (flowers, eyes, active nav link) |
-| `cartoon-blue` | `#2C5491` | Accent (the blue of the Colombia flag on the hero portrait's shirt) |
 | Heading font | **Lilita One** (Google Fonts, via `next/font`) | Bold vintage-cartoon headings |
 | Body font | **Source Sans 3** (Google Fonts, via `next/font`) | Body text (same family as the mockup) |
 | Theme | Light only | Matches the cartoon look |
