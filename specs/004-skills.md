@@ -1,7 +1,7 @@
 ---
 id: "004"
 title: "Skills"
-status: draft
+status: approved
 jira_epic: ""
 depends_on: ["001"]
 ---
