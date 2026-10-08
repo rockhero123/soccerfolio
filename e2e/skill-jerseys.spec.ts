@@ -29,14 +29,7 @@ for (const width of [375, 768, 1280]) {
       await expect(label).toHaveCSS("color", "rgb(255, 251, 239)");
       const fits = await label.evaluate((el) => {
         const size = parseFloat(getComputedStyle(el).fontSize);
-        const wordWrapped = [...el.textContent!.split(" ")].every(
-          (w) => !w.includes("\n"),
-        );
-        return {
-          size,
-          fits: el.scrollWidth <= el.clientWidth + 1,
-          wordWrapped,
-        };
+        return { size, fits: el.scrollWidth <= el.clientWidth + 1 };
       });
       expect(fits.size).toBeGreaterThanOrEqual(12);
       expect(fits.fits).toBe(true);
