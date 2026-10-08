@@ -67,6 +67,7 @@ The main idea is a soccer field surrounded by enchanted forest. All the porgfoli
 ### Art direction
 
 - **Medium:** hand-coded **SVG** illustrations, created by the Developer agent. No raster artwork except photos and project thumbnails.
+- **Skill logos:** the skills section (spec 004) shows the official logos of the technologies, copied as inline SVG paths (e.g. Simple Icons, CC0) and recoloured to the tokens. They are the only non-original artwork, identify the tools, and remain trademarks of their owners.
 - **Style:** 1930s rubber-hose / Cuphead look: thick, slightly uneven ink outlines, "pie-cut" eyes, big round shapes, exaggerated expressions, muted vintage colors.
 - **Motion:** illustrations are **static**. No character animation.
 - **Vintage film effect:** a subtle film-grain and vignette overlay covers the whole page. It never blocks clicks (`pointer-events: none`) and is removed when the user has `prefers-reduced-motion` set.
@@ -115,7 +116,7 @@ Each spec becomes a **Jira Epic**. Each user story (`US-x`) inside a spec become
 |----|------|--------|-----------|
 | 001 | [Foundation: layout, theme and navigation](./001-foundation-layout.md) | approved | [SOC-1](https://soccerfolio.atlassian.net/browse/SOC-1) |
 | 002 | [Hero](./002-hero.md) | approved | [SOC-10](https://soccerfolio.atlassian.net/browse/SOC-10) |
-| 004 | [Skills](./004-skills.md) | draft | — |
+| 004 | [Skills](./004-skills.md) | approved | [SOC-14](https://soccerfolio.atlassian.net/browse/SOC-14) |
 | 006 | [Projects](./006-projects.md) | draft | — |
 | 007 | [Contact and footer](./007-contact.md) | draft | — |
 | 008 | [SEO, performance and accessibility](./008-seo-performance.md) | draft | — |
