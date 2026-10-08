@@ -33,19 +33,19 @@ export default function SkillJersey({ skill }: { skill: Skill }) {
           className="fill-pitch-dark stroke-ink stroke-outline-lg"
           strokeLinejoin="round"
         />
-        {/* Collar and sleeve cuffs. */}
+        {/* Collar, and cuffs running parallel to the sleeve openings. */}
         <path
           d="M38 6Q60 18 82 6"
           className="fill-none stroke-chalk [stroke-width:calc(var(--stroke-width-outline)*1.3)]"
           strokeLinecap="round"
         />
         <path
-          d="M8 34L20 41M112 34L100 41"
+          d="M7.5 29L17.5 47.5M112.5 29L102.5 47.5"
           className="fill-none stroke-chalk stroke-outline"
           strokeLinecap="round"
         />
       </svg>
-      <div className="absolute inset-x-[15%] top-[24%] bottom-[8%] flex flex-col items-center justify-start gap-[6cqw] text-center">
+      <div className="absolute inset-x-[11%] top-[24%] bottom-[8%] flex flex-col items-center justify-start gap-[6cqw] text-center">
         <span
           data-jersey="name"
           style={{ "--chars": Math.max(longestWord, 5) } as CSSProperties}
