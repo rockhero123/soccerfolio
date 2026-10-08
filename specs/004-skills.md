@@ -2,7 +2,7 @@
 id: "004"
 title: "Skills"
 status: approved
-jira_epic: ""
+jira_epic: "SOC-14"
 depends_on: ["001"]
 ---
 
@@ -35,7 +35,7 @@ Each skill is a "player": a cartoon soccer jersey (manifest §6: skills as jerse
 - [ ] AC4 — The logo is decorative (`aria-hidden="true"`) because the name is already text; the jersey is not focusable and has no interactive behaviour.
 - [ ] AC5 — Skills (name, logo key, position) come from the typed data file `src/content/skills.ts`.
 
-**Jira:** —
+**Jira:** [SOC-15](https://soccerfolio.atlassian.net/browse/SOC-15)
 
 ### US-2: Tactics board with the 1-4-3-3 formation
 **As a** recruiter, **I want** the skills laid out as a team formation on a tactics board, **so that** I can scan Ricardo's whole stack in one look.
@@ -59,7 +59,7 @@ Lineup:
 - [ ] AC4 — The formation stays a recognisable 1-4-3-3 and fits without horizontal scroll at 375px, 768px and 1280px+: all eleven jerseys visible, none overlapping, names readable (≥ 0.75rem on mobile, ≥ 0.875rem from 768px).
 - [ ] AC5 — For screen readers the team is a list grouped by line ("Forwards", "Midfielders", "Defenders", "Goalkeeper"), each line listing its skill names; the board artwork is decorative.
 
-**Jira:** —
+**Jira:** [SOC-16](https://soccerfolio.atlassian.net/browse/SOC-16)
 
 ## Content / data model
 ```ts
