@@ -3,10 +3,9 @@ import EnchantedMirror from "@/components/EnchantedMirror";
 import IntroSign from "@/components/IntroSign";
 import PageSection from "@/components/PageSection";
 import PlaceholderCard from "@/components/PlaceholderCard";
-import SkillJersey from "@/components/skills/SkillJersey";
+import TacticsBoard from "@/components/skills/TacticsBoard";
 import SoccerField from "@/components/SoccerField";
 import { site } from "@/content/site";
-import { skills as skillList } from "@/content/skills";
 
 const [hero, skills, projects, contact] = site.sections;
 
@@ -42,14 +41,9 @@ export default function Home() {
           </div>
         </PageSection>
         <PageSection id={skills.id} title={skills.title}>
-          {/* The jerseys, until the tactics board (spec 004 US-2) lines them up. */}
-          <ul className="mx-auto grid w-full max-w-3xl grid-cols-3 justify-items-center gap-x-3 gap-y-5 md:grid-cols-4 lg:grid-cols-6">
-            {skillList.map((skill) => (
-              <li key={skill.name} className="flex w-full justify-center">
-                <SkillJersey skill={skill} />
-              </li>
-            ))}
-          </ul>
+          <div className="mx-auto w-full max-w-3xl">
+            <TacticsBoard />
+          </div>
         </PageSection>
         <PageSection id={projects.id} title={projects.title}>
           <PlaceholderCard>
