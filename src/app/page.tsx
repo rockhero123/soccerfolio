@@ -4,7 +4,7 @@ import IntroSign from "@/components/IntroSign";
 import PageSection from "@/components/PageSection";
 import PlaceholderCard from "@/components/PlaceholderCard";
 import TacticsBoard from "@/components/skills/TacticsBoard";
-import ProjectGrid from "@/components/projects/ProjectGrid";
+import ProjectBrowser from "@/components/projects/ProjectBrowser";
 import ProjectModal from "@/components/projects/ProjectModal";
 import SoccerField from "@/components/SoccerField";
 import { site } from "@/content/site";
@@ -48,7 +48,7 @@ export default function Home() {
           </div>
         </PageSection>
         <PageSection id={projects.id} title={projects.title}>
-          <ProjectGrid />
+          <ProjectBrowser />
           <ProjectModal />
         </PageSection>
       </div>
