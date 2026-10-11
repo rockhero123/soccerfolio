@@ -26,8 +26,8 @@ export default function ProjectCard({ project }: { project: Project }) {
         <Image
           src={image.src}
           alt={image.alt}
-          width={288}
-          height={216}
+          width={image.width}
+          height={image.height}
           loading="lazy"
           sizes="(min-width: 1280px) 18rem, (min-width: 768px) 21rem, 24rem"
           className="aspect-[4/3] w-full object-cover"

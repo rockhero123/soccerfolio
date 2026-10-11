@@ -6,7 +6,13 @@
 export type ProjectCategory =
   "Web" | "Mobile app" | "Interactive installation" | "Java game";
 
-export type ProjectImage = { src: string; alt: string };
+/** Width and height are the file's real size, so `next/image` keeps its proportions. */
+export type ProjectImage = {
+  src: string;
+  alt: string;
+  width: number;
+  height: number;
+};
 
 export type Project = {
   slug: string;
@@ -28,10 +34,29 @@ export type Project = {
   repoUrl?: string;
 };
 
-const img = (file: string, alt: string): ProjectImage => ({
-  src: `/images/projects/${file}`,
-  alt,
-});
+/** Real pixel sizes of the image files in public/images/projects. */
+const SIZES: Record<string, [number, number]> = {
+  "p10.png": [288, 216],
+  "p10_portrait.png": [791, 455],
+  "p3.png": [288, 216],
+  "p3_portrait.jpg": [792, 2564],
+  "p1.png": [288, 216],
+  "p12.png": [288, 216],
+  "p12_portrait.png": [700, 382],
+  "p2.png": [288, 216],
+  "p2_portrait.png": [792, 2010],
+  "p9.png": [288, 215],
+  "p4.png": [288, 216],
+  "p7.png": [288, 215],
+  "p7_portrait2.png": [1200, 600],
+  "p7_portrait3.png": [1200, 601],
+  "p7_portrait4.png": [1200, 594],
+};
+
+const img = (file: string, alt: string): ProjectImage => {
+  const [width, height] = SIZES[file];
+  return { src: `/images/projects/${file}`, alt, width, height };
+};
 
 export const projects: Project[] = [
   {

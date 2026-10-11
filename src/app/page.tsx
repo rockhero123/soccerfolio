@@ -5,6 +5,7 @@ import PageSection from "@/components/PageSection";
 import PlaceholderCard from "@/components/PlaceholderCard";
 import TacticsBoard from "@/components/skills/TacticsBoard";
 import ProjectGrid from "@/components/projects/ProjectGrid";
+import ProjectModal from "@/components/projects/ProjectModal";
 import SoccerField from "@/components/SoccerField";
 import { site } from "@/content/site";
 
@@ -48,6 +49,7 @@ export default function Home() {
         </PageSection>
         <PageSection id={projects.id} title={projects.title}>
           <ProjectGrid />
+          <ProjectModal />
         </PageSection>
       </div>
     </SoccerField>
