@@ -4,6 +4,7 @@ import IntroSign from "@/components/IntroSign";
 import PageSection from "@/components/PageSection";
 import PlaceholderCard from "@/components/PlaceholderCard";
 import TacticsBoard from "@/components/skills/TacticsBoard";
+import ProjectGrid from "@/components/projects/ProjectGrid";
 import SoccerField from "@/components/SoccerField";
 import { site } from "@/content/site";
 
@@ -46,11 +47,7 @@ export default function Home() {
           </div>
         </PageSection>
         <PageSection id={projects.id} title={projects.title}>
-          <PlaceholderCard>
-            <p className="font-body text-lg">
-              Selected projects are coming soon.
-            </p>
-          </PlaceholderCard>
+          <ProjectGrid />
         </PageSection>
       </div>
     </SoccerField>
