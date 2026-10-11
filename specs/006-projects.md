@@ -2,7 +2,7 @@
 id: "006"
 title: "Projects"
 status: approved
-jira_epic: ""
+jira_epic: "SOC-17"
 depends_on: ["001"]
 ---
 
@@ -44,7 +44,7 @@ The eight projects come from Ricardo's previous portfolio (ricardomartinez10.git
 - [ ] AC4 — The whole card opens the project's detail modal (US-2) by mouse, touch and keyboard (Enter/Space on a focusable "view details" control) without nesting interactive elements; the live/repo links still work on their own.
 - [ ] AC5 — The grid is responsive: 1 column at 375px, 2 at 768px, 3 from 1280px, with no horizontal scroll.
 
-**Jira:** —
+**Jira:** [SOC-18](https://soccerfolio.atlassian.net/browse/SOC-18)
 
 ### US-2: Project detail modal
 **As a** recruiter, **I want** a detail view for each project, **so that** I can read the full story and see more images without leaving the page.
@@ -59,7 +59,7 @@ Portrait images live in `design/`: `p10_portrait.png` (Jogo), `p3_portrait.jpg` 
 - [ ] AC4 — It is an accessible dialog: `role="dialog"`, `aria-modal="true"`, labelled by the project title; focus moves into it on open, stays inside while open, and returns to the card that opened it on close.
 - [ ] AC5 — The modal matches the site's cartoon style (ink outline, rounded panel, allowed text/surface pairs from manifest §6) and works at 375px, 768px and 1280px.
 
-**Jira:** —
+**Jira:** [SOC-19](https://soccerfolio.atlassian.net/browse/SOC-19)
 
 ### US-3: Project category filters
 **As a** visitor, **I want** to filter the projects by category, **so that** I only see the kind of work I care about.
@@ -71,7 +71,7 @@ Portrait images live in `design/`: `p10_portrait.png` (Jogo), `p3_portrait.jpg` 
 - [ ] AC4 — The number of visible projects is announced to screen readers when the filter changes (a polite live region, e.g. "3 projects").
 - [ ] AC5 — The filters are keyboard accessible, wrap on small screens with no horizontal scroll, and meet WCAG AA contrast in both states.
 
-**Jira:** —
+**Jira:** [SOC-20](https://soccerfolio.atlassian.net/browse/SOC-20)
 
 ## Content / data model
 ```ts

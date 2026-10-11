@@ -117,7 +117,7 @@ Each spec becomes a **Jira Epic**. Each user story (`US-x`) inside a spec become
 | 001 | [Foundation: layout, theme and navigation](./001-foundation-layout.md) | approved | [SOC-1](https://soccerfolio.atlassian.net/browse/SOC-1) |
 | 002 | [Hero](./002-hero.md) | approved | [SOC-10](https://soccerfolio.atlassian.net/browse/SOC-10) |
 | 004 | [Skills](./004-skills.md) | approved | [SOC-14](https://soccerfolio.atlassian.net/browse/SOC-14) |
-| 006 | [Projects](./006-projects.md) | draft | — |
+| 006 | [Projects](./006-projects.md) | approved | [SOC-17](https://soccerfolio.atlassian.net/browse/SOC-17) |
 | 007 | [Contact and footer](./007-contact.md) | draft | — |
 | 008 | [SEO, performance and accessibility](./008-seo-performance.md) | draft | — |
 | 900 | [Easter egg](./900-easter-egg.md) | draft | — |
