@@ -9,7 +9,7 @@ depends_on: ["001", "002"]
 # 900 — Easter egg
 
 ## Summary
-A cartoon waterfall pours across the top of the soccer field, from the forest edge down to the Introduction section. Hidden behind the falling water, a music video plays as soon as the page loads — only its music is heard — a fun, surprising detail that shows Ricardo's personality.
+A cartoon waterfall pours across the top of the soccer field, from the forest edge down to the Introduction section. Behind the falling water a music video plays as soon as the page loads, visible through the translucent falls — a fun, surprising detail that shows Ricardo's personality.
 
 ## Goals
 - Surprise and delight visitors (manifest G6) with a feature that fits the enchanted-forest concept.
@@ -48,7 +48,7 @@ The waterfall spans the top strip of the field — from the top edge of the fiel
 Video: https://www.youtube.com/watch?v=Yq2HC4_Zxgo. Browsers block videos with sound from starting on their own until the visitor has interacted with the page, so the video tries sound first and falls back to muted (owner decision). To get the music playing right away, the first visit of a session opens with a "Kick off!" overlay whose click unlocks sound (owner decision).
 
 **Acceptance criteria**
-- [ ] AC1 — The video (`Yq2HC4_Zxgo`, from `src/content/easterEgg.ts`) is embedded behind the waterfall from `youtube-nocookie.com`, completely hidden behind the water (only the music is heard), and loops.
+- [ ] AC1 — The video (`Yq2HC4_Zxgo`, from `src/content/easterEgg.ts`) is embedded from `youtube-nocookie.com`, centred behind the waterfall, with the translucent water flowing in front of it so the video is visible through the falls, and loops.
 - [ ] AC2 — When the Kick off overlay is not shown (AC6), on page load it starts playing with sound. If the browser blocks autoplay with sound, it plays muted instead and turns the sound on at the visitor's first click, tap or key press on the page; a "Sound on" button is also shown.
 - [ ] AC3 — A visible, keyboard-accessible control always lets the visitor pause/play and mute/unmute the video; each control has an accessible name and reflects its state.
 - [ ] AC4 — With `prefers-reduced-motion: reduce` the video does not start by itself; the visitor can start it with the play control.
