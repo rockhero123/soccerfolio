@@ -69,7 +69,7 @@ The main idea is a soccer field surrounded by enchanted forest. All the porgfoli
 - **Medium:** hand-coded **SVG** illustrations, created by the Developer agent. No raster artwork except photos and project thumbnails.
 - **Skill logos:** the skills section (spec 004) shows the official logos of the technologies, copied as inline SVG paths (e.g. Simple Icons, CC0) and recoloured to the tokens. They are the only non-original artwork, identify the tools, and remain trademarks of their owners.
 - **Style:** 1930s rubber-hose / Cuphead look: thick, slightly uneven ink outlines, "pie-cut" eyes, big round shapes, exaggerated expressions, muted vintage colors.
-- **Motion:** illustrations are **static**. No character animation.
+- **Motion:** illustrations are **static**. No character animation. The one exception is the easter egg's waterfall (spec 900), whose water moves with CSS and stands still with `prefers-reduced-motion`.
 - **Vintage film effect:** a subtle film-grain and vignette overlay covers the whole page. It never blocks clicks (`pointer-events: none`) and is removed when the user has `prefers-reduced-motion` set.
 - **Composition:** the enchanted forest is the page background. A soccer field sits in the middle of it and contains all the content sections. On mobile the forest shrinks to a decorative frame around the field.
 

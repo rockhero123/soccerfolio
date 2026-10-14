@@ -78,3 +78,4 @@ A personal portfolio website for Ricardo Martinez, software developer. The visua
 
 - Never commit secrets. Keep Jira, GitHub and Vercel tokens in `.env.local` or in the agent's environment; `.env*` is git-ignored.
 - The easter egg must not expose private data and must not affect normal site behavior.
+- Exception (owner decision, spec 900): the easter egg's music video player loads with the page instead of on a trigger. It must use YouTube's privacy-enhanced embed, give visitors pause/mute controls, respect `prefers-reduced-motion`, and the page must work normally if it fails to load.
