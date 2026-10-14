@@ -120,7 +120,7 @@ Each spec becomes a **Jira Epic**. Each user story (`US-x`) inside a spec become
 | 006 | [Projects](./006-projects.md) | approved | [SOC-17](https://soccerfolio.atlassian.net/browse/SOC-17) |
 | 007 | [Contact and footer](./007-contact.md) | draft | — |
 | 008 | [SEO, performance and accessibility](./008-seo-performance.md) | draft | — |
-| 900 | [Easter egg](./900-easter-egg.md) | draft | — |
+| 900 | [Easter egg](./900-easter-egg.md) | approved | [SOC-21](https://soccerfolio.atlassian.net/browse/SOC-21) |
 
 Statuses: `draft` → `approved` → `in-progress` → `done`. Only `approved` specs go to Jira.
 New specs start from [`_template.md`](./_template.md).

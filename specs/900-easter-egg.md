@@ -2,7 +2,7 @@
 id: "900"
 title: "Easter egg"
 status: approved
-jira_epic: ""
+jira_epic: "SOC-21"
 depends_on: ["001", "002"]
 ---
 
@@ -39,7 +39,7 @@ The waterfall spans the top strip of the field — from the top edge of the fiel
 - [ ] AC4 — With `prefers-reduced-motion: reduce` the water is drawn but does not move.
 - [ ] AC5 — The artwork is decorative (`aria-hidden="true"`), never receives focus, and adds no raster images.
 
-**Jira:** —
+**Jira:** [SOC-22](https://soccerfolio.atlassian.net/browse/SOC-22)
 
 ### US-2: Music video behind the waterfall
 **As a** visitor, **I want** a music video to play behind the waterfall when the page loads, **so that** I discover a fun, personal surprise.
@@ -54,7 +54,7 @@ Video: https://www.youtube.com/watch?v=Yq2HC4_Zxgo. Browsers block videos with s
 - [ ] AC4 — With `prefers-reduced-motion: reduce` the video does not start by itself; the visitor can start it with the play control.
 - [ ] AC5 — The rest of the page works normally while the video loads or if YouTube is unavailable (the waterfall still shows), and the video never covers or blocks the Introduction section or the header navigation.
 
-**Jira:** —
+**Jira:** [SOC-23](https://soccerfolio.atlassian.net/browse/SOC-23)
 
 ## Content / data model
 ```ts
