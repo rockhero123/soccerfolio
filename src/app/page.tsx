@@ -29,7 +29,7 @@ export default function Home() {
         </PageSection>
       }
     >
-      <div className="flex flex-col gap-16">
+      <div className="flex flex-col gap-8 md:gap-12">
         <PageSection id={hero.id} title={hero.title}>
           {/* The intro sign comes out from behind the mirror: beside it from
               768px, below it on phones. The mirror sits on top. */}

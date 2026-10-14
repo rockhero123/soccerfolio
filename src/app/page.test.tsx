@@ -87,6 +87,20 @@ describe("Home page — AC1: sections on the soccer field", () => {
   });
 });
 
+describe("Home page — section spacing (owner layout fix)", () => {
+  it("pads every section and separates its title banner from the content", () => {
+    renderHome();
+    for (const id of ["hero", "skills", "projects", "contact"]) {
+      expect(document.getElementById(id)).toHaveClass(
+        "py-10",
+        "md:py-16",
+        "gap-10",
+        "md:gap-14",
+      );
+    }
+  });
+});
+
 describe("Home page — AC3: content width", () => {
   it("centres the content in both field zones at a maximum of 1100px", () => {
     const { field } = renderHome();
