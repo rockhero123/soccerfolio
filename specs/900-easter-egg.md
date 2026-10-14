@@ -45,14 +45,15 @@ The waterfall spans the top strip of the field — from the top edge of the fiel
 **As a** visitor, **I want** a music video to play behind the waterfall when the page loads, **so that** I discover a fun, personal surprise.
 
 **Context**
-Video: https://www.youtube.com/watch?v=Yq2HC4_Zxgo. Browsers block videos with sound from starting on their own until the visitor has interacted with the page, so the video tries sound first and falls back to muted (owner decision).
+Video: https://www.youtube.com/watch?v=Yq2HC4_Zxgo. Browsers block videos with sound from starting on their own until the visitor has interacted with the page, so the video tries sound first and falls back to muted (owner decision). To get the music playing right away, the first visit of a session opens with a "Kick off!" overlay whose click unlocks sound (owner decision).
 
 **Acceptance criteria**
 - [ ] AC1 — The video (`Yq2HC4_Zxgo`, from `src/content/easterEgg.ts`) is embedded behind the waterfall from `youtube-nocookie.com`, completely hidden behind the water (only the music is heard), and loops.
-- [ ] AC2 — On page load it starts playing with sound. If the browser blocks autoplay with sound, it plays muted instead and turns the sound on at the visitor's first click, tap or key press on the page; a "Sound on" button is also shown.
+- [ ] AC2 — When the Kick off overlay is not shown (AC6), on page load it starts playing with sound. If the browser blocks autoplay with sound, it plays muted instead and turns the sound on at the visitor's first click, tap or key press on the page; a "Sound on" button is also shown.
 - [ ] AC3 — A visible, keyboard-accessible control always lets the visitor pause/play and mute/unmute the video; each control has an accessible name and reflects its state.
 - [ ] AC4 — With `prefers-reduced-motion: reduce` the video does not start by itself; the visitor can start it with the play control.
 - [ ] AC5 — The rest of the page works normally while the video loads or if YouTube is unavailable (the waterfall still shows), and the video never covers or blocks the Introduction section or the header navigation.
+- [ ] AC6 — On the first page load of a browser session, a cartoon "Kick off!" overlay covers the page with two choices: "Kick off!" enters the portfolio and starts the music with sound right away, and "Enter without music" enters without playing it (Escape does the same). It is a keyboard-accessible modal dialog with focus on "Kick off!", it is not shown again in the same session, and later loads follow AC2 — or stay silent if the visitor chose no music.
 
 **Jira:** [SOC-23](https://soccerfolio.atlassian.net/browse/SOC-23)
 
@@ -80,3 +81,4 @@ export const easterEgg = {
 - [x] Trigger: plays on page load, with sound when the browser allows it (owner decision).
 - [x] Placement: across the top of the field, down to the Introduction section (owner decision).
 - [x] Stories: two (waterfall, then video) (owner decision).
+- [x] Kick off overlay: once per session, with an "Enter without music" choice (owner decision).
