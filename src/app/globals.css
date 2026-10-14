@@ -76,6 +76,30 @@
 }
 
 /*
+ * The easter egg's waterfall (spec 900 US-1): the one animated illustration
+ * (manifest §6 Motion exception). Used with `motion-safe:` so the water stands
+ * still with prefers-reduced-motion. Pure CSS, no JavaScript loop.
+ */
+@theme {
+  --animate-water-drift: water-drift 3.2s ease-in-out infinite alternate;
+  --animate-water-dash: water-dash 0.7s linear infinite;
+  --animate-droplet: droplet 1.2s ease-out infinite;
+
+  @keyframes water-drift {
+    from { transform: translateX(-1.5rem); }
+    to { transform: translateX(1.5rem); }
+  }
+  @keyframes water-dash {
+    to { stroke-dashoffset: -48; }
+  }
+  @keyframes droplet {
+    0% { transform: translate(0, 0); opacity: 0; }
+    25% { opacity: 1; }
+    100% { transform: translate(var(--dx, 0px), -26px); opacity: 0; }
+  }
+}
+
+/*
  * `--forest-side` / `--forest-band` size the forest frame; the page content is
  * padded by the same amounts so it sits in the clear centre (the field).
  */

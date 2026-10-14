@@ -12,6 +12,8 @@ type SoccerFieldProps = {
   children: ReactNode;
   /** Content of the dark-grass contact zone at the bottom of the field. */
   contact?: ReactNode;
+  /** Decoration across the top of the playing zone, over the lawn and its markings (e.g. the waterfall). */
+  crown?: ReactNode;
 };
 
 /**
@@ -89,7 +91,11 @@ const boundaryLine: Record<LineLayer, string> = {
  * circle, corner arcs) are SVGs with a fixed viewBox, sized by width only.
  * All markings are decorative and hidden from assistive tech.
  */
-export default function SoccerField({ children, contact }: SoccerFieldProps) {
+export default function SoccerField({
+  children,
+  contact,
+  crown,
+}: SoccerFieldProps) {
   return (
     <div
       data-testid="soccer-field"
@@ -135,6 +141,12 @@ export default function SoccerField({ children, contact }: SoccerFieldProps) {
           <div className="mx-auto w-full max-w-[68.75rem]">{children}</div>
         </div>
         {scatterLayer("play")}
+        {/* Above the lawn's scatter, below the forest shade and the content. */}
+        {crown && (
+          <div className="pointer-events-none absolute inset-0 z-[3]">
+            {crown}
+          </div>
+        )}
       </div>
 
       <div

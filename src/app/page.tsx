@@ -6,6 +6,7 @@ import PlaceholderCard from "@/components/PlaceholderCard";
 import TacticsBoard from "@/components/skills/TacticsBoard";
 import ProjectBrowser from "@/components/projects/ProjectBrowser";
 import ProjectModal from "@/components/projects/ProjectModal";
+import Waterfall from "@/components/easter-egg/Waterfall";
 import SoccerField from "@/components/SoccerField";
 import { site } from "@/content/site";
 
@@ -19,6 +20,7 @@ const [hero, skills, projects, contact] = site.sections;
 export default function Home() {
   return (
     <SoccerField
+      crown={<Waterfall />}
       contact={
         <PageSection id={contact.id} title={contact.title}>
           <PlaceholderCard>
