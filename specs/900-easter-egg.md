@@ -53,7 +53,7 @@ Video: https://www.youtube.com/watch?v=Yq2HC4_Zxgo. Browsers block videos with s
 - [ ] AC3 — A visible, keyboard-accessible control always lets the visitor pause/play and mute/unmute the video; each control has an accessible name and reflects its state.
 - [ ] AC4 — With `prefers-reduced-motion: reduce` the video does not start by itself; the visitor can start it with the play control.
 - [ ] AC5 — The rest of the page works normally while the video loads or if YouTube is unavailable (the waterfall still shows), and the video never covers or blocks the Introduction section or the header navigation.
-- [ ] AC6 — On the first page load of a browser session, a cartoon "Kick off!" overlay covers the page with two choices: "Kick off!" enters the portfolio and starts the music with sound right away, and "Enter without music" enters without playing it (Escape does the same). It is a keyboard-accessible modal dialog with focus on "Kick off!", it is not shown again in the same session, and later loads follow AC2 — or stay silent if the visitor chose no music.
+- [ ] AC6 — The overlay is built behind a switch (`easterEgg.kickOff.enabled` in `src/content/easterEgg.ts`), **off for now** (owner decision); while off, every load follows AC2. When enabled: on the first page load of a browser session, a cartoon "Kick off!" overlay covers the page with two choices: "Kick off!" enters the portfolio and starts the music with sound right away, and "Enter without music" enters without playing it (Escape does the same). It is a keyboard-accessible modal dialog with focus on "Kick off!", it is not shown again in the same session, and later loads follow AC2 — or stay silent if the visitor chose no music.
 
 **Jira:** [SOC-23](https://soccerfolio.atlassian.net/browse/SOC-23)
 
@@ -81,4 +81,4 @@ export const easterEgg = {
 - [x] Trigger: plays on page load, with sound when the browser allows it (owner decision).
 - [x] Placement: across the top of the field, down to the Introduction section (owner decision).
 - [x] Stories: two (waterfall, then video) (owner decision).
-- [x] Kick off overlay: once per session, with an "Enter without music" choice (owner decision).
+- [x] Kick off overlay: once per session, with an "Enter without music" choice (owner decision) — built but switched off for now (owner decision).
