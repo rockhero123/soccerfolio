@@ -40,7 +40,7 @@ The eight projects come from Ricardo's previous portfolio (ricardomartinez10.git
 **Acceptance criteria**
 - [ ] AC1 — Section `#projects` renders a card for each project in `src/content/projects.ts`, in the order above, below its "Projects" title banner.
 - [ ] AC2 — Each card shows the preview image (`next/image`, lazy-loaded, descriptive alt text), the title, a 1–2 sentence description, the tech stack as tags, and links to the live site and the repository when those URLs exist (no empty links).
-- [ ] AC3 — Cards are drawn in the site's cartoon style (ink outline, rounded corners, an allowed text/surface pair from manifest §6) and each has tall grass (`GrassStrip`) along its bottom edge, like the section title banners.
+- [ ] AC3 — Cards are drawn in the site's pixel style (a Stardew-style paper menu box, `pixel-frame-paper`: wooden pixel frame, notched corners, `ink` on `parchment`) and each has pixel grass (`GrassStrip`) along its bottom edge, like the section title banners. Tags are pixel chips; links are pixel buttons.
 - [ ] AC4 — The whole card opens the project's detail modal (US-2) by mouse, touch and keyboard (Enter/Space on a focusable "view details" control) without nesting interactive elements; the live/repo links still work on their own.
 - [ ] AC5 — The grid is responsive: 1 column at 375px, 2 at 768px, 3 from 1280px, with no horizontal scroll.
 
@@ -57,7 +57,7 @@ Portrait images live in `design/`: `p10_portrait.png` (Jogo), `p3_portrait.jpg` 
 - [ ] AC2 — The modal content scrolls inside the modal when it is taller than the screen; the page behind does not scroll while it is open.
 - [ ] AC3 — An "X" button in the corner (accessible name "Close") closes it, and so does the Escape key; clicking the backdrop closes it too.
 - [ ] AC4 — It is an accessible dialog: `role="dialog"`, `aria-modal="true"`, labelled by the project title; focus moves into it on open, stays inside while open, and returns to the card that opened it on close.
-- [ ] AC5 — The modal matches the site's cartoon style (ink outline, rounded panel, allowed text/surface pairs from manifest §6) and works at 375px, 768px and 1280px.
+- [ ] AC5 — The modal matches the site's pixel style (a paper menu box with a wooden pixel frame, a pixel "X" button, allowed text/surface pairs from manifest §6) and works at 375px, 768px and 1280px.
 
 **Jira:** [SOC-19](https://soccerfolio.atlassian.net/browse/SOC-19)
 
@@ -106,9 +106,10 @@ export const projects: Project[] = [/* the eight projects above */];
 Images are copied from `design/` to `public/images/projects/` and served with `next/image`.
 
 ## Design notes
-- Matches the design guidelines in `manifest.md` §6 (cartoon style, ink outlines, token palette, text on surfaces).
-- Cards and modal reuse existing pieces where they fit: `GrassStrip`, the wooden/silver sign looks, the `mint` card surface.
+- Matches the design guidelines in `manifest.md` §6 (pixel style, token ramps, text on surfaces).
+- Cards and modal reuse existing pieces where they fit: `GrassStrip`, the pixel frames and pixel buttons. Filter buttons are pixel buttons; the pressed one is `pitch-dark` with `chalk` text and sits one pixel lower.
 - Source content: the project modals of ricardomartinez10.github.io (titles, descriptions, dates, clients, tech, live links for Jogo and Ingaser), typos fixed.
+- Updated from the owner's CV (`cv_source_data/`): Lime Delivery starts in June 2017 and adds the Node.js/Firebase REST APIs; Move On is named as the graduation project.
 
 ## Testing notes
 - Vitest: cards render from `projects.ts`; links are hidden when their URLs are missing; the modal shows every field and falls back to the preview image; Escape and the X close it; filter logic returns the right projects and sets `aria-pressed`.

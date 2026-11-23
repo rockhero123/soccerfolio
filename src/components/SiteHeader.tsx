@@ -5,20 +5,22 @@ import { site } from "@/content/site";
 import Logo from "./header/Logo";
 import { useActiveSection } from "./header/useActiveSection";
 import Vine from "./header/Vine";
+import PixelArt from "./pixel/PixelArt";
+import { CLOSE_ICON, MENU_ICON } from "./sprites/icons";
 import WoodPlank, { engraved } from "./WoodPlank";
 
 const SECTION_IDS = site.sections.map((section) => section.id);
 const MENU_ID = "site-menu";
 
 const focusRing =
-  "rounded-[6px] outline-none focus-visible:outline-3 focus-visible:outline-offset-4 focus-visible:outline-cartoon-yellow";
+  "focus-visible:outline-3 focus-visible:outline-offset-4 focus-visible:outline-red-600";
 
 /**
- * The site header (spec 001 US-7): a hand-drawn wooden sign hanging from vines
+ * The site header (spec 001 US-7): a pixel-art wooden sign hanging from vines
  * at the top of the screen, fixed while scrolling. It holds the "RM" logo (to
- * `#hero`) and the section links, engraved in the wood.
+ * `#hero`) and the section links, burned into the light wood.
  *
- * - The link for the section in view gets a `cartoon-yellow` underline.
+ * - The link for the section in view gets a pixel `cartoon-red` underline.
  * - Below 768px the links fold into a hamburger menu that opens and closes with
  *   mouse, touch and keyboard, closes on Esc or a click outside, and after a
  *   link is chosen.
@@ -56,10 +58,10 @@ export default function SiteHeader() {
         href={href}
         onClick={onPick}
         aria-current={current ? "location" : undefined}
-        className={`border-b-4 pb-0.5 font-heading text-xl tracking-wider ${engraved} ${focusRing} ${
+        className={`border-b-[length:var(--px)] font-heading text-3xl leading-none tracking-wide uppercase ${engraved} ${focusRing} ${
           current
-            ? "border-cartoon-yellow"
-            : "border-transparent hover:border-forest-bark-light"
+            ? "border-red-600"
+            : "border-transparent hover:border-wood-500"
         }`}
       >
         {label}
@@ -75,11 +77,11 @@ export default function SiteHeader() {
       <nav
         ref={navRef}
         aria-label="Main"
-        className="pointer-events-auto relative mt-3"
+        className="pointer-events-auto relative mt-3 [--px:3px]"
       >
-        <Vine className="-top-3 left-[16%]" />
-        <Vine className="-top-3 right-[16%] -scale-x-100" />
-        <div className="relative flex items-center gap-5 px-10 pt-1.5 pb-3 md:gap-7">
+        <Vine className="-top-4 left-[16%]" />
+        <Vine className="-top-4 right-[16%] -scale-x-100" />
+        <div className="relative flex items-center gap-5 px-10 pt-2.5 pb-3 md:gap-8 md:px-12">
           <WoodPlank />
           <a
             href="#hero"
@@ -102,18 +104,7 @@ export default function SiteHeader() {
             onClick={() => setOpen((isOpen) => !isOpen)}
             className={`relative grid size-10 place-items-center md:hidden ${focusRing}`}
           >
-            <svg
-              viewBox="0 0 24 24"
-              aria-hidden="true"
-              focusable="false"
-              className="size-7 overflow-visible"
-            >
-              <path
-                d={open ? "M5 5L19 19M19 5L5 19" : "M4 6H20M4 12H20M4 18H20"}
-                className="fill-none stroke-parchment [stroke-width:calc(var(--stroke-width-outline)*1.2)]"
-                strokeLinecap="round"
-              />
-            </svg>
+            <PixelArt art={open ? CLOSE_ICON : MENU_ICON} />
           </button>
         </div>
 

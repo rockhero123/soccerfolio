@@ -3,7 +3,9 @@ import { renderToStaticMarkup } from "react-dom/server";
 import { afterEach, describe, expect, it } from "vitest";
 import { skills, type SkillLogo } from "@/content/skills";
 import { contrast, overlay, token } from "@/test/contrast";
-import { GRAIN, VIGNETTE } from "../FilmOverlay";
+import { expectPixelSprite, expectTokensOnly, pixelTokens } from "@/test/pixel";
+import { VIGNETTE } from "../FilmOverlay";
+import { BADGES, JERSEY } from "./jerseyArt";
 import SkillJersey from "./SkillJersey";
 import { SKILL_LOGOS } from "./skillLogos";
 
@@ -14,13 +16,16 @@ function renderJersey(index = 0) {
   return container.querySelector("[data-skill]") as HTMLElement;
 }
 
-describe("SkillJersey — AC1: a cartoon jersey with the name and the logo below", () => {
-  it("draws a pitch-dark shirt with a bold ink outline", () => {
-    const shirt = renderJersey().querySelector('[data-jersey="shirt"] path')!;
-    expect(shirt).toHaveClass(
-      "fill-pitch-dark",
-      "stroke-ink",
-      "stroke-outline-lg",
+describe("SkillJersey — AC1: a pixel jersey with the name and the logo below", () => {
+  it("draws a shaded pitch-dark pixel shirt with chalk collar and cuffs and an ink outline", () => {
+    const jersey = renderJersey();
+    const shirt = jersey.querySelector('[data-jersey="shirt"]')!;
+    expectPixelSprite(shirt);
+    expect(pixelTokens(shirt)).toEqual(
+      expect.arrayContaining(["grass-800", "grass-700", "grass-900", "paper-100", "ink"]),
+    );
+    expect(jersey.getAttribute("style")).toContain(
+      `calc(${JERSEY.width} * var(--px))`,
     );
   });
 
@@ -36,7 +41,7 @@ describe("SkillJersey — AC1: a cartoon jersey with the name and the logo below
   });
 });
 
-describe("SkillJersey — AC2: every skill has its own inline logo", () => {
+describe("SkillJersey — AC2: every skill has its own pixelated logo", () => {
   const logos: SkillLogo[] = [
     "javascript",
     "typescript",
@@ -58,6 +63,20 @@ describe("SkillJersey — AC2: every skill has its own inline logo", () => {
     expect(new Set(paths).size).toBe(paths.length);
   });
 
+  it.each(Object.entries(BADGES))(
+    "pixelates the %s logo in ink on a round parchment badge",
+    (_, badge) => {
+      const tokens = badge.paths.map((p) => p.token);
+      expect(tokens).toEqual(expect.arrayContaining(["ink", "paper-200"]));
+      // Enough ink pixels to read as a mark, not a speck or a blob.
+      let ink = 0;
+      for (let y = 0; y < badge.canvas.height; y++)
+        for (let x = 0; x < badge.canvas.width; x++)
+          if (badge.canvas.get(x, y) === "ink") ink++;
+      expect(ink).toBeGreaterThan(70);
+    },
+  );
+
   it("renders logos as inline SVG in token colours, with no raster images", () => {
     const html = renderToStaticMarkup(
       <>
@@ -66,9 +85,8 @@ describe("SkillJersey — AC2: every skill has its own inline logo", () => {
         ))}
       </>,
     );
-    expect(html).not.toMatch(/<img|<image|data:image|\.png|\.svg"/);
-    expect(html).not.toMatch(/#[0-9a-fA-F]{3,8}\b(?![-\w])/);
-    expect(html).not.toMatch(/(fill|stroke)="(?!url\(|none)/);
+    expect(html).not.toMatch(/data:image|\.svg"/);
+    expectTokensOnly(html);
   });
 });
 
@@ -79,10 +97,9 @@ describe("SkillJersey — AC3: readable names that fit", () => {
     expect(name).toHaveClass("text-chalk", "font-heading");
   });
 
-  it("keeps chalk on pitch-dark at AA, even under the film overlay", () => {
+  it("keeps chalk on pitch-dark at AA, even under the vignette", () => {
     const ink = token("ink");
-    const dark = (c: ReturnType<typeof token>) =>
-      overlay(c, ink, VIGNETTE + GRAIN);
+    const dark = (c: ReturnType<typeof token>) => overlay(c, ink, VIGNETTE);
     expect(
       contrast(token("chalk"), token("pitch-dark")),
     ).toBeGreaterThanOrEqual(4.5);

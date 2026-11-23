@@ -49,3 +49,9 @@ next-env.d.ts
 # design source files (large binaries)
 *.ai
 .DS_Store
+
+# local design references (copyrighted mood images, never shipped)
+/design/pixel_art/
+
+# Playwright MCP screenshots and logs
+/.playwright-mcp/

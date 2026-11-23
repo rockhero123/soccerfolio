@@ -1,44 +1,6 @@
-import CharacterSvg from "./parts/CharacterSvg";
-import Maw from "./parts/Maw";
-import PieEye from "./parts/PieEye";
+import CharacterSprite from "./parts/CharacterSprite";
 
-/** A grinning frog with bulging eyes and a mouth from cheek to cheek. */
+/** A wide-mouthed frog with eyes on top of its head. Pixel art (spec 001 US-4). */
 export default function Frog({ className }: { className?: string }) {
-  return (
-    <CharacterSvg name="frog" viewBox="0 0 110 84" className={className}>
-      <circle cx={34} cy={26} r={15} className="fill-moss" />
-      <circle cx={76} cy={26} r={15} className="fill-moss" />
-      <path d="M8 76C4 50 24 30 55 30S106 50 102 76Z" className="fill-moss" />
-      <ellipse cx={30} cy={78} rx={10} ry={4} className="fill-moss" />
-      <ellipse cx={80} cy={78} rx={10} ry={4} className="fill-moss" />
-      <PieEye
-        cx={34}
-        cy={24}
-        rx={10}
-        ry={11}
-        pupil={0.25}
-        veins
-        look={[-3, 0]}
-      />
-      <PieEye
-        cx={76}
-        cy={24}
-        rx={10}
-        ry={11}
-        pupil={0.25}
-        veins
-        look={[3, 2]}
-      />
-      <Maw
-        cx={55}
-        cy={46}
-        width={70}
-        curve={2}
-        open={17}
-        teeth={[7, 6]}
-        fang={8}
-        tongue
-      />
-    </CharacterSvg>
-  );
+  return <CharacterSprite name="frog" className={className} />;
 }

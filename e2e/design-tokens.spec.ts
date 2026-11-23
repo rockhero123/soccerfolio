@@ -33,40 +33,41 @@ test.describe("AC1 — design tokens", () => {
     for (const [name, value] of Object.entries(colorTokens)) {
       expect(await read(`--color-${name}`), name).toBe(value);
     }
-    expect(await read("--border-width-outline")).toBe("3px");
-    expect(await read("--border-width-outline-lg")).toBe("4px");
-    expect(await read("--radius-card")).toBe("12px");
-    expect(await read("--radius-pill")).toBe("9999px");
+    // Colour ramps for the pixel art, built on the base tokens.
+    expect(await read("--color-wood-300")).toBe("#edb75a");
+    expect(await read("--color-grass-500")).toBe("#00b262");
+    // One art pixel: 3px on phones, 4px from 768px.
+    const width = page.viewportSize()!.width;
+    expect(await read("--px")).toBe(width >= 768 ? "4px" : "3px");
   });
 
   test("token utilities resolve to the token values", async ({ page }) => {
     await page.goto("/");
-    // A card that uses the mint, 3px outline and card-radius token utilities.
-    const card = page.locator(".bg-mint.rounded-card.border-outline").first();
-    await expect(card).toHaveCSS("background-color", "rgb(168, 240, 216)");
-    await expect(card).toHaveCSS("border-top-width", "3px");
-    await expect(card).toHaveCSS("border-top-color", "rgb(30, 26, 22)");
-    await expect(card).toHaveCSS("border-top-left-radius", "12px");
+    // A paper card: parchment paper, square pixel corners, a notched dark-wood outline.
+    const card = page.locator(".pixel-frame-paper").first();
+    await expect(card).toHaveCSS("background-color", "rgb(243, 231, 201)");
+    await expect(card).toHaveCSS("border-top-left-radius", "0px");
+    await expect(card).toHaveCSS("box-shadow", /rgb\(72, 38, 19\)/);
     await expect(page.locator("body")).toHaveCSS(
       "background-color",
-      "rgb(243, 231, 201)",
+      "rgb(22, 58, 33)",
     );
   });
 });
 
 test.describe("AC2 — fonts", () => {
-  test("headings use Lilita One and body uses Source Sans 3", async ({
+  test("headings use Jersey 10 and body uses Pixelify Sans", async ({
     page,
   }) => {
     await page.goto("/");
-    await expect(page.locator("h1")).toHaveCSS("font-family", /Lilita One/);
+    await expect(page.locator("h1")).toHaveCSS("font-family", /Jersey 10/);
     await expect(page.locator("body")).toHaveCSS(
       "font-family",
-      /Source Sans 3/,
+      /Pixelify Sans/,
     );
     await expect(page.locator("main p").first()).toHaveCSS(
       "font-family",
-      /Source Sans 3/,
+      /Pixelify Sans/,
     );
 
     const loaded = await page.evaluate(async () => {
@@ -76,13 +77,16 @@ test.describe("AC2 — fonts", () => {
         .map((f) => f.family.replace(/['"]/g, ""));
       return families;
     });
-    expect(loaded).toContain("Lilita One");
-    expect(loaded).toContain("Source Sans 3");
+    expect(loaded).toContain("Jersey 10");
+    expect(loaded).toContain("Pixelify Sans");
   });
 
   test("fonts are self-hosted (no requests to Google)", async ({ page }) => {
     const external: string[] = [];
     page.on("request", (request) => {
+      // Only the site's own requests: the easter egg's YouTube player (spec
+      // 900) loads its own fonts inside its iframe.
+      if (request.frame() !== page.mainFrame()) return;
       if (/fonts\.(googleapis|gstatic)\.com/.test(request.url())) {
         external.push(request.url());
       }

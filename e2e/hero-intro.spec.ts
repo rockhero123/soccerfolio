@@ -68,7 +68,7 @@ for (const width of [375, 768, 1280]) {
   });
 }
 
-test("AC2/AC4 — the intro is readable: ≥ 1.125rem, bold, line height ≥ 1.5, parchment", async ({
+test("AC2/AC4 — the intro is readable: ≥ 1.125rem, line height ≥ 1.5, ink burned into light wood", async ({
   page,
 }) => {
   await page.goto("/");
@@ -80,8 +80,8 @@ test("AC2/AC4 — the intro is readable: ≥ 1.125rem, bold, line height ≥ 1.5
   });
   expect(size).toBeGreaterThanOrEqual(18);
   expect(line / size).toBeGreaterThanOrEqual(1.5);
-  await expect(text).toHaveCSS("color", "rgb(243, 231, 201)");
-  await expect(text).toHaveCSS("font-weight", "700");
+  await expect(text).toHaveCSS("color", "rgb(30, 26, 22)");
+  await expect(text).toHaveCSS("font-weight", "500");
 });
 
 test("an axe scan finds no serious issues", async ({ page }) => {

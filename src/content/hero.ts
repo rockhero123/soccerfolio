@@ -12,6 +12,6 @@ export const hero = {
     "Software Engineer with seven years of experience crafting intuitive, user-centered interfaces across the logistics, entertainment, and tourism industries. At a leading software development consultancy, he contributed to projects for clients including Disney, delivering creative solutions that balance aesthetics with usability.",
   portrait: {
     label:
-      "Cartoon portrait of Ricardo Martinez as a speedy vintage soccer player in a yellow Colombia shirt, with a roguish grin",
+      "Pixel-art portrait of Ricardo Martinez as a speedy soccer player in a yellow Colombia shirt, with a roguish grin",
   },
 } as const;

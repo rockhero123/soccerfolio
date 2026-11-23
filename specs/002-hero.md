@@ -9,30 +9,30 @@ depends_on: ["001"]
 # 002 — Hero
 
 ## Summary
-The first screen: who Ricardo is and what he does. A hand-drawn cartoon portrait of Ricardo as a vintage soccer player sits in an enchanted mirror with his nickname and role, next to a wooden sign with a short introduction.
+The first screen: who Ricardo is and what he does. A pixel-art portrait of Ricardo as a soccer player sits in an enchanted mirror with his nickname and role, next to a wooden sign with a short introduction.
 
 ## Goals
 - Communicate name, role and value proposition in a few seconds (manifest G1).
-- Make the first impression memorable and on-theme: a rubber-hose cartoon of Ricardo in a Colombia shirt.
+- Make the first impression memorable and on-theme: a pixel-art portrait of Ricardo in a Colombia shirt, like an RPG character portrait.
 
 ## Non-goals
 - Heavy animations or video backgrounds. The portrait and mirror are static.
 - Call-to-action buttons and social links. Contact lives in the Contact section (spec 007).
-- Raster or AI-generated artwork. The portrait is hand-coded SVG (manifest §6).
+- Raster or AI-generated artwork. The portrait is hand-coded pixel art (manifest §6).
 
 ## User stories
 
 ### US-1: Cartoon profile portrait
-**As a** recruiter, **I want** to see a cartoon portrait of Ricardo in the hero, **so that** I get a visual sense of who I'm looking at.
+**As a** recruiter, **I want** to see a pixel-art portrait of Ricardo in the hero, **so that** I get a visual sense of who I'm looking at.
 
 **Context**
-Art brief, adapted from the owner's prompt: draw the person in `design/profile_reference.jpeg` as a vintage cartoon soccer player in the classic rubber-hose style (mood: Cuphead, Pizza Tower, Rocko's Modern Life, early Ed, Edd n Eddy; manifest §6). Clearly keep his identity: short dark hair, a moustache and a partial beard along the jaw, dark eyes, strong eyebrows, big ears. He wears the yellow Colombia national-team shirt with a round collar and has a roguish, toothy smirk. A sunburst, speed lines and smoke puffs show he is fast. Style references are mood only; never trace them.
+Art brief, adapted from the owner's prompt: draw the person in `design/profile_reference.jpeg` as a pixel-art soccer player bust, like the character portraits of cozy farming RPGs (mood: `design/pixel_art/`; manifest §6). Clearly keep his identity: short dark hair, a moustache and a partial beard along the jaw, dark eyes, strong eyebrows, big ears. He wears the yellow Colombia national-team shirt with a round collar and has a roguish, toothy smirk. A sunburst, speed lines and smoke puffs show he is fast. Style references are mood only; never trace them.
 
 **Acceptance criteria**
-- [ ] AC1 — A `CartoonPortrait` component renders an original, hand-coded, static SVG portrait of Ricardo in the rubber-hose style (bold `ink` outlines, pie-cut eyes, manifest palette) that keeps the recognisable features listed in the art brief.
+- [ ] AC1 — A `CartoonPortrait` component renders an original, hand-coded, static pixel-art portrait of Ricardo (shaded skin and hair ramps, 1-pixel outlines, manifest palette) that keeps the recognisable features listed in the art brief.
 - [ ] AC2 — He wears the yellow Colombia shirt (`cartoon-yellow`, manifest §6).
 - [ ] AC3 — The portrait is clipped to a circle, and the top of the head (the hair) breaks out of the circle above its edge.
-- [ ] AC4 — The portrait is meaningful, not decorative: it has `role="img"` and an accessible name from `src/content/hero.ts` (e.g. "Cartoon portrait of Ricardo Martinez as a vintage soccer player in a Colombia shirt").
+- [ ] AC4 — The portrait is meaningful, not decorative: it has `role="img"` and an accessible name from `src/content/hero.ts` (e.g. "Pixel-art portrait of Ricardo Martinez as a soccer player in a Colombia shirt").
 - [ ] AC5 — It uses design tokens only (no raw hex) and contains no raster images.
 
 **Jira:** [SOC-11](https://soccerfolio.atlassian.net/browse/SOC-11)
@@ -41,7 +41,7 @@ Art brief, adapted from the owner's prompt: draw the person in `design/profile_r
 **As a** visitor, **I want** the portrait shown in a magical frame with Ricardo's name and role, **so that** I know immediately who he is and what he does.
 
 **Acceptance criteria**
-- [ ] AC1 — The portrait sits inside a rounded rectangle drawn as an **enchanted mirror**: an ornate cartoon frame with an `ink` outline, a glass surface with painted shine, and tall grass (`GrassStrip`) along its bottom edge, like the section title banners.
+- [ ] AC1 — The portrait sits inside an **enchanted mirror**: a bevelled pixel stone-silver frame (`pixel-frame-stone`) with a gold crest and corner studs, magic pixel sparkles, a `mint` glass surface with a stepped pixel shine, and pixel grass (`GrassStrip`) along its bottom edge, like the section title banners.
 - [ ] AC2 — Below the portrait, inside the mirror, the nickname "Richi" is shown in bold (`font-heading`), and below it the role "Software Engineer" in regular weight (`font-body`).
 - [ ] AC3 — The nickname is the page's only `<h1>`. It shows "Richi", and its accessible name is "Ricardo Martinez (Richi)", so screen readers and search engines get the full name. The visible text stays part of the accessible name (WCAG 2.5.3).
 - [ ] AC4 — The role is "Software Engineer" everywhere: `site.role` in `src/content/site.ts` and the page `<title>` use it. Name, nickname and role come from `src/content/hero.ts` / `src/content/site.ts`.
@@ -53,7 +53,7 @@ Art brief, adapted from the owner's prompt: draw the person in `design/profile_r
 **As a** recruiter, **I want** a short introduction next to the portrait, **so that** I quickly learn Ricardo's background and interests.
 
 **Acceptance criteria**
-- [ ] AC1 — An introduction paragraph is shown on a wooden plank in the same style as the section title banners (`WoodPlank`), with the text engraved in the wood (`parchment` on `bark`, manifest §6).
+- [ ] AC1 — An introduction paragraph is shown on a pixel wooden plank in the same style as the section title banners (`WoodPlank`), with the text burned into the light wood (`ink` on light wood, manifest §6).
 - [ ] AC2 — The text comes from `src/content/hero.ts` (`intro`).
 - [ ] AC3 — From 768px the sign sits next to the enchanted mirror. Below 768px it stacks under the mirror. Nothing overflows at 375px, 768px or 1280px+.
 - [ ] AC4 — The engraved text is readable: at least 1.125rem, line height ≥ 1.5, and WCAG AA contrast on every part of the plank. It stays ≥ 4.5:1 under the film overlay.
@@ -67,16 +67,16 @@ export const hero = {
   name: "Ricardo Martinez",
   nickname: "Richi",
   // role comes from site.role ("Software Engineer")
-  intro: "TODO — final introduction text from the owner",
+  intro: "Software Engineer with seven years of experience …", // from the CV profile
   portrait: {
     label:
-      "Cartoon portrait of Ricardo Martinez as a vintage soccer player in a Colombia shirt",
+      "Pixel-art portrait of Ricardo Martinez as a speedy soccer player in a yellow Colombia shirt, with a roguish grin",
   },
 };
 ```
 
 ## Design notes
-- All artwork matches the design guidelines in `manifest.md` §6: hand-coded SVG, rubber-hose style, bold ink outlines and the token palette.
+- All artwork matches the design guidelines in `manifest.md` §6: hand-coded pixel art, 1-pixel outlines and the token ramps.
 - The hero section keeps its "Introduction" title banner from spec 001 (US-6). The mirror and sign replace the placeholder card.
 - The portrait reference photo is `design/profile_reference.jpeg`. Use it for likeness only; it is never shipped.
 - Layout: mirror and sign side by side from 768px (mirror first), stacked below 768px.

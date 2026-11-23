@@ -1,6 +1,6 @@
 /**
  * Selected projects (spec 006), from Ricardo's previous portfolio
- * (ricardomartinez10.github.io), texts cleaned up. Images live in
+ * (ricardomartinez10.github.io), texts cleaned up, with details from his CV. Images live in
  * `public/images/projects/` (copied from `design/`).
  */
 export type ProjectCategory =
@@ -84,11 +84,11 @@ export const projects: Project[] = [
     summary:
       "A mobile app for a virtual liquor store in Cali, for both customers and stores.",
     description:
-      "Development of a virtual liquor store app for the city of Cali, with experiences for both customers placing orders and stores managing them.",
+      "Development of a virtual liquor store app for the city of Cali, with experiences for both customers placing orders and stores managing them. Programmed the Android app in Java and designed the RESTful APIs with Node.js and Firebase, working with the designers and the business promoter.",
     category: "Mobile app",
-    date: "July 2017",
+    date: "June 2017",
     client: "Lime Delivery",
-    tech: ["Android (Java)", "Firebase", "Retrofit 2", "RxJava"],
+    tech: ["Android (Java)", "Node.js", "Firebase", "Retrofit 2", "RxJava"],
     image: img("p3.png", "Lime Delivery app preview"),
     portraits: [img("p3_portrait.jpg", "Lime Delivery app screens")],
   },
@@ -140,7 +140,7 @@ export const projects: Project[] = [
     summary:
       "An interactive rehab system for knee-injury recovery with game-based routines.",
     description:
-      "Move On is a portable, interactive rehab system for knee-injury recovery that complements the rehabilitation center so patients can keep recovering at home. It offers dynamic, game-based routines and interactive environments for every recovery phase, detailed guidance on each exercise and immediate feedback on its correct execution, helping patients get excellent results and stick to their treatment.",
+      "Ricardo's graduation project, “Intervention in Physical Rehabilitation Experience for Knee Sports Injuries”. Move On is a portable, interactive rehab system for knee-injury recovery that complements the rehabilitation center so patients can keep recovering at home. It offers dynamic, game-based routines and interactive environments for every recovery phase, detailed guidance on each exercise and immediate feedback on its correct execution, helping patients get excellent results and stick to their treatment.",
     category: "Interactive installation",
     date: "April 2017",
     client: "Icesi University",

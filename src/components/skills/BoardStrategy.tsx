@@ -1,5 +1,6 @@
 /**
- * The coach's chalk drawings on the tactics board (spec 004 US-2): dashed zone
+ * The coach's chalk drawings on the tactics board (spec 004 US-2), as chunky,
+ * un-smoothed pixel strokes: dashed zone
  * circles, curved runs and straight passes with arrowheads, and "X" marks for
  * the opponents — like a trainer's pitch board. Decorative.
  *
@@ -8,9 +9,11 @@
  * 86 % from the top; thirds and quarters across. Strokes keep their width.
  */
 const chalk = "fill-none stroke-chalk";
-const run = `${chalk} [stroke-width:2.5px] [stroke-dasharray:7_6]`;
-const pass = `${chalk} [stroke-width:2px] [stroke-dasharray:2_5]`;
-const head = `${chalk} [stroke-width:2.5px]`;
+// Square-capped, pixel-wide chalk dashes, drawn without anti-aliasing so they
+// read as chunky pixel strokes on the slate.
+const run = `${chalk} [stroke-width:var(--px)] [stroke-dasharray:calc(var(--px)*2)_calc(var(--px)*2)]`;
+const pass = `${chalk} [stroke-width:var(--px)] [stroke-dasharray:var(--px)_calc(var(--px)*2)]`;
+const head = `${chalk} [stroke-width:var(--px)]`;
 
 export default function BoardStrategy() {
   return (
@@ -20,9 +23,10 @@ export default function BoardStrategy() {
       aria-hidden="true"
       focusable="false"
       data-board="strategy"
-      className="pointer-events-none absolute inset-0 size-full opacity-75"
-      strokeLinecap="round"
-      strokeLinejoin="round"
+      className="pointer-events-none absolute inset-0 size-full opacity-60"
+      shapeRendering="crispEdges"
+      strokeLinecap="butt"
+      strokeLinejoin="miter"
     >
       {/* Zones: the midfield trio and the attacking box. */}
       <g data-strategy="zone">
@@ -31,8 +35,7 @@ export default function BoardStrategy() {
           cy="38"
           rx="44"
           ry="13"
-          className={`${run} fill-chalk`}
-          fillOpacity={0.06}
+          className={run}
           vectorEffect="non-scaling-stroke"
         />
         <ellipse
@@ -40,8 +43,7 @@ export default function BoardStrategy() {
           cy="12"
           rx="22"
           ry="8"
-          className={`${run} fill-chalk`}
-          fillOpacity={0.06}
+          className={run}
           vectorEffect="non-scaling-stroke"
         />
       </g>

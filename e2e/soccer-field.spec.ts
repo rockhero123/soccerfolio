@@ -58,9 +58,14 @@ for (const width of [375, 768, 1280]) {
       const halfway = await box(page, marking("halfway-line"));
       const circle = await box(page, marking("center-circle"));
 
-      // Top penalty area hangs from the top line, bottom one stands on the bottom line.
-      expect(topArea.y).toBeCloseTo(boundary.y, -1);
-      expect(bottomArea.y + bottomArea.height).toBeCloseTo(
+      // Top penalty area hangs from the top line, bottom one stands on the
+      // bottom line. Each drawing keeps 6 art pixels above its goal line for
+      // the goal (posts and net), which pokes out behind the line.
+      const px = await page.evaluate(() =>
+        parseFloat(getComputedStyle(document.documentElement).getPropertyValue("--px")),
+      );
+      expect(topArea.y + 6 * px).toBeCloseTo(boundary.y, -1);
+      expect(bottomArea.y + bottomArea.height - 6 * px).toBeCloseTo(
         boundary.y + boundary.height,
         -1,
       );
@@ -81,15 +86,10 @@ for (const width of [375, 768, 1280]) {
       expect(circle.y).toBeGreaterThan(topArea.y + topArea.height);
       expect(circle.y + circle.height).toBeLessThan(bottomArea.y);
       await expect(page.locator(marking("corner-arc"))).toHaveCount(4);
-      for (const name of [
-        "penalty-box",
-        "goal-area",
-        "penalty-spot",
-        "penalty-arc",
-        "goal",
-        "center-spot",
-      ]) {
-        await expect(page.locator(marking(name)).first()).toBeVisible();
+      // Box, goal area, spot, arc and goal are pixels of the penalty-area
+      // sprites; the centre spot is part of the centre-circle sprite.
+      for (const name of ["penalty-area-top", "penalty-area-bottom", "center-circle"]) {
+        await expect(page.locator(marking(name))).toBeVisible();
       }
     });
 
@@ -119,7 +119,7 @@ for (const width of [375, 768, 1280]) {
       // Shapes keep their drawn proportions however tall the field gets.
       const topArea = await box(page, marking("penalty-area-top"));
       expect(topArea.width).toBeCloseTo(before.width, 0);
-      expect(topArea.width / topArea.height).toBeCloseTo(400 / 170, 1);
+      expect(topArea.width / topArea.height).toBeCloseTo(96 / 54, 1);
       const circle = await box(page, marking("center-circle"));
       expect(circle.width).toBeCloseTo(circle.height, 0);
 
@@ -144,16 +144,21 @@ for (const width of [375, 768, 1280]) {
     }) => {
       const play = page.locator(zone("play"));
       await expect(play).toHaveCSS("background-color", "rgb(0, 178, 98)");
-      await expect(play).toHaveCSS(
-        "background-image",
-        /repeating-linear-gradient/,
-      );
+      // A striped pixel lawn covers the zone.
+      const lawn = await box(page, `${zone("play")} [data-field-paint="play"]`);
+      const playBox = await box(page, zone("play"));
+      expect(lawn.width).toBeCloseTo(playBox.width, 0);
+      expect(lawn.height).toBeCloseTo(playBox.height, 0);
       const contact = page.locator(zone("contact"));
       await expect(contact).toHaveCSS("background-color", "rgb(0, 82, 45)");
       // The grass strip edges the contact zone, rising into the bright grass.
       const grass = await box(page, `${zone("contact")} [data-grass-strip]`);
       const contactBox = await box(page, zone("contact"));
-      expect(grass.y + grass.height).toBeCloseTo(contactBox.y, 0);
+      // Its ground row overlaps the zone's edge by two art pixels, so no seam shows.
+      const px = await page.evaluate(() =>
+        parseFloat(getComputedStyle(document.documentElement).getPropertyValue("--px")),
+      );
+      expect(Math.abs(grass.y + grass.height - contactBox.y)).toBeLessThanOrEqual(2 * px);
     });
 
     test("AC5 — an axe scan finds no serious issues on the shell", async ({

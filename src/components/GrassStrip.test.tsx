@@ -1,57 +1,57 @@
 import { cleanup, render } from "@testing-library/react";
+import { renderToStaticMarkup } from "react-dom/server";
 import { afterEach, describe, expect, it } from "vitest";
+import { expectPixelSprite, expectTokensOnly, pixelTokens } from "@/test/pixel";
 import GrassStrip from "./GrassStrip";
 
 afterEach(cleanup);
 
-describe("GrassStrip — AC4: reusable grass for title banners", () => {
-  it("is a decorative, unfocusable SVG", () => {
+describe("GrassStrip — AC4: reusable pixel grass for title banners", () => {
+  it("is a decorative, unfocusable, crisp pixel SVG", () => {
     const { container } = render(<GrassStrip />);
     const svg = container.querySelector("svg")!;
-    expect(svg).toHaveAttribute("aria-hidden", "true");
-    expect(svg).toHaveAttribute("focusable", "false");
+    expectPixelSprite(svg);
     expect(svg.textContent).toBe("");
   });
 
-  it("draws cartoon grass: back and front rows of blades with ink outlines, on a solid base", () => {
+  it("repeats one tile of shaded tufts at the site's pixel size", () => {
     const { container } = render(<GrassStrip />);
     const pattern = container.querySelector("pattern")!;
     expect(pattern).toHaveAttribute("patternUnits", "userSpaceOnUse");
-    for (const row of ["back", "front"]) {
-      const blades = pattern.querySelector(`[data-grass-row="${row}"]`)!;
-      expect(blades.getAttribute("d")!.match(/M/g)!.length).toBeGreaterThan(12);
-      // Bold ink outline, kept at the outline width when the strip stretches.
-      expect(blades).toHaveClass("stroke-ink", "stroke-outline");
-      expect(blades).toHaveAttribute("vector-effect", "non-scaling-stroke");
-    }
-    expect(pattern.querySelector("rect")).not.toBeNull();
-    const rect = container.querySelector("svg > rect")!;
-    expect(rect).toHaveAttribute("width", "100%");
-    expect(rect).toHaveAttribute("fill", `url(#${pattern.id})`);
-  });
-
-  it("fills the tile edge to edge, so the repeat has no gaps", () => {
-    const { container } = render(<GrassStrip />);
-    const pattern = container.querySelector("pattern")!;
-    const width = Number(pattern.getAttribute("width"));
-    const front = pattern
-      .querySelector('[data-grass-row="front"]')!
-      .getAttribute("d")!;
-    const xs = [...front.matchAll(/[ZM]?M?([\d.]+) \d+(?:\.\d+)?Z/g)].map((m) =>
-      Number(m[1]),
+    expect(pattern).toHaveAttribute("width", "64");
+    expect(pattern).toHaveAttribute("height", "9");
+    // Dark roots, mid blades, light tips and a dark outline.
+    const tokens = pixelTokens(pattern);
+    expect(tokens).toEqual(expect.arrayContaining(["grass-900", "grass-500"]));
+    expect(new Set(tokens).size).toBeGreaterThanOrEqual(4);
+    const scaled = container.querySelector("svg > g")!;
+    expect(scaled.getAttribute("style")).toContain("scale(var(--px-scale))");
+    expect(scaled.querySelector("rect")).toHaveAttribute(
+      "fill",
+      `url(#${pattern.id})`,
     );
-    expect(Math.max(...xs)).toBeGreaterThan(width - 12);
   });
 
-  it("defaults to dark grass and accepts its size and colour as tokens", () => {
-    const { container, rerender } = render(<GrassStrip />);
+  it("is always 9 art pixels tall and spans its box", () => {
+    const { container } = render(<GrassStrip />);
     expect(container.querySelector("svg")).toHaveClass(
       "w-full",
-      "fill-pitch-dark",
+      "h-[calc(9*var(--px))]",
     );
-    rerender(<GrassStrip className="h-10 fill-pitch" />);
-    expect(container.querySelector("svg")).toHaveClass("h-10", "fill-pitch");
-    expect(container.innerHTML).not.toMatch(/#[0-9a-fA-F]{3,8}\b(?![-\w])/);
+  });
+
+  it("defaults to dark grass and offers bright field grass", () => {
+    const { container, rerender } = render(<GrassStrip />);
+    expect(container.querySelector("svg")).toHaveAttribute("data-grass-strip", "dark");
+    rerender(<GrassStrip tone="field" className="absolute" />);
+    const svg = container.querySelector("svg")!;
+    expect(svg).toHaveAttribute("data-grass-strip", "field");
+    expect(svg).toHaveClass("absolute");
+    expect(pixelTokens(svg)).toContain("grass-300");
+  });
+
+  it("uses design tokens only", () => {
+    expectTokensOnly(renderToStaticMarkup(<GrassStrip />));
   });
 
   it("can be used several times on one page without clashing pattern ids", () => {
@@ -63,7 +63,7 @@ describe("GrassStrip — AC4: reusable grass for title banners", () => {
     );
     const [a, b] = [...container.querySelectorAll("pattern")].map((p) => p.id);
     expect(a).not.toBe(b);
-    const fills = [...container.querySelectorAll("svg > rect")].map((r) =>
+    const fills = [...container.querySelectorAll("svg > g > rect")].map((r) =>
       r.getAttribute("fill"),
     );
     expect(fills).toEqual([`url(#${a})`, `url(#${b})`]);

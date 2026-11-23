@@ -2,32 +2,28 @@ import CartoonPortrait from "@/components/CartoonPortrait";
 import EnchantedMirror from "@/components/EnchantedMirror";
 import IntroSign from "@/components/IntroSign";
 import PageSection from "@/components/PageSection";
-import PlaceholderCard from "@/components/PlaceholderCard";
 import TacticsBoard from "@/components/skills/TacticsBoard";
 import ProjectBrowser from "@/components/projects/ProjectBrowser";
 import ProjectModal from "@/components/projects/ProjectModal";
+import MusicWaterfall from "@/components/easter-egg/MusicWaterfall";
 import Waterfall from "@/components/easter-egg/Waterfall";
 import SoccerField from "@/components/SoccerField";
+import ContactBoard from "@/components/contact/ContactBoard";
 import { site } from "@/content/site";
 
 const [hero, skills, projects, contact] = site.sections;
 
 /**
  * The single page (spec 001 US-6): every section lives on the soccer field, in
- * order hero, skills, projects, contact. Sections are placeholders until their
- * own specs (002, 004, 006, 007) fill them in.
+ * order hero, skills, projects, contact (specs 002, 004, 006, 007).
  */
 export default function Home() {
   return (
     <SoccerField
-      crown={<Waterfall />}
+      crown={<MusicWaterfall scene={<Waterfall />} />}
       contact={
         <PageSection id={contact.id} title={contact.title}>
-          <PlaceholderCard>
-            <p className="font-body text-lg">
-              Contact details are coming soon.
-            </p>
-          </PlaceholderCard>
+          <ContactBoard />
         </PageSection>
       }
     >
@@ -38,7 +34,7 @@ export default function Home() {
           <div className="flex flex-col items-center md:flex-row md:items-center md:justify-center">
             <div className="relative z-10 w-full shrink-0 md:w-auto">
               <EnchantedMirror
-                portrait={<CartoonPortrait className="w-48 md:w-56" />}
+                portrait={<CartoonPortrait />}
               />
             </div>
             <IntroSign />

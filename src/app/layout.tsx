@@ -1,22 +1,25 @@
 import type { Metadata } from "next";
-import { Lilita_One, Source_Sans_3 } from "next/font/google";
+import { Jersey_10, Pixelify_Sans } from "next/font/google";
 import FilmOverlay from "@/components/FilmOverlay";
+import { KICKOFF_INIT_SCRIPT } from "@/components/easter-egg/kickoffChoice";
 import ForestBackground from "@/components/ForestBackground";
 import SiteHeader from "@/components/SiteHeader";
 import { site } from "@/content/site";
 import "./globals.css";
 
-const lilitaOne = Lilita_One({
+/** Headings: a chunky pixel face that reads like jersey lettering. */
+const jersey10 = Jersey_10({
   weight: "400",
   subsets: ["latin"],
   display: "swap",
-  variable: "--font-lilita-one",
+  variable: "--font-jersey-10",
 });
 
-const sourceSans3 = Source_Sans_3({
+/** Body: a readable pixel face for running text. */
+const pixelifySans = Pixelify_Sans({
   subsets: ["latin"],
   display: "swap",
-  variable: "--font-source-sans-3",
+  variable: "--font-pixelify-sans",
 });
 
 export const metadata: Metadata = {
@@ -28,14 +31,20 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html
       lang="en"
-      className={`${lilitaOne.variable} ${sourceSans3.variable} h-full antialiased`}
+      className={`${jersey10.variable} ${pixelifySans.variable} h-full`}
+      // The Kick off script below may set data-kicked-off before React hydrates.
+      suppressHydrationWarning
     >
+      <head>
+        {/* Hides the Kick off overlay (when enabled) before paint on later loads of the session (spec 900). */}
+        <script dangerouslySetInnerHTML={{ __html: KICKOFF_INIT_SCRIPT }} />
+      </head>
       <body className="relative isolate min-h-full flex flex-col font-body">
         <ForestBackground />
         <header>
           <a
             href="#main"
-            className="sr-only rounded-pill border-outline border-ink bg-parchment px-4 py-2 font-heading text-ink focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-[60]"
+            className="sr-only pixel-button bg-paper-200 px-4 py-1 font-heading text-xl uppercase text-ink focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-[60]"
           >
             Skip to content
           </a>
@@ -51,7 +60,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
             {children}
           </main>
           <footer className="flex justify-center">
-            <p className="rounded-pill border-outline border-ink bg-parchment px-5 py-1.5 font-body text-ink">
+            <p className="pixel-button bg-paper-200 px-5 py-0.5 font-heading text-xl tracking-wide text-ink">
               {site.name}
             </p>
           </footer>

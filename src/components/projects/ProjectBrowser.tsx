@@ -12,11 +12,12 @@ import {
 } from "./projectFilters";
 
 const base =
-  "rounded-pill border-outline border-ink px-4 py-1.5 font-heading text-base shadow-[2px_3px_0_var(--color-ink)] transition-transform focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-cartoon-yellow motion-reduce:transition-none";
-// Both states are allowed text pairs in manifest §6.
-const active = "bg-pitch-dark text-chalk";
+  "pixel-button px-3 py-0.5 font-heading text-xl leading-tight tracking-wide uppercase focus-visible:outline-3 focus-visible:outline-offset-4 focus-visible:outline-red-600";
+// Both states are allowed text pairs in manifest §6. The pressed button sits
+// one pixel lower, like a pushed pixel button.
+const active = "translate-y-[var(--px)] bg-pitch-dark text-chalk";
 const inactive =
-  "bg-parchment text-ink hover:-translate-y-0.5 hover:bg-cartoon-yellow";
+  "bg-paper-200 text-ink hover:-translate-y-[var(--px)] hover:bg-gold-500 motion-reduce:hover:translate-y-0";
 
 /**
  * The projects grid with category filters (spec 006 US-3): "All" and one button
@@ -44,7 +45,7 @@ export default function ProjectBrowser({
         role="group"
         aria-label="Filter projects by category"
         data-project-filters=""
-        className="flex flex-wrap justify-center gap-2.5"
+        className="flex flex-wrap justify-center gap-3"
       >
         {filterOptions(projects).map((option) => {
           const pressed = option === filter;

@@ -40,21 +40,46 @@ describe("globals.css design tokens (AC1)", () => {
     },
   );
 
-  it("defines the outline widths (3px, 4px for large shapes)", () => {
-    expect(tokenValue("border-width-outline")).toBe("3px");
-    expect(tokenValue("border-width-outline-lg")).toBe("4px");
-    expect(tokenValue("stroke-width-outline")).toBe("3px");
-    expect(tokenValue("stroke-width-outline-lg")).toBe("4px");
+  it.each([
+    ["grass", 8],
+    ["leaf", 8],
+    ["wood", 8],
+    ["stone", 8],
+    ["water", 8],
+    ["paper", 5],
+    ["red", 5],
+    ["gold", 5],
+    ["skin", 5],
+  ])("defines the %s colour ramp (%i shades)", (ramp, shades) => {
+    const names = [...theme.matchAll(new RegExp(`--color-${ramp}-(\\d+):`, "g"))];
+    expect(names).toHaveLength(shades);
   });
 
-  it("defines the radius tokens (12px cards, 9999px pills)", () => {
-    expect(tokenValue("radius-card")).toBe("12px");
-    expect(tokenValue("radius-pill")).toBe("9999px");
+  it("builds the ramps on the base tokens where they fit", () => {
+    expect(tokenValue("color-grass-500")).toBe("var(--color-pitch)");
+    expect(tokenValue("color-grass-800")).toBe("var(--color-pitch-dark)");
+    expect(tokenValue("color-wood-600")).toBe("var(--color-bark)");
+    expect(tokenValue("color-red-600")).toBe("var(--color-cartoon-red)");
+    expect(tokenValue("color-gold-600")).toBe("var(--color-cartoon-yellow)");
   });
+
+  it("sets the pixel size: 3px on phones, 4px from 768px (manifest §6)", () => {
+    expect(css).toMatch(/:root \{\s*--px: 3px;\s*\/\*[^*]*\*\/\s*--px-scale: 3;/);
+    expect(css).toMatch(
+      /@media \(min-width: 48rem\) \{\s*:root \{\s*--px: 4px;\s*--px-scale: 4;/,
+    );
+  });
+
+  it.each(["paper", "wood", "stone", "board"])(
+    "defines the pixel-frame-%s surface",
+    (frame) => {
+      expect(css).toContain(`@utility pixel-frame-${frame} {`);
+    },
+  );
 
   it("maps font-heading and font-body to the next/font variables (AC2)", () => {
-    expect(tokenValue("font-heading")).toBe("var(--font-lilita-one)");
-    expect(tokenValue("font-body")).toBe("var(--font-source-sans-3)");
+    expect(tokenValue("font-heading")).toBe("var(--font-jersey-10)");
+    expect(tokenValue("font-body")).toBe("var(--font-pixelify-sans)");
   });
 });
 

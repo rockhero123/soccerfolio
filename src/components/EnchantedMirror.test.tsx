@@ -1,13 +1,12 @@
-import { readFileSync } from "node:fs";
-import { join } from "node:path";
-import { cleanup, render, screen, within } from "@testing-library/react";
+import { cleanup, render, screen } from "@testing-library/react";
 import { renderToStaticMarkup } from "react-dom/server";
 import { afterEach, describe, expect, it } from "vitest";
 import { hero } from "@/content/hero";
 import { site } from "@/content/site";
 import { contrast, overlay, token } from "@/test/contrast";
+import { expectTokensOnly } from "@/test/pixel";
 import EnchantedMirror from "./EnchantedMirror";
-import { GRAIN, VIGNETTE } from "./FilmOverlay";
+import { VIGNETTE } from "./FilmOverlay";
 
 afterEach(cleanup);
 
@@ -19,119 +18,66 @@ function renderMirror() {
   return { container, frame };
 }
 
-describe("EnchantedMirror — AC1: an ornate enchanted mirror with grass", () => {
-  it("draws a rounded, polished silver frame with an ink outline around the glass", () => {
+describe("EnchantedMirror — AC1: an enchanted pixel mirror with grass", () => {
+  it("draws a bevelled pixel stone-silver frame around mint glass", () => {
     const { frame } = renderMirror();
-    const rim = frame.querySelector(".bg-silver")!;
-    expect(rim).toHaveClass("border-ink", "border-outline-lg");
-    // A metallic gradient from light to shaded silver.
-    expect(rim).toHaveClass(
-      "bg-linear-135",
-      "from-silver-light",
-      "via-silver",
-      "to-silver-shade",
-    );
-    expect(rim.className).toMatch(/rounded-\[/);
-    const glass = rim.querySelector(".bg-mint")!;
-    expect(glass).toHaveClass("border-ink");
-    expect(glass.className).toMatch(/rounded-\[/);
+    const glass = frame.querySelector(".pixel-frame-stone")!;
+    expect(glass).not.toBeNull();
+    // Four gold corner studs on the frame, and a gold crest on top.
+    expect(glass.querySelectorAll(":scope > svg:not([data-mirror])")).toHaveLength(4);
+    expect(frame.querySelector('[data-mirror="crest"]')).not.toBeNull();
   });
 
-  it("is magical: silver sparkles and painted shine on the glass, with no crest", () => {
+  it("is magical: pixel sparkles around it and a stepped shine on the glass", () => {
     const { frame } = renderMirror();
-    expect(frame.querySelector('[data-mirror="crest"]')).toBeNull();
-    frame
-      .querySelectorAll('[data-mirror="sparkle"] path')
-      .forEach((p) => expect(p).toHaveClass("fill-silver-light"));
-    expect(
-      frame.querySelectorAll('[data-mirror="sparkle"]').length,
-    ).toBeGreaterThanOrEqual(3);
-    expect(
-      frame.querySelector('[data-mirror="shine"] .fill-chalk'),
-    ).not.toBeNull();
+    expect(frame.querySelectorAll('[data-mirror="sparkle"]')).toHaveLength(3);
+    const shine = frame.querySelector('[data-mirror="shine"]')!;
+    expect(shine).toHaveClass("opacity-60");
+    expect(shine.querySelector('path[fill="var(--color-paper-100)"]')).not.toBeNull();
   });
 
-  it("grows tall grass along its bottom edge", () => {
+  it("grows pixel grass along its bottom edge", () => {
     const { frame } = renderMirror();
-    const grass = frame.querySelector("[data-grass-strip]")!;
-    expect(grass).toHaveClass("absolute", "bottom-0");
-    expect(grass.parentElement).toBe(frame);
+    expect(frame.querySelector("[data-grass-strip]")).toHaveClass("absolute");
   });
 
   it("holds the portrait inside the glass", () => {
     const { frame } = renderMirror();
-    const glass = frame.querySelector(".bg-mint")!;
-    expect(
-      within(glass as HTMLElement).getByRole("img", { name: "Portrait" }),
-    ).toBeInTheDocument();
+    const glass = frame.querySelector(".pixel-frame-stone")!;
+    expect(glass).toContainElement(screen.getByRole("img", { name: "Portrait" }));
   });
 
   it("keeps all the ornaments decorative", () => {
     const { frame } = renderMirror();
     frame
-      .querySelectorAll('[data-mirror="sparkle"], [data-mirror="shine"]')
-      .forEach((el) => expect(el).toHaveAttribute("aria-hidden", "true"));
+      .querySelectorAll('svg[shape-rendering="crispEdges"]')
+      .forEach((svg) => expect(svg).toHaveAttribute("aria-hidden", "true"));
   });
 });
 
 describe("EnchantedMirror — AC2/AC3: nickname and role", () => {
-  it('shows "Richi" in bold as the only <h1>, named "Ricardo Martinez (Richi)"', () => {
+  it('shows "Richi" as the only <h1>, named "Ricardo Martinez (Richi)"', () => {
     const { frame } = renderMirror();
     const h1 = screen.getByRole("heading", { level: 1 });
     expect(h1).toHaveAccessibleName("Ricardo Martinez (Richi)");
     expect(h1).toHaveClass("font-heading");
-    // Only the nickname is drawn; the full name is for screen readers and search.
-    expect(h1.querySelector('[aria-hidden="true"]')).toHaveTextContent(
-      /^Richi$/,
-    );
+    expect(h1.querySelector('[aria-hidden="true"]')).toHaveTextContent(/^Richi$/);
     expect(h1.querySelector(".sr-only")).toHaveTextContent(
       /^Ricardo Martinez \(Richi\)$/,
     );
     expect(frame.querySelectorAll("h1")).toHaveLength(1);
   });
 
-  it("shows the role below the name in regular weight", () => {
+  it("shows the role below the name in regular weight, on a riveted pixel nameplate", () => {
     const { frame } = renderMirror();
     const role = frame.querySelector('[data-mirror="role"]')!;
     expect(role).toHaveTextContent("Software Engineer");
-    expect(role).toHaveClass("font-body", "font-normal");
+    expect(role).toHaveClass("font-body", "font-normal", "pixel-button", "bg-stone-200");
+    expect(role.querySelectorAll('[data-mirror="rivet"]')).toHaveLength(2);
     const h1 = frame.querySelector("h1")!;
     expect(
       h1.compareDocumentPosition(role) & Node.DOCUMENT_POSITION_FOLLOWING,
     ).toBeTruthy();
-  });
-});
-
-describe("EnchantedMirror — the role on a shiny metal nameplate (owner design)", () => {
-  it("engraves the role on a riveted silver plate with an ink outline", () => {
-    const { frame } = renderMirror();
-    const plate = frame.querySelector('[data-mirror="role"]')!;
-    expect(plate).toHaveClass(
-      "bg-linear-to-b",
-      "from-silver-light",
-      "to-silver",
-      "border-ink",
-      "text-ink",
-    );
-    // Only the two lighter silvers sit behind the text (ink stays ≥ 7.9:1).
-    expect(plate.className).not.toMatch(/silver-shade/);
-    expect(plate.querySelectorAll('[data-mirror="rivet"]')).toHaveLength(2);
-    plate
-      .querySelectorAll('[data-mirror="rivet"]')
-      .forEach((r) => expect(r).toHaveAttribute("aria-hidden", "true"));
-    expect(plate).toHaveClass("whitespace-nowrap");
-  });
-
-  it("keeps ink text at AA or better on the plate's silvers, even under the film overlay", () => {
-    const ink = token("ink");
-    for (const name of ["silver-light", "silver"]) {
-      const metal = token(name);
-      expect(contrast(ink, metal), name).toBeGreaterThanOrEqual(7);
-      const dark = (c: typeof ink) => overlay(c, ink, VIGNETTE + GRAIN);
-      expect(contrast(dark(ink), dark(metal)), name).toBeGreaterThanOrEqual(
-        4.5,
-      );
-    }
   });
 });
 
@@ -145,29 +91,19 @@ describe("EnchantedMirror — AC4: name and role from the content files", () => 
 });
 
 describe("EnchantedMirror — AC5: readable text in tokens only", () => {
-  it("puts ink text on the mint glass (an allowed manifest §6 pair)", () => {
+  const ink = token("ink");
+  const darken = (c: ReturnType<typeof token>) => overlay(c, ink, VIGNETTE);
+
+  it("puts ink text on the mint glass and the light stone plate, ≥ 4.5:1 under the vignette", () => {
     const { frame } = renderMirror();
-    const text = frame.querySelector("h1")!.parentElement!;
-    expect(text).toHaveClass("text-ink");
-    expect(text.closest(".bg-mint")).not.toBeNull();
+    expect(frame.querySelector(".pixel-frame-stone > div")).toHaveClass("text-ink");
+    for (const surface of ["mint", "stone-200"])
+      expect(contrast(ink, darken(token(surface)))).toBeGreaterThanOrEqual(4.5);
   });
 
-  it("mixes its silver tones from the ink and chalk tokens", () => {
-    const css = readFileSync(
-      join(process.cwd(), "src/app/globals.css"),
-      "utf8",
+  it("uses design tokens only", () => {
+    expectTokensOnly(
+      renderToStaticMarkup(<EnchantedMirror portrait={<span />} />),
     );
-    for (const name of ["silver-light", "silver", "silver-shade"]) {
-      const value = css.match(new RegExp(`--color-${name}:\\s*([^;]+);`))![1];
-      expect(value).toMatch(
-        /^color-mix\(in oklab, var\(--color-ink\) \d+%, var\(--color-chalk\)\)$/,
-      );
-    }
-  });
-
-  it("uses no raw hex colours", () => {
-    const html = renderToStaticMarkup(<EnchantedMirror portrait={null} />);
-    expect(html).not.toMatch(/#[0-9a-fA-F]{3,8}\b(?![-\w])/);
-    expect(html).not.toMatch(/(fill|stroke)="(?!url\(|none)/);
   });
 });

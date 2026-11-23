@@ -10,16 +10,20 @@ test("AC1 — the portrait sits in an enchanted mirror with grass at its foot", 
   const frame = page.locator(mirror);
   await expect(frame).toBeVisible();
   await expect(
-    frame.getByRole("img", { name: /Cartoon portrait of Ricardo Martinez/ }),
+    frame.getByRole("img", { name: /Pixel-art portrait of Ricardo Martinez/ }),
   ).toBeVisible();
   const box = (await frame.boundingBox())!;
   const grass = (await frame.locator("[data-grass-strip]").boundingBox())!;
-  expect(grass.y + grass.height).toBeCloseTo(box.y + box.height, 0);
-  // A polished silver frame: a metallic gradient.
-  await expect(frame.locator(".bg-silver")).toHaveCSS(
-    "background-image",
-    /linear-gradient/,
+  // The grass's ground row tucks two art pixels under the frame's foot.
+  const px = await page.evaluate(() =>
+    parseFloat(getComputedStyle(document.documentElement).getPropertyValue("--px")),
   );
+  expect(Math.abs(grass.y + grass.height - (box.y + box.height))).toBeLessThanOrEqual(2 * px);
+  // A bevelled pixel stone-silver frame around mint glass, with a gold crest.
+  const glass = frame.locator(".pixel-frame-stone");
+  await expect(glass).toHaveCSS("background-color", "rgb(168, 240, 216)");
+  await expect(glass).toHaveCSS("box-shadow", /rgb\(231, 233, 238\)/);
+  await expect(frame.locator('[data-mirror="crest"]')).toBeVisible();
 });
 
 test("AC2/AC3 — Richi is the only h1, named Ricardo Martinez (Richi), with the role below", async ({
@@ -44,7 +48,7 @@ test("AC2/AC3 — Richi is the only h1, named Ricardo Martinez (Richi), with the
     .locator(`${mirror} [data-mirror="role"]`)
     .boundingBox())!;
   expect(roleBox.y).toBeGreaterThan(nameBox.y);
-  await expect(h1).toHaveCSS("font-family", /Lilita One/);
+  await expect(h1).toHaveCSS("font-family", /Jersey 10/);
   await expect(page.locator(`${mirror} [data-mirror="role"]`)).toHaveCSS(
     "font-weight",
     "400",
@@ -66,7 +70,9 @@ for (const width of [320, 375, 768, 1280]) {
     await page.goto("/");
     const plate = page.locator(`${mirror} [data-mirror="role"]`);
     const p = (await plate.boundingBox())!;
-    const glass = (await page.locator(`${mirror} .bg-mint`).boundingBox())!;
+    const glass = (await page
+      .locator(`${mirror} .pixel-frame-stone`)
+      .boundingBox())!;
     expect(p.x).toBeGreaterThanOrEqual(glass.x);
     expect(p.x + p.width).toBeLessThanOrEqual(glass.x + glass.width);
     const lineHeight = await plate.evaluate((el) =>

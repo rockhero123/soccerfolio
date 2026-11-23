@@ -9,7 +9,7 @@ depends_on: ["001", "002"]
 # 900 — Easter egg
 
 ## Summary
-A cartoon waterfall pours across the top of the soccer field, from the forest edge down to the Introduction section. Behind the falling water a music video plays as soon as the page loads, subtly visible through the water — a fun, surprising detail that shows Ricardo's personality.
+A pixel-art waterfall pours across the top of the soccer field, from the forest edge down to the Introduction section. Hidden behind the falling water, a music video plays as soon as the page loads — only its music is heard — a fun, surprising detail that shows Ricardo's personality.
 
 ## Goals
 - Surprise and delight visitors (manifest G6) with a feature that fits the enchanted-forest concept.
@@ -27,15 +27,15 @@ A cartoon waterfall pours across the top of the soccer field, from the forest ed
 ## User stories
 
 ### US-1: Animated cartoon waterfall
-**As a** visitor, **I want** a lively cartoon waterfall at the top of the field, **so that** the page opens with a surprising, magical scene.
+**As a** visitor, **I want** a lively pixel-art waterfall at the top of the field, **so that** the page opens with a surprising, magical scene.
 
 **Context**
-The waterfall spans the top strip of the field — from the top edge of the field, behind the top goal area, down to just above the "Introduction" title banner — pouring from the forest edge. It is drawn in the site's rubber-hose style and palette (manifest §6), with leaves, sticks and rocks in and around the water.
+The waterfall spans the top strip of the field — from the top edge of the field, behind the top goal area, down to just above the "Introduction" title banner — pouring from the forest edge. It is drawn in the site's pixel-art style and palette (manifest §6): a three-tier cascade down a mossy stone cliff, with jungle hanging over the cliff and leaves, sticks and rocks in and around the water.
 
 **Acceptance criteria**
-- [ ] AC1 — A `Waterfall` component draws an original cartoon waterfall (inline SVG and CSS, bold `ink` outlines, token colours only) with rocks along its edges and leaves and sticks carried by the water.
+- [ ] AC1 — A `Waterfall` component draws an original pixel-art waterfall (inline SVG sprites and patterns, token colours only) with rocks along its edges and leaves and sticks carried by the water.
 - [ ] AC2 — It is placed across the top of the field, from the field's top edge to just above the Introduction title banner, at 375px, 768px and 1280px+, without covering the banner or any section content.
-- [ ] AC3 — The water looks like it is moving: falling streaks, waves, foam at the bottom and currents, animated with CSS (no JavaScript animation loop), with no visible scroll jank.
+- [ ] AC3 — The water looks like it is moving: falling streaks, sideways ripples, flickering foam and drifting leaves, animated with pixel-stepped CSS (`steps()`, no JavaScript animation loop), with no visible scroll jank.
 - [ ] AC4 — With `prefers-reduced-motion: reduce` the water is drawn but does not move.
 - [ ] AC5 — The artwork is decorative (`aria-hidden="true"`), never receives focus, and adds no raster images.
 
@@ -45,14 +45,15 @@ The waterfall spans the top strip of the field — from the top edge of the fiel
 **As a** visitor, **I want** a music video to play behind the waterfall when the page loads, **so that** I discover a fun, personal surprise.
 
 **Context**
-Video: https://www.youtube.com/watch?v=Yq2HC4_Zxgo. Browsers block videos with sound from starting on their own until the visitor has interacted with the page, so the video tries sound first and falls back to muted (owner decision).
+Video: https://www.youtube.com/watch?v=Yq2HC4_Zxgo. Browsers block videos with sound from starting on their own until the visitor has interacted with the page, so the video tries sound first and falls back to muted (owner decision). To get the music playing right away, the first visit of a session opens with a "Kick off!" overlay whose click unlocks sound (owner decision).
 
 **Acceptance criteria**
-- [ ] AC1 — The video (`Yq2HC4_Zxgo`, from `src/content/easterEgg.ts`) is embedded behind the waterfall from `youtube-nocookie.com`, subtly visible through the falling water, and loops.
-- [ ] AC2 — On page load it starts playing with sound. If the browser blocks autoplay with sound, it plays muted instead and turns the sound on at the visitor's first click, tap or key press on the page; a "Sound on" button is also shown.
+- [ ] AC1 — The video (`Yq2HC4_Zxgo`, from `src/content/easterEgg.ts`) is embedded behind the waterfall from `youtube-nocookie.com`, completely hidden (only the music is heard), and loops.
+- [ ] AC2 — When the Kick off overlay is not shown (AC6), on page load it starts playing with sound. If the browser blocks autoplay with sound, it plays muted instead and turns the sound on at the visitor's first click, tap or key press on the page; a "Sound on" button is also shown.
 - [ ] AC3 — A visible, keyboard-accessible control always lets the visitor pause/play and mute/unmute the video; each control has an accessible name and reflects its state.
 - [ ] AC4 — With `prefers-reduced-motion: reduce` the video does not start by itself; the visitor can start it with the play control.
 - [ ] AC5 — The rest of the page works normally while the video loads or if YouTube is unavailable (the waterfall still shows), and the video never covers or blocks the Introduction section or the header navigation.
+- [ ] AC6 — The overlay is built behind a switch (`easterEgg.kickOff.enabled` in `src/content/easterEgg.ts`), **off for now** (owner decision); while off, every load follows AC2. When enabled: on the first page load of a browser session, a cartoon "Kick off!" overlay covers the page with two choices: "Kick off!" enters the portfolio and starts the music with sound right away, and "Enter without music" enters without playing it (Escape does the same). It is a keyboard-accessible modal dialog with focus on "Kick off!", it is not shown again in the same session, and later loads follow AC2 — or stay silent if the visitor chose no music.
 
 **Jira:** [SOC-23](https://soccerfolio.atlassian.net/browse/SOC-23)
 
@@ -68,9 +69,10 @@ export const easterEgg = {
 ```
 
 ## Design notes
-- Matches the design guidelines in `manifest.md` §6: hand-coded SVG, rubber-hose style, ink outlines, token palette. The waterfall is the one animated illustration (manifest §6 "Motion" exception); it stands still with reduced motion.
-- Water: translucent light blues/whites mixed from the tokens (e.g. `chalk`, `mint`), so the video shows through; foam in `chalk`, rocks in `forest-deep`/`bark`, leaves and sticks reuse the field-debris pieces.
-- The pause/mute controls follow the site's pill-button style (as the project filters) and sit at the bottom corner of the waterfall.
+- Matches the design guidelines in `manifest.md` §6: hand-coded pixel art, token ramps. The waterfall is the one animated illustration (manifest §6 "Motion" exception); it stands still with reduced motion.
+- Water: the `water` ramp with `chalk` foam; cliffs and rocks from the `stone` ramp with moss; leaves and sticks as small pixel sprites.
+- The pause/mute controls follow the site's pixel-button style (as the project filters) and sit at the top corner of the waterfall.
+- The waterfall art is rendered on the server and passed to the client player as `scene`, so the pixel art is not bundled for the browser.
 
 ## Testing notes
 - Vitest: the waterfall is `aria-hidden` and token-only with rocks, leaves and sticks; the embed URL uses `youtube-nocookie.com` with the video id from `easterEgg.ts`; the controls have accessible names and states; reduced motion disables autoplay.
@@ -80,3 +82,4 @@ export const easterEgg = {
 - [x] Trigger: plays on page load, with sound when the browser allows it (owner decision).
 - [x] Placement: across the top of the field, down to the Introduction section (owner decision).
 - [x] Stories: two (waterfall, then video) (owner decision).
+- [x] Kick off overlay: once per session, with an "Enter without music" choice (owner decision) — built but switched off for now (owner decision).

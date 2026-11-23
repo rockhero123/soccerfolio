@@ -20,7 +20,8 @@ for (const width of [375, 768, 1280]) {
       const box = (await page.locator(overlay).boundingBox())!;
       expect(box).toEqual({ x: 0, y: 0, width, height: 800 });
     }
-    await expect(page.locator(`${overlay} [data-film="grain"]`)).toBeVisible();
+    // A banded vignette; no film grain in the pixel-art design.
+    await expect(page.locator(`${overlay} [data-film="grain"]`)).toHaveCount(0);
     await expect(page.locator(`${overlay} [data-film="vignette"]`)).toHaveCSS(
       "background-image",
       /radial-gradient/,
