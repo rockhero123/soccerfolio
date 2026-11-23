@@ -1,5 +1,6 @@
 import AxeBuilder from "@axe-core/playwright";
 import { expect, test } from "@playwright/test";
+import { hero } from "../src/content/hero";
 
 const mirror = '[data-mirror="frame"]';
 const sign = "[data-intro-sign]";
@@ -72,7 +73,7 @@ test("AC2/AC4 — the intro is readable: ≥ 1.125rem, bold, line height ≥ 1.5
 }) => {
   await page.goto("/");
   const text = page.locator(`${sign} p`);
-  await expect(text).toContainText("Interactive Media Design");
+  await expect(text).toHaveText(hero.intro);
   const { size, line } = await text.evaluate((el) => {
     const cs = getComputedStyle(el);
     return { size: parseFloat(cs.fontSize), line: parseFloat(cs.lineHeight) };
