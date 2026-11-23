@@ -28,7 +28,7 @@ A personal portfolio website for Ricardo Martinez, software developer. The visua
 | End-to-end tests | Playwright |
 | Lint | ESLint (`eslint-config-next`) |
 | Package manager | npm |
-| Hosting | Vercel |
+| Hosting | GitHub Pages (static export, deployed by `.github/workflows/deploy-pages.yml`) |
 
 - Next.js 16 has breaking changes. Read `node_modules/next/dist/docs/` before using an API you are not sure about (see `AGENTS.md`).
 - Do not add a new dependency unless the story requires it. Explain any new dependency in the PR description.
@@ -76,6 +76,6 @@ A personal portfolio website for Ricardo Martinez, software developer. The visua
 
 ## 9. Security
 
-- Never commit secrets. Keep Jira, GitHub and Vercel tokens in `.env.local` or in the agent's environment; `.env*` is git-ignored.
+- Never commit secrets. Keep Jira and GitHub tokens in `.env.local` or in the agent's environment; `.env*` is git-ignored.
 - The easter egg must not expose private data and must not affect normal site behavior.
 - Exception (owner decision, spec 900): the easter egg's music video player loads with the page instead of on a trigger. It must use YouTube's privacy-enhanced embed, give visitors pause/mute controls, respect `prefers-reduced-motion`, and the page must work normally if it fails to load.
