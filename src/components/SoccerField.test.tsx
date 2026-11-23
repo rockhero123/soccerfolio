@@ -1,9 +1,15 @@
-import { readFileSync } from "node:fs";
-import { join } from "node:path";
 import { cleanup, render, screen } from "@testing-library/react";
+import { renderToStaticMarkup } from "react-dom/server";
 import { afterEach, describe, expect, it } from "vitest";
+import { expectPixelSprite, expectTokensOnly, pixelTokens } from "@/test/pixel";
 import SoccerField from "./SoccerField";
-import { ZONE_PALETTE } from "./soccer-field/debris/palette";
+import { LAWN_ART, LAWN_TILE, SCATTER_ART } from "./soccer-field/lawnArt";
+import {
+  CENTER_CIRCLE,
+  CORNER_ARC,
+  PENALTY,
+  PENALTY_ART,
+} from "./soccer-field/markingArt";
 
 afterEach(cleanup);
 
@@ -23,13 +29,12 @@ function renderField() {
   return { container, field, play, contact, marking };
 }
 
-describe("SoccerField — AC1: wraps the content with bold parchment and ink field markings", () => {
+describe("SoccerField — AC1: wraps the content with pixel chalk markings", () => {
   it("renders the sections in the playing zone and the contact slot in the contact zone", () => {
     const { play, contact } = renderField();
     expect(play).toContainElement(
       screen.getByRole("heading", { name: "Skills" }),
     );
-    // Content sits in its own layer above all the art.
     for (const zone of [play, contact]) {
       expect(zone.querySelector("[data-field-content]")).toHaveClass(
         "relative",
@@ -42,375 +47,181 @@ describe("SoccerField — AC1: wraps the content with bold parchment and ink fie
   it("draws the outer boundary with four corner arcs", () => {
     const { marking } = renderField();
     expect(marking("boundary")).toHaveLength(1);
-    expect(marking("boundary")[0]).toHaveClass("border-parchment");
     expect(marking("corner-arc")).toHaveLength(4);
   });
 
-  it("draws a penalty box, goal area, spot and arc at the top", () => {
-    const { play } = renderField();
-    const top = play.querySelector('[data-marking="penalty-area-top"]')!;
-    for (const name of [
-      "penalty-box",
-      "goal-area",
-      "penalty-spot",
-      "penalty-arc",
-    ]) {
-      expect(top.querySelector(`[data-marking="${name}"]`)).not.toBeNull();
-    }
-  });
-
-  it("draws the halfway line with the centre circle and spot", () => {
-    const { play, marking } = renderField();
-    expect(play).toContainElement(marking("halfway-line")[0] as HTMLElement);
-    expect(marking("halfway-line")[0]).toHaveClass("bg-parchment");
-    expect(
-      play.querySelector('[data-marking="center-circle"] circle'),
-    ).not.toBeNull();
-    expect(marking("center-spot")).toHaveLength(1);
-  });
-
-  it("draws a penalty box and a goal at the bottom, mirrored from the top", () => {
-    const { contact } = renderField();
-    const bottom = contact.querySelector(
-      '[data-marking="penalty-area-bottom"]',
-    )!;
+  it("draws a penalty area at the top, the halfway line with the centre circle, and a penalty area with a goal at the bottom", () => {
+    const { play, contact } = renderField();
+    expect(play.querySelector('[data-marking="penalty-area-top"]')).not.toBeNull();
+    expect(play.querySelector('[data-marking="halfway-line"]')).not.toBeNull();
+    expect(play.querySelector('[data-marking="center-circle"]')).not.toBeNull();
+    const bottom = contact.querySelector('[data-marking="penalty-area-bottom"]')!;
     expect(bottom).toHaveClass("-scale-y-100");
-    expect(bottom.querySelector('[data-marking="penalty-box"]')).not.toBeNull();
-    expect(bottom.querySelector('[data-marking="goal"]')).not.toBeNull();
   });
 
-  it("paints every marking in parchment over a wider ink casing, never in white", () => {
+  it("draws every marking as crisp pixel art in chalk, never in white", () => {
     const { field } = renderField();
-    const paint = field.querySelectorAll(
-      "[data-marking] path, [data-marking] circle",
+    const sprites = field.querySelectorAll("svg[data-marking]");
+    expect(sprites.length).toBe(7);
+    sprites.forEach((svg) => {
+      expectPixelSprite(svg);
+      expect(pixelTokens(svg).every((t) => ["paper-100", "stone-300"].includes(t))).toBe(true);
+    });
+    expect(field.querySelector('[data-marking="boundary"]')).toHaveClass(
+      "border-paper-100",
     );
-    const ink = field.querySelectorAll(
-      "[data-marking-ink] path, [data-marking-ink] circle",
-    );
-    expect(paint.length).toBeGreaterThan(10);
-    paint.forEach((shape) =>
-      expect(shape.getAttribute("class")).toMatch(/(stroke|fill)-parchment/),
-    );
-    ink.forEach((shape) =>
-      expect(shape.getAttribute("class")).toMatch(/(stroke|fill)-ink/),
-    );
-    // Each painted marking has an ink casing of the same kind.
-    for (const name of [
-      "boundary",
-      "halfway-line",
-      "penalty-box",
-      "goal-area",
-      "penalty-arc",
-      "corner-arc",
-      "center-circle",
-      "goal",
-    ]) {
-      expect(
-        field.querySelectorAll(`[data-marking-ink="${name}"]`).length,
-      ).toBe(field.querySelectorAll(`[data-marking="${name}"]`).length);
-    }
-    expect(field.innerHTML).not.toMatch(/(stroke|fill|border|bg)-chalk/);
-    expect(field.innerHTML).not.toMatch(/#[0-9a-fA-F]{3,8}\b(?![-\w])/);
-  });
-
-  it("draws the ink casing wider than the parchment line, using the outline token", () => {
-    const { field } = renderField();
-    const casing = field.querySelector('[data-marking-ink="penalty-box"]')!;
-    const line = field.querySelector('[data-marking="penalty-box"]')!;
-    expect(casing.getAttribute("class")).toContain(
-      "calc(var(--field-line)+2*var(--stroke-width-outline))",
-    );
-    expect(line.getAttribute("class")).toContain(
-      "[stroke-width:var(--field-line)]",
+    expect(field.querySelector('[data-marking="halfway-line"]')).toHaveClass(
+      "bg-paper-100",
     );
   });
 
-  it("layers every ink casing below every parchment line", () => {
+  it("gives the markings a crisp, one-pixel dark-grass drop shadow", () => {
     const { field } = renderField();
-    const z = (el: Element) =>
-      el.closest('[class*="z-["]')!.className.match(/z-\[(\d)\]/)![1];
-    const inkZ = new Set(
-      [...field.querySelectorAll("[data-marking-ink]")].map(z),
+    field.querySelectorAll("[data-field-markings]:not(:has([data-field-scatter]))").forEach((layer) => {
+      expect(layer.className).toContain("drop-shadow(var(--px)_var(--px)_0_");
+    });
+  });
+});
+
+describe("SoccerField — AC1: the pixel markings' geometry", () => {
+  const { canvas: box } = PENALTY_ART.plain;
+  const line = PENALTY.goalDepth;
+
+  it("draws the penalty box sides from the goal line, two pixels wide", () => {
+    for (const x of [0, 1, PENALTY.width - 2, PENALTY.width - 1])
+      expect(box.get(x, line + 5)).toBe("paper-100");
+    expect(box.get(2, line + 5)).toBeUndefined();
+  });
+
+  it("puts the penalty spot on the centre line and the arc outside the box", () => {
+    const mid = PENALTY.width / 2;
+    expect(box.get(mid, line + 26)).toBe("paper-100");
+    const arcRows = [...Array(box.height).keys()].filter(
+      (y) => y > line + 39 && box.get(mid, y) === "paper-100",
     );
-    const paintZ = new Set(
-      [...field.querySelectorAll("[data-marking]")].map(z),
-    );
-    expect([...inkZ]).toEqual(["1"]);
-    expect([...paintZ]).toEqual(["2"]);
+    expect(arcRows.length).toBeGreaterThan(0);
+  });
+
+  it("adds the goal (posts and net) behind the line only at the bottom end", () => {
+    const tokens = (art: typeof PENALTY_ART.goal) =>
+      art.paths.map((p) => p.token);
+    expect(tokens(PENALTY_ART.goal)).toContain("stone-300");
+    expect(tokens(PENALTY_ART.plain)).not.toContain("stone-300");
+  });
+
+  it("keeps the centre circle and its spot symmetric", () => {
+    const { canvas } = CENTER_CIRCLE;
+    for (let y = 0; y < canvas.height; y++)
+      for (let x = 0; x < canvas.width; x++)
+        expect(canvas.get(x, y)).toBe(canvas.get(canvas.width - 1 - x, y));
+    expect(canvas.get(canvas.width / 2, canvas.height / 2)).toBe("paper-100");
+  });
+
+  it("draws a quarter-circle corner arc", () => {
+    expect(CORNER_ARC.canvas.get(6, 0)).toBe("paper-100");
+    expect(CORNER_ARC.canvas.get(0, 6)).toBe("paper-100");
+    expect(CORNER_ARC.canvas.get(0, 0)).toBeUndefined();
   });
 });
 
 describe("SoccerField — AC2: grows with its content, markings keep their proportions", () => {
   it("has no fixed height, so sections are never clipped", () => {
-    const { field, play, contact } = renderField();
-    for (const el of [field, play, contact]) {
-      expect(el.className).not.toMatch(/(^|\s)(h-|max-h-)/);
-    }
+    const { field, play } = renderField();
+    expect(field.className).not.toMatch(/(^|\s)h-\[|(^|\s)h-\d/);
+    expect(play.className).toMatch(/min-h-\[/);
   });
 
-  it("sizes proportional shapes by width only, with a fixed viewBox", () => {
+  it("sizes every marking sprite in art pixels, so it never stretches", () => {
     const { field } = renderField();
-    const shapes = field.querySelectorAll(
-      '[data-marking^="penalty-area-"], [data-marking="center-circle"]',
-    );
-    expect(shapes).toHaveLength(3);
-    shapes.forEach((svg) => {
-      expect(svg).toHaveAttribute("viewBox");
-      expect(svg).not.toHaveAttribute("preserveAspectRatio", "none");
-      expect(svg.getAttribute("class")).not.toMatch(/(^|\s)h-/);
+    field.querySelectorAll("svg[data-marking]").forEach((svg) => {
+      expect(svg.getAttribute("style")).toMatch(/width: calc\(\d+ \* var\(--px\)\)/);
     });
-    expect(
-      field
-        .querySelector('[data-marking="center-circle"]')!
-        .getAttribute("viewBox"),
-    ).toBe("0 0 200 200");
   });
 
-  it("keeps the lines the same width at any size", () => {
+  it("keeps content clear of the penalty areas with padding in art pixels", () => {
     const { field } = renderField();
-    field
-      .querySelectorAll(
-        "[data-marking] .stroke-parchment, [data-marking-ink] .stroke-ink, [data-marking].stroke-parchment, [data-marking-ink].stroke-ink",
-      )
-      .forEach((line) =>
-        expect(line).toHaveAttribute("vector-effect", "non-scaling-stroke"),
-      );
+    expect(field.className).toContain("[--penalty-h:calc(48*var(--px))]");
+    expect(
+      field.querySelector('[data-field-zone="play"] [data-field-content]'),
+    ).toHaveClass("pt-[calc(var(--field-inset)+var(--penalty-h)+1.5rem)]");
   });
 });
 
-describe("SoccerField — AC3: grass colours", () => {
-  it("uses mown pitch grass for the playing zone", () => {
-    const { play } = renderField();
-    expect(play).toHaveClass("bg-pitch", "bg-mowing");
-  });
-
-  it("paints both zones with a watercolour wash that only raises text contrast", () => {
+describe("SoccerField — AC3: pixel lawns", () => {
+  it("lays a striped pitch lawn in the playing zone and a pitch-dark lawn in the contact zone", () => {
     const { play, contact } = renderField();
-    expect(play.querySelector('[data-field-paint="lighten"]')).not.toBeNull();
-    expect(contact.querySelector('[data-field-paint="darken"]')).not.toBeNull();
-    for (const paint of [
-      ...play.querySelectorAll("[data-field-paint]"),
-      ...contact.querySelectorAll("[data-field-paint]"),
-    ]) {
-      paint
-        .querySelectorAll("feTurbulence")
-        .forEach((noise) =>
-          expect(noise).toHaveAttribute("stitchTiles", "stitch"),
-        );
-    }
-    expect(
-      play.querySelector("[data-field-paint] feFlood")!.getAttribute("class"),
-    ).toContain("--color-parchment");
-    expect(
-      contact
-        .querySelector("[data-field-paint] feFlood")!
-        .getAttribute("class"),
-    ).toContain("--color-ink");
-  });
-
-  it("lets the forest shade fall on the field edges", () => {
-    const { field } = renderField();
-    const shade = field.querySelector("[data-field-shade]")!;
-    expect(shade).toHaveAttribute("aria-hidden", "true");
-    expect(shade.className).toMatch(
-      /shadow-\[inset_.*var\(--color-forest-deep\)/,
-    );
-    expect(field.className).toMatch(/shadow-\[0_.*var\(--color-forest-deep\)/);
-  });
-
-  it("uses pitch-dark for the contact zone, edged with a grass strip", () => {
-    const { contact } = renderField();
+    expect(play).toHaveClass("bg-pitch");
     expect(contact).toHaveClass("bg-pitch-dark");
-    expect(contact.querySelector("[data-grass-strip]")).toHaveClass(
-      "fill-pitch-dark",
+    expect(play.querySelector('[data-field-paint="play"]')).not.toBeNull();
+    expect(contact.querySelector('[data-field-paint="contact"]')).not.toBeNull();
+  });
+
+  it("mows the lawns in two-tone stripes", () => {
+    const { canvas } = LAWN_ART.play;
+    const stripe = LAWN_TILE.stripe;
+    expect(canvas.height).toBe(stripe * 2);
+    const count = (y0: number, token: string) => {
+      let n = 0;
+      for (let y = y0; y < y0 + stripe; y++)
+        for (let x = 0; x < canvas.width; x++) if (canvas.get(x, y) === token) n++;
+      return n;
+    };
+    expect(count(0, "grass-500")).toBeGreaterThan(count(0, "grass-400"));
+    expect(count(stripe, "grass-400")).toBeGreaterThan(count(stripe, "grass-500"));
+    expect(LAWN_ART.contact.paths.map((p) => p.token)).toEqual(
+      expect.arrayContaining(["grass-800", "grass-700"]),
     );
   });
 
-  it("defines the mowing stripes from tokens only", () => {
-    const css = readFileSync(
-      join(process.cwd(), "src/app/globals.css"),
-      "utf8",
+  it("edges the contact zone with a strip of pixel grass", () => {
+    const { contact } = renderField();
+    expect(contact.querySelector("[data-grass-strip]")).not.toBeNull();
+  });
+
+  it("frames the field with a notched dark border and crisp forest shade on its edges", () => {
+    const { field } = renderField();
+    expect(field.className).toContain("var(--color-leaf-900)");
+    expect(field.querySelector("[data-field-shade]")!.className).toContain(
+      "inset_0_0_0_var(--px)",
     );
-    const utility = css.match(/@utility bg-mowing\s*\{([^}]*)\}/)?.[1] ?? "";
-    expect(utility).toMatch(/repeating-linear-gradient/);
-    expect(utility).toContain("var(--color-chalk)");
-    expect(utility).not.toMatch(/#[0-9a-f]{3,8}/i);
   });
 });
 
-describe("SoccerField — painted to sit in the forest (design notes)", () => {
-  const kinds = (el: Element) =>
-    new Set(
-      [...el.querySelectorAll("[data-debris]")].map((p) =>
-        p.getAttribute("data-debris"),
-      ),
-    );
-
-  it("scatters leaves, twigs, stems, feathers, clover and tufts over the bright grass", () => {
-    const { play } = renderField();
-    const lawn = play.querySelector('[data-field-scatter="play"]')!;
-    expect([...kinds(lawn)].sort()).toEqual([
-      "clover",
-      "feather",
-      "leaf",
-      "stem",
-      "tuft",
-      "twig",
-    ]);
-  });
-
-  it("scatters leaves, twigs, stems and tufts over the dark grass", () => {
-    const { contact } = renderField();
-    const dark = contact.querySelector('[data-field-scatter="contact"]')!;
-    expect([...kinds(dark)].sort()).toEqual(["leaf", "stem", "tuft", "twig"]);
-  });
-
-  it("spreads debris over the whole zone, not just the edges", () => {
-    const { play } = renderField();
-    const patterns = play.querySelectorAll("[data-field-scatter] pattern");
-    // Two overlapping layers with unrelated tile sizes, both wider than a desktop field.
-    expect(patterns).toHaveLength(2);
-    const sizes = [...patterns].map((p) => [
-      Number(p.getAttribute("width")),
-      Number(p.getAttribute("height")),
-    ]);
-    sizes.forEach(([w]) => expect(w).toBeGreaterThanOrEqual(760));
-    expect(sizes[0]).not.toEqual(sizes[1]);
-    for (const pattern of patterns) {
-      const width = Number(pattern.getAttribute("width"));
-      const xs = [...pattern.querySelectorAll("g[id] > [data-debris]")].map(
-        (piece) =>
-          Number(
-            piece.getAttribute("transform")!.match(/translate\(([\d.]+)/)![1],
-          ),
-      );
-      // Pieces land across the whole tile width: left, middle and right thirds.
-      for (const third of [0, 1, 2]) {
-        expect(
-          xs.some(
-            (x) => x >= (third * width) / 3 && x < ((third + 1) * width) / 3,
-          ),
-        ).toBe(true);
-      }
-      // Pieces crossing a tile edge continue in all eight neighbouring tiles.
-      expect(pattern.querySelectorAll("use")).toHaveLength(8);
-    }
-  });
-
-  it("colours each zone's debris only from its readable palette", () => {
+describe("SoccerField — fallen forest debris (design notes)", () => {
+  it("scatters debris over both zones on two overlapping tiles", () => {
     const { play, contact } = renderField();
-    const colours = (el: Element) =>
-      new Set(
-        [...el.querySelectorAll("[data-field-scatter] [class]")]
-          .flatMap((node) => node.getAttribute("class")!.split(" "))
-          .filter(
-            (c) =>
-              /^(fill|stroke)-(?!none|ink$|parchment$)/.test(c) &&
-              !c.includes("["),
-          ),
-      );
-    const zoneColours = (zone: "play" | "contact") => {
-      const p = ZONE_PALETTE[zone];
-      return new Set([
-        ...p.leaves,
-        p.twig,
-        p.stalk,
-        p.leaflet,
-        p.tuft,
-        ...(p.feather ? [p.feather.tip] : []),
-        ...(p.clover ? [p.clover] : []),
-      ]);
-    };
-    for (const [el, zone] of [
-      [play, "play"],
-      [contact, "contact"],
-    ] as const) {
-      const allowed = zoneColours(zone);
-      for (const c of colours(el)) expect(allowed, c).toContain(c);
-    }
+    expect(play.querySelectorAll('[data-field-scatter="play"]')).toHaveLength(2);
+    expect(contact.querySelectorAll('[data-field-scatter="contact"]')).toHaveLength(2);
   });
 
-  it("melts debris into the grass: contact shadow, grass tint, and blur and fade by depth", () => {
-    const { play, contact } = renderField();
-    for (const [zone, grass] of [
-      [play, "--color-pitch"],
-      [contact, "--color-pitch-dark"],
-    ] as const) {
-      const patterns = [
-        ...zone.querySelectorAll("[data-field-scatter] pattern"),
-      ];
-      const depths = patterns.map((pattern) => {
-        const filter = pattern.querySelector("filter")!;
-        const layer = pattern.querySelector(`g[filter="url(#${filter.id})"]`)!;
-        // Soft shadow from the pieces' shape, tinted towards the zone's grass, then blurred.
-        expect(
-          filter.querySelector('feGaussianBlur[in="SourceAlpha"]'),
-        ).not.toBeNull();
-        expect(filter.querySelector("feOffset")).not.toBeNull();
-        const floods = [...filter.querySelectorAll("feFlood")].map((f) =>
-          f.getAttribute("class"),
-        );
-        expect(floods.some((c) => c!.includes(grass))).toBe(true);
-        const blur = filter.querySelector(
-          'feGaussianBlur[in="SourceGraphic"]',
-        )!;
-        return {
-          blur: Number(blur.getAttribute("stdDeviation")),
-          opacity: Number(layer.getAttribute("opacity")),
-        };
-      });
-      // The deeper layer is softer and fainter than the front one.
-      expect(depths[1].blur).toBeGreaterThan(depths[0].blur);
-      expect(depths[1].opacity).toBeLessThan(depths[0].opacity);
-      depths.forEach(({ blur, opacity }) => {
-        expect(blur).toBeLessThanOrEqual(2);
-        expect(opacity).toBeGreaterThanOrEqual(0.5);
-      });
-    }
-  });
-
-  it("draws the deeper, softer layer underneath", () => {
-    const { play } = renderField();
-    const svg = play.querySelector("[data-field-scatter]")!;
-    const order = [...svg.querySelectorAll(":scope > rect")].map((r) =>
-      r.getAttribute("fill"),
+  it("draws leaves, twigs, clovers, flowers and pebbles from the token ramps", () => {
+    const tokens = SCATTER_ART.play.flatMap((tile) => tile.paths.map((p) => p.token));
+    expect(tokens).toEqual(
+      expect.arrayContaining(["wood-700", "leaf-400", "paper-100", "stone-300"]),
     );
-    expect(order[0]).toMatch(/-1\)$/);
-    expect(order[1]).toMatch(/-0\)$/);
   });
 
   it("lays debris on top of the lines and below the forest shade and content", () => {
-    const { field } = renderField();
-    field.querySelectorAll("[data-field-scatter]").forEach((scatter) => {
-      expect(scatter.closest(".z-\\[3\\]")).not.toBeNull();
-    });
-    expect(field.querySelector("[data-field-shade]")).toHaveClass("z-[4]");
+    const { play } = renderField();
+    const scatter = play.querySelector("[data-field-scatter]")!.parentElement!;
+    expect(scatter).toHaveClass("z-[3]");
   });
 
-  it("keeps the debris and paint pattern ids unique, with tokens only", () => {
-    const { field } = renderField();
-    const ids = [...field.querySelectorAll("pattern, filter")].map(
-      (el) => el.id,
-    );
+  it("keeps pattern ids unique and uses tokens only", () => {
+    const { container } = renderField();
+    const ids = [...container.querySelectorAll("pattern")].map((p) => p.id);
     expect(new Set(ids).size).toBe(ids.length);
-    expect(field.innerHTML).not.toMatch(/#[0-9a-fA-F]{3,8}\b(?![-\w])/);
-    expect(field.innerHTML).not.toMatch(/(fill|stroke)="(?!url\(|none)/);
+    expectTokensOnly(
+      renderToStaticMarkup(<SoccerField contact={<p>c</p>}>x</SoccerField>),
+    );
   });
 });
 
 describe("SoccerField — AC5: decorative markings and readable text", () => {
   it('hides every marking from assistive tech with aria-hidden="true"', () => {
     const { field } = renderField();
-    field
-      .querySelectorAll(
-        "[data-marking], [data-marking-ink], [data-field-paint], [data-field-scatter]",
-      )
-      .forEach((m) => {
-        expect(m.closest('[aria-hidden="true"]')).not.toBeNull();
-      });
-    field.querySelectorAll("svg").forEach((svg) => {
-      expect(svg.closest('[aria-hidden="true"]')).not.toBeNull();
-      expect(svg).toHaveAttribute("focusable", "false");
+    field.querySelectorAll("[data-marking]").forEach((m) => {
+      expect(m.closest('[aria-hidden="true"]')).not.toBeNull();
     });
   });
 

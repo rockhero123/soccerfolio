@@ -3,7 +3,7 @@ import userEvent from "@testing-library/user-event";
 import { afterEach, describe, expect, it } from "vitest";
 import { projects } from "@/content/projects";
 import { contrast, overlay, token } from "@/test/contrast";
-import { GRAIN, VIGNETTE } from "../FilmOverlay";
+import { VIGNETTE } from "../FilmOverlay";
 import ProjectBrowser from "./ProjectBrowser";
 import {
   ALL,
@@ -81,7 +81,7 @@ describe("ProjectBrowser — AC2/AC3: filtering, with aria-pressed", () => {
       .forEach((b) => {
         const on = b.textContent === "Interactive installation";
         expect(b).toHaveAttribute("aria-pressed", String(on));
-        expect(b).toHaveClass(on ? "bg-pitch-dark" : "bg-parchment");
+        expect(b).toHaveClass("pixel-button", on ? "bg-pitch-dark" : "bg-paper-200");
       });
     await user.click(screen.getByRole("button", { name: "All" }));
     expect(titles()).toHaveLength(projects.length);
@@ -129,12 +129,11 @@ describe("ProjectBrowser — AC5: keyboard, wrapping and contrast", () => {
 
   it.each([
     ["active", "chalk", "pitch-dark"],
-    ["inactive", "ink", "parchment"],
-    ["hovered", "ink", "cartoon-yellow"],
-  ])("%s buttons stay ≥ 4.5:1, even under the film overlay", (_, text, bg) => {
+    ["inactive", "ink", "paper-200"],
+    ["hovered", "ink", "gold-500"],
+  ])("%s buttons stay ≥ 4.5:1, even under the vignette", (_, text, bg) => {
     const ink = token("ink");
-    const dark = (c: ReturnType<typeof token>) =>
-      overlay(c, ink, VIGNETTE + GRAIN);
+    const dark = (c: ReturnType<typeof token>) => overlay(c, ink, VIGNETTE);
     expect(contrast(token(text), token(bg))).toBeGreaterThanOrEqual(4.5);
     expect(contrast(dark(token(text)), dark(token(bg)))).toBeGreaterThanOrEqual(
       4.5,

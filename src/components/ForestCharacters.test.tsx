@@ -6,6 +6,8 @@ import { renderToStaticMarkup } from "react-dom/server";
 import { afterEach, describe, expect, it } from "vitest";
 import ForestBackground from "./ForestBackground";
 import ForestCharacters from "./ForestCharacters";
+import { CHARACTERS } from "./forest/characterArt";
+import { expectTokensOnly } from "@/test/pixel";
 
 afterEach(cleanup);
 
@@ -26,7 +28,7 @@ function renderAll() {
   return container;
 }
 
-describe("Forest characters — AC1: at least 15 original rubber-hose characters", () => {
+describe("Forest characters — AC1: at least 15 original pixel-art characters", () => {
   it("renders at least 15 different characters", () => {
     const names = [...renderAll().querySelectorAll("[data-character]")].map(
       (c) => c.getAttribute("data-character"),
@@ -52,57 +54,39 @@ describe("Forest characters — AC1: at least 15 original rubber-hose characters
     }
   });
 
-  it.each(characters)(
-    "$file has an exaggerated face with pie-cut eyes",
-    ({ Character }) => {
-      const { container } = render(<Character />);
-      const eyes = container.querySelectorAll('[data-part="pie-eye"]');
-      expect(eyes.length).toBeGreaterThanOrEqual(1);
-      eyes.forEach((eye) => {
-        // A parchment eye white and an ink pupil with a wedge cut out (a long arc).
-        expect(eye.querySelector("ellipse.fill-parchment")).not.toBeNull();
-        expect(eye.querySelector("path.fill-ink")!.getAttribute("d")).toMatch(
-          /A[\d.]+ [\d.]+ 0 1 1 /,
-        );
-      });
+  it.each(Object.entries(CHARACTERS))(
+    "%s has an exaggerated face: big eyes with a pie-cut notch in the pupil",
+    (_, art) => {
+      const { canvas } = art;
+      // A pie-cut pupil: an eye-white pixel with ink directly below it and
+      // ink beside it (the notch bitten out of the top of the pupil).
+      let notches = 0;
+      for (let y = 0; y < canvas.height; y++)
+        for (let x = 0; x < canvas.width; x++)
+          if (
+            canvas.get(x, y) === "paper-100" &&
+            canvas.get(x, y + 1) === "ink" &&
+            canvas.get(x - 1, y) === "ink"
+          )
+            notches++;
+      expect(notches).toBeGreaterThanOrEqual(1);
     },
   );
 
-  it.each(characters)(
-    "$file pulls an exaggerated, Cuphead-boss expression",
-    ({ Character }) => {
-      const { container } = render(<Character />);
-      const has = (part: string) =>
-        container.querySelector(`[data-part="${part}"]`) !== null;
-      // At least two dramatic features: fangs, a gaping maw, scowling or
-      // terrified brows, heavy lids or bloodshot eyes.
-      const features = ["teeth", "maw", "brow", "lid", "veins"].filter(has);
-      expect(features.length).toBeGreaterThanOrEqual(2);
-      // Pupils shrink to a manic pinprick (well under the default size).
-      const eyes = [...container.querySelectorAll('[data-part="pie-eye"]')];
-      const pinprick = eyes.some((eye) => {
-        const white = eye.querySelector("ellipse")!;
-        const pupil = eye.querySelector("path.fill-ink")!.getAttribute("d")!;
-        const rx = Number(pupil.match(/A([\d.]+)/)![1]);
-        return rx <= Number(white.getAttribute("rx")) * 0.4;
-      });
-      expect(pinprick).toBe(true);
+  it.each(Object.entries(CHARACTERS))(
+    "%s is shaded pixel art with a dark wood outline, in tokens only",
+    (_, art) => {
+      const tokens = art.paths.map((p) => p.token);
+      expect(tokens).toContain("wood-900");
+      expect(tokens.length).toBeGreaterThanOrEqual(6);
+      expect(art.canvas.width).toBeGreaterThanOrEqual(16);
+      tokens.forEach((t) => expect(t).toMatch(/^[a-z]+(-\d+)?$/));
     },
   );
 
-  it.each(characters)(
-    "$file is drawn with bold ink outlines in token colours only",
-    ({ Character }) => {
-      const { container } = render(<Character />);
-      expect(container.querySelector("svg > g")).toHaveClass(
-        "stroke-ink",
-        "stroke-outline-lg",
-      );
-      const html = container.innerHTML;
-      expect(html).not.toMatch(/#[0-9a-fA-F]{3,8}\b(?![-\w])/);
-      expect(html).not.toMatch(/(fill|stroke)="(?!url\(|none)/);
-    },
-  );
+  it("uses design tokens only", () => {
+    expectTokensOnly(renderToStaticMarkup(<ForestCharacters />));
+  });
 
   it("is static: no SVG or CSS animation", () => {
     const html = renderToStaticMarkup(<ForestCharacters />);
@@ -178,10 +162,12 @@ describe("Forest characters — AC4: one component per character in src/componen
     }
   });
 
-  it("accepts a size from its caller, so it can be reused anywhere", () => {
+  it("is drawn at the site's pixel size, and accepts layout classes from its caller", () => {
     const { Character } = characters[0];
-    const { container } = render(<Character className="h-40" />);
-    expect(container.querySelector("svg")).toHaveClass("h-40", "w-auto");
+    const { container } = render(<Character className="self-start" />);
+    const svg = container.querySelector("svg")!;
+    expect(svg).toHaveClass("self-start");
+    expect(svg.getAttribute("style")).toMatch(/width: calc\(\d+ \* var\(--px\)\)/);
   });
 });
 

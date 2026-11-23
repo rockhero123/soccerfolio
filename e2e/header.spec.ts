@@ -46,7 +46,7 @@ test.describe("desktop (1280px)", () => {
     await page.goto("/");
   });
 
-  test("AC1 — a wooden sign with the RM logo and the section links", async ({
+  test("AC1 — a pixel wooden sign with the RM logo and the section links", async ({
     page,
   }) => {
     const nav = page.locator(sign);
@@ -60,7 +60,7 @@ test.describe("desktop (1280px)", () => {
       const link = nav.getByRole("link", { name, exact: true });
       await expect(link).toBeVisible();
       await expect(link).toHaveAttribute("href", `#${id}`);
-      await expect(link).toHaveCSS("color", "rgb(243, 231, 201)"); // parchment
+      await expect(link).toHaveCSS("color", "rgb(30, 26, 22)"); // ink, burned into light wood
     }
     await expect(page.getByRole("button", { name: /menu/i })).toBeHidden();
   });
@@ -92,7 +92,7 @@ test.describe("desktop (1280px)", () => {
     await expectSectionUnderSign(page, "contact");
   });
 
-  test("AC4 — highlights the link of the section in view with a yellow underline", async ({
+  test("AC4 — highlights the link of the section in view with a red pixel underline", async ({
     page,
   }) => {
     for (const { name } of links) {
@@ -100,7 +100,7 @@ test.describe("desktop (1280px)", () => {
       await link.click();
       await settle(page);
       await expect(link).toHaveAttribute("aria-current", "location");
-      await expect(link).toHaveCSS("border-bottom-color", "rgb(232, 182, 48)"); // cartoon-yellow
+      await expect(link).toHaveCSS("border-bottom-color", "rgb(200, 49, 43)"); // cartoon-red
       await expect(
         page.locator(`${sign} [aria-current="location"]:visible`),
       ).toHaveCount(1);
@@ -240,4 +240,24 @@ test("visual check screenshots (375px with the menu open, and 1280px)", async ({
   await page.screenshot({
     path: `test-results/soc-8-header-${testInfo.project.name}-375.png`,
   });
+});
+
+test("AC1 — keyboard focus on the header links shows the red focus ring", async ({
+  page,
+}) => {
+  await page.setViewportSize({ width: 1280, height: 900 });
+  await page.goto("/");
+  const links = page.locator("header a");
+  const count = await links.count();
+  expect(count).toBeGreaterThan(1);
+  // Focus the first link, then Tab through the rest, as a keyboard user would.
+  await links.first().focus();
+  for (let i = 1; i < count; i++) {
+    await page.keyboard.press("Tab");
+    const link = links.nth(i);
+    if (!(await link.isVisible())) continue;
+    await expect(link).toBeFocused();
+    await expect(link).toHaveCSS("outline-style", "solid");
+    await expect(link).toHaveCSS("outline-color", "rgb(200, 49, 43)");
+  }
 });

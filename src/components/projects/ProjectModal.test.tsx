@@ -117,7 +117,7 @@ describe("ProjectModal — AC2: scrolls inside, the page stays still", () => {
     const { dialog } = openAt("lime-delivery");
     const panel = dialog.querySelector("[data-modal-panel]")!;
     expect(panel).toHaveClass("overflow-y-auto");
-    expect(panel.className).toContain("max-h-[min(90dvh,56rem)]");
+    expect(panel.className).toContain("max-h-[calc(min(90dvh,56rem)-2*var(--px))]");
     expect(document.documentElement.style.overflow).toBe("hidden");
     fireEvent.click(screen.getByRole("button", { name: "Close" }));
     expect(document.documentElement.style.overflow).toBe("");
@@ -166,15 +166,22 @@ describe("ProjectModal — AC4: an accessible dialog", () => {
   });
 });
 
-describe("ProjectModal — AC5: cartoon style", () => {
-  it("is a rounded mint panel with an ink outline and ink text", () => {
+describe("ProjectModal — AC5: pixel style", () => {
+  it("is a paper menu box with a wooden pixel frame and ink text", () => {
     const { dialog } = openAt("jogo");
     expect(dialog.querySelector("[data-modal-panel]")).toHaveClass(
-      "bg-mint",
+      "pixel-frame-paper",
       "text-ink",
-      "border-ink",
-      "border-outline-lg",
-      "rounded-card",
+    );
+  });
+
+  it("closes with a pixel X button", () => {
+    openAt("jogo");
+    const close = screen.getByRole("button", { name: "Close" });
+    expect(close).toHaveClass("pixel-button", "bg-red-400");
+    expect(close.querySelector('svg[shape-rendering="crispEdges"]')).toHaveAttribute(
+      "aria-hidden",
+      "true",
     );
   });
 });

@@ -1,4 +1,6 @@
-import { lineClass, markingAttrs, type LineLayer } from "./lines";
+import PixelArt from "../pixel/PixelArt";
+import { markingAttrs } from "./lines";
+import { CORNER_ARC } from "./markingArt";
 
 type Corner = "top-left" | "top-right" | "bottom-left" | "bottom-right";
 
@@ -10,23 +12,13 @@ const placement: Record<Corner, string> = {
   "bottom-right": "bottom-0 right-0 -scale-100",
 };
 
-type CornerArcProps = { corner: Corner; layer: LineLayer };
-
-/** A quarter-circle arc in one corner of the field boundary. */
-export default function CornerArc({ corner, layer }: CornerArcProps) {
+/** A quarter-circle pixel arc in one corner of the field boundary. */
+export default function CornerArc({ corner }: { corner: Corner }) {
   return (
-    <svg
-      viewBox="0 0 24 24"
-      {...markingAttrs(layer, "corner-arc")}
-      className={`absolute size-5 overflow-visible md:size-6 ${placement[corner]}`}
-      focusable="false"
-    >
-      <path
-        d="M0 20A20 20 0 0 0 20 0"
-        className={lineClass[layer]}
-        strokeLinecap="round"
-        vectorEffect="non-scaling-stroke"
-      />
-    </svg>
+    <PixelArt
+      art={CORNER_ARC}
+      className={`absolute ${placement[corner]}`}
+      data={markingAttrs("corner-arc")}
+    />
   );
 }

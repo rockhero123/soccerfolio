@@ -43,6 +43,8 @@ function fromOklab([L, a, b]: RGB): RGB {
 /** A colour token: a hex value, or an oklab `color-mix()` of two other tokens. */
 export function token(name: string): RGB {
   const value = css.match(new RegExp(`--color-${name}:\\s*([^;]+);`))![1];
+  const alias = value.match(/^var\(--color-([\w-]+)\)$/);
+  if (alias) return token(alias[1]);
   const hex = value.match(/^#([0-9a-f]{6})$/i);
   if (hex) {
     return [0, 2, 4].map(

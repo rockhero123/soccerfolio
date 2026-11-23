@@ -22,27 +22,34 @@ const nav = () => screen.getByRole("navigation", { name: "Main" });
 const menuButton = () => screen.getByRole("button", { name: /menu/i });
 const menu = () => document.getElementById("site-menu")!;
 
-describe("SiteHeader — AC1: a wooden sign with the logo and section links", () => {
-  it("is a fixed, wooden sign at the top of the screen", () => {
+describe("SiteHeader — AC1: a pixel wooden sign with the logo and section links", () => {
+  it("is a fixed, pixel wooden sign hanging from vines at the top of the screen", () => {
     const { container } = render(<SiteHeader />);
     expect(container.querySelector("[data-site-header]")).toHaveClass(
       "fixed",
       "top-0",
       "z-40",
     );
-    const plank = nav().querySelector('[data-wood="plank"]')!;
-    expect(plank.querySelector("path.fill-bark")).not.toBeNull();
-    expect(plank.querySelector("path.stroke-ink")).not.toBeNull();
+    expect(nav().querySelector('[data-wood="plank"]')).toHaveClass(
+      "pixel-frame-wood",
+    );
+    // Two nails on the sign, two on the (folded) mobile menu plank.
+    expect(nav().querySelectorAll('[data-wood="nail"]')).toHaveLength(4);
+    // Two pixel vines the sign hangs from.
+    expect(nav().querySelectorAll("[data-vine]")).toHaveLength(2);
   });
 
   it('shows the "RM" logo linking to #hero', () => {
     render(<SiteHeader />);
     const logo = within(nav()).getByRole("link", { name: /^RM/ });
     expect(logo).toHaveAttribute("href", "#hero");
-    expect(logo).toHaveTextContent("RM");
+    // The pixel "RM" blocks are decorative; the link carries the name.
+    const art = logo.querySelector('[data-logo="rm"]')!;
+    expect(art).toHaveAttribute("aria-hidden", "true");
+    expect(art.querySelectorAll("path").length).toBeGreaterThan(3);
   });
 
-  it("takes its links from site.nav, engraved in parchment", () => {
+  it("takes its links from site.nav, burned into the wood in ink", () => {
     render(<SiteHeader />);
     const desktop = nav().querySelector("ul")!;
     const links = within(desktop).getAllByRole("link");
@@ -50,7 +57,7 @@ describe("SiteHeader — AC1: a wooden sign with the logo and section links", ()
       site.nav.map(({ label, href }) => [label, href]),
     );
     links.forEach((l) =>
-      expect(l).toHaveClass("text-parchment", "font-heading"),
+      expect(l).toHaveClass("text-ink", "font-heading"),
     );
   });
 });
@@ -135,13 +142,13 @@ describe("SiteHeader — AC4: highlights the section in view", () => {
     }
   }
 
-  it("marks the link of the section that has scrolled into view with a yellow underline", () => {
+  it("marks the link of the section that has scrolled into view with a red pixel underline", () => {
     addSections({ hero: -900, skills: 100, projects: 700, contact: 1400 });
     render(<SiteHeader />);
     const desktop = nav().querySelector("ul")!;
     const current = within(desktop).getByRole("link", { name: "Skills" });
     expect(current).toHaveAttribute("aria-current", "location");
-    expect(current).toHaveClass("border-cartoon-yellow");
+    expect(current).toHaveClass("border-red-600");
     for (const name of ["Projects", "Contact"]) {
       const other = within(desktop).getByRole("link", { name });
       expect(other).not.toHaveAttribute("aria-current");

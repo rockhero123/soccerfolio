@@ -37,13 +37,14 @@ for (const width of [375, 768, 1280]) {
 
       const root = await box(page, forest);
       expect(root.y).toBe(0);
-      expect(root.height).toBeCloseTo(pageHeight, 0);
+      // scrollHeight is rounded to whole pixels; the layout box is not.
+      expect(Math.abs(root.height - pageHeight)).toBeLessThanOrEqual(1);
       await expect(page.locator(forest)).toHaveCSS("z-index", "-10");
 
       const left = await box(page, part("side-left"));
-      expect(left.height).toBeCloseTo(pageHeight, 0);
+      expect(Math.abs(left.height - pageHeight)).toBeLessThanOrEqual(1);
       const bottom = await box(page, part("band-bottom"));
-      expect(bottom.y + bottom.height).toBeCloseTo(pageHeight, 0);
+      expect(Math.abs(bottom.y + bottom.height - pageHeight)).toBeLessThanOrEqual(1);
 
       // The content is painted above the forest.
       const card = await box(page, "main h1");

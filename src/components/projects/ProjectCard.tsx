@@ -3,12 +3,13 @@ import type { Project } from "@/content/projects";
 import GrassStrip from "../GrassStrip";
 
 const link =
-  "relative z-10 rounded-pill border-outline border-ink bg-parchment px-3 py-1 font-heading text-sm text-ink underline-offset-2 hover:bg-cartoon-yellow focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-cartoon-yellow";
+  "relative z-10 pixel-button bg-gold-500 px-3 py-0.5 font-heading text-xl leading-tight tracking-wide uppercase text-ink hover:bg-gold-400 focus-visible:outline-3 focus-visible:outline-offset-4 focus-visible:outline-red-600";
 
 /**
  * One project card (spec 006 US-1): preview image, title, summary, tech tags
- * and the live / repository links that exist, on a `mint` surface with an ink
- * outline and tall grass along its bottom edge.
+ * and the live / repository links that exist, in a Stardew-style paper menu
+ * box (`ink` on `parchment`, a wooden pixel frame) with pixel grass along its
+ * bottom edge.
  *
  * The whole card opens the project's detail view: the title is a link to
  * `#project-<slug>` whose hit area is stretched over the card, so there are no
@@ -20,9 +21,9 @@ export default function ProjectCard({ project }: { project: Project }) {
   return (
     <article
       data-project={slug}
-      className="group relative flex h-full flex-col rounded-card border-outline-lg border-ink bg-mint pb-8 text-ink shadow-[4px_5px_0_var(--color-ink)] transition-transform hover:-translate-y-1 has-[a[data-open]:focus-visible]:outline-3 has-[a[data-open]:focus-visible]:outline-offset-4 has-[a[data-open]:focus-visible]:outline-cartoon-yellow motion-reduce:transition-none motion-reduce:hover:translate-y-0"
+      className="group relative flex h-full flex-col pixel-frame-paper p-[calc(4*var(--px))] pb-[calc(9*var(--px))] text-ink hover:-translate-y-[var(--px)] has-[a[data-open]:focus-visible]:outline-3 has-[a[data-open]:focus-visible]:outline-offset-8 has-[a[data-open]:focus-visible]:outline-red-600 motion-reduce:hover:translate-y-0"
     >
-      <div className="overflow-hidden rounded-t-[calc(var(--radius-card)-4px)] border-b-outline border-ink">
+      <div className="overflow-hidden shadow-[0_0_0_var(--px)_var(--color-wood-700)]">
         <Image
           src={image.src}
           alt={image.alt}
@@ -33,23 +34,23 @@ export default function ProjectCard({ project }: { project: Project }) {
           className="aspect-[4/3] w-full object-cover"
         />
       </div>
-      <div className="flex flex-1 flex-col gap-2.5 px-4 pt-3">
-        <h3 className="font-heading text-xl">
+      <div className="flex flex-1 flex-col gap-2.5 px-2 pt-3">
+        <h3 className="font-heading text-3xl leading-none tracking-wide">
           <a
             href={`#project-${slug}`}
             data-open=""
             aria-label={`${title} — view details`}
-            className="outline-none after:absolute after:inset-0 after:rounded-card"
+            className="outline-none after:absolute after:inset-0"
           >
             {title}
           </a>
         </h3>
-        <p className="font-body text-[0.95rem] leading-relaxed">{summary}</p>
+        <p className="font-body text-base leading-relaxed">{summary}</p>
         <ul aria-label="Tech stack" className="flex flex-wrap gap-2">
           {tech.map((t) => (
             <li
               key={t}
-              className="rounded-pill border-2 border-ink bg-chalk px-2 py-0.5 font-body text-xs font-semibold"
+              className="bg-paper-300 px-1.5 font-body text-sm shadow-[0_0_0_calc(var(--px)*0.5)_var(--color-wood-500)]"
             >
               {t}
             </li>
@@ -88,7 +89,7 @@ export default function ProjectCard({ project }: { project: Project }) {
           </div>
         )}
       </div>
-      <GrassStrip className="pointer-events-none absolute inset-x-1 -bottom-1 h-7 fill-pitch-dark" />
+      <GrassStrip className="pointer-events-none absolute inset-x-0 -bottom-[calc(2*var(--px))]" />
     </article>
   );
 }

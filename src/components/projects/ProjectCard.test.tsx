@@ -102,20 +102,27 @@ describe("ProjectCard — AC2: image, title, summary, tech and existing links", 
   });
 });
 
-describe("ProjectCard — AC3: cartoon card with grass", () => {
-  it("sits on a mint surface with an ink outline, rounded corners and grass at the bottom", () => {
+describe("ProjectCard — AC3: pixel card with grass", () => {
+  it("is a paper menu box with a wooden pixel frame, ink text and pixel grass at the bottom", () => {
     const { container } = render(<ProjectCard project={projects[0]} />);
     const card = container.querySelector("[data-project]")!;
-    expect(card).toHaveClass(
-      "bg-mint",
-      "text-ink",
-      "border-ink",
-      "border-outline-lg",
-      "rounded-card",
-    );
+    expect(card).toHaveClass("pixel-frame-paper", "text-ink");
+    expect(card.className).not.toMatch(/rounded/);
     const grass = card.querySelector("[data-grass-strip]")!;
     expect(grass).toHaveAttribute("aria-hidden", "true");
-    expect(grass).toHaveClass("absolute", "-bottom-1");
+    expect(grass).toHaveClass("absolute", "-bottom-[calc(2*var(--px))]");
+  });
+
+  it("shows tags as pixel chips and links as pixel buttons", () => {
+    const { container } = render(<ProjectCard project={projects[0]} />);
+    container
+      .querySelectorAll('[aria-label="Tech stack"] li')
+      .forEach((tag) => expect(tag).toHaveClass("bg-paper-300"));
+    expect(screen.getByRole("link", { name: /Live site/ })).toHaveClass(
+      "pixel-button",
+      "bg-gold-500",
+      "text-ink",
+    );
   });
 
   it("uses tokens only", () => {

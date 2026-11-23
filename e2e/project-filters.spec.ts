@@ -33,7 +33,7 @@ test("clicking a filter changes the visible cards and announces the count", asyn
   await expect(
     group.getByRole("button", { name: "All", exact: true }),
   ).toHaveAttribute("aria-pressed", "false");
-  await expect(page.getByRole("status")).toHaveText("2 projects");
+  await expect(page.locator("#projects").getByRole("status")).toHaveText("2 projects");
   await expect(group.getByRole("button", { name: "Java game" })).toHaveCSS(
     "background-color",
     "rgb(0, 82, 45)",
@@ -41,7 +41,7 @@ test("clicking a filter changes the visible cards and announces the count", asyn
 
   await group.getByRole("button", { name: "All", exact: true }).click();
   await expect(page.locator(cards)).toHaveCount(8);
-  await expect(page.getByRole("status")).toHaveText("8 projects");
+  await expect(page.locator("#projects").getByRole("status")).toHaveText("8 projects");
 });
 
 test("filters work from the keyboard and filtered cards still open their modal", async ({

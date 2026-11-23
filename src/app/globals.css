@@ -19,83 +19,231 @@
   --color-bark: #7a5236;
   --color-cartoon-red: #c8312b;
   --color-cartoon-yellow: #e8b630;
-
-  /* Outline width → border-outline / border-outline-lg, stroke-outline / stroke-outline-lg */
-  --border-width-outline: 3px;
-  --border-width-outline-lg: 4px;
-  --stroke-width-outline: 3px;
-  --stroke-width-outline-lg: 4px;
-
-  /* Radius → rounded-card / rounded-pill */
-  --radius-card: 12px;
-  --radius-pill: 9999px;
 }
 
 /* Fonts → font-heading / font-body (variables set by next/font in layout.tsx) */
 @theme inline {
-  --font-heading: var(--font-lilita-one);
-  --font-body: var(--font-source-sans-3);
+  --font-heading: var(--font-jersey-10);
+  --font-body: var(--font-pixelify-sans);
 }
 
 /*
- * Enchanted forest palette (spec 001 US-2) → bg-forest-mist, fill-forest-mid-leaf, …
- * Muted, painted forest colours mixed from the tokens above — no new hex values.
+ * Pixel-art palette (manifest §6, pixel-art redesign). Stardew-style colour
+ * ramps: every material has 4–8 shades from shadow (high number) to highlight
+ * (low number), so sprites can be shaded by hand, light from the top left.
+ * Ramps reuse the base tokens where they fit (pitch, bark, cartoon-red, …).
+ * → bg-grass-500, fill-wood-300, text-paper-100, var(--color-leaf-700), …
  */
 @theme static {
-  --color-forest-mist: color-mix(in oklab, var(--color-moss) 22%, var(--color-parchment));
-  --color-forest-distant-leaf: color-mix(in oklab, var(--color-moss) 48%, var(--color-parchment));
-  --color-forest-distant-shade: color-mix(in oklab, var(--color-forest-deep) 20%, var(--color-forest-distant-leaf));
-  --color-forest-distant-wood: color-mix(in oklab, var(--color-bark) 32%, var(--color-parchment));
-  --color-forest-distant-line: color-mix(in oklab, var(--color-forest-deep) 38%, var(--color-parchment));
-  --color-forest-mid-leaf: color-mix(in oklab, var(--color-moss) 68%, var(--color-forest-deep));
-  --color-forest-mid-shade: color-mix(in oklab, var(--color-moss) 38%, var(--color-forest-deep));
-  --color-forest-mid-light: color-mix(in oklab, var(--color-moss) 70%, var(--color-parchment));
-  --color-forest-bark-shade: color-mix(in oklab, var(--color-bark) 62%, var(--color-ink));
-  --color-forest-bark-light: color-mix(in oklab, var(--color-bark) 62%, var(--color-parchment));
-  --color-forest-deep-shade: color-mix(in oklab, var(--color-forest-deep) 62%, var(--color-ink));
-  --color-forest-deep-light: color-mix(in oklab, var(--color-forest-deep) 72%, var(--color-moss));
+  /* Field grass, built around `pitch` / `pitch-dark`. */
+  --color-grass-900: #0b331f;
+  --color-grass-800: var(--color-pitch-dark);
+  --color-grass-700: #12793a;
+  --color-grass-600: #0f9a4c;
+  --color-grass-500: var(--color-pitch);
+  --color-grass-400: #3fc865;
+  --color-grass-300: #86da5e;
+  --color-grass-200: #c2ec74;
+
+  /* Forest leaves (trees, bushes, vines). */
+  --color-leaf-900: #0e2416;
+  --color-leaf-800: #163a21;
+  --color-leaf-700: #1f5529;
+  --color-leaf-600: #2c7330;
+  --color-leaf-500: #489436;
+  --color-leaf-400: #74b53d;
+  --color-leaf-300: #a9d350;
+  --color-leaf-200: #d8ec7c;
+
+  /* Warm wood (trunks, signs, frames, fences). */
+  --color-wood-900: #2a160b;
+  --color-wood-800: #482613;
+  --color-wood-700: #6a3a1d;
+  --color-wood-600: var(--color-bark);
+  --color-wood-500: #a8662b;
+  --color-wood-400: #d08d3b;
+  --color-wood-300: #edb75a;
+  --color-wood-200: #f8da8e;
+
+  /* Stone (rocks, the mirror frame, metal). */
+  --color-stone-900: #1d2029;
+  --color-stone-800: #323644;
+  --color-stone-700: #4a5061;
+  --color-stone-600: #656c7e;
+  --color-stone-500: #858c9c;
+  --color-stone-400: #a6acb9;
+  --color-stone-300: #c8ccd5;
+  --color-stone-200: #e7e9ee;
+
+  /* Water (the waterfall, the mirror glass). */
+  --color-water-900: #0e2250;
+  --color-water-800: #163a7a;
+  --color-water-700: #1e58a6;
+  --color-water-600: #2b7ccc;
+  --color-water-500: #3ea2e4;
+  --color-water-400: #6bc4ef;
+  --color-water-300: #a5e0f6;
+  --color-water-200: #ddf4fb;
+
+  /* Paper (menu boxes, cards, dialog surfaces). */
+  --color-paper-500: #d4ac68;
+  --color-paper-400: #e6c891;
+  --color-paper-300: #f2dcae;
+  --color-paper-200: var(--color-parchment);
+  --color-paper-100: var(--color-chalk);
+
+  /* Accents. */
+  --color-red-800: #5c1418;
+  --color-red-700: #8c2220;
+  --color-red-600: var(--color-cartoon-red);
+  --color-red-500: #e25a3a;
+  --color-red-400: #f19070;
+  --color-gold-800: #6b4610;
+  --color-gold-700: #a56d19;
+  --color-gold-600: var(--color-cartoon-yellow);
+  --color-gold-500: #f5cf4c;
+  --color-gold-400: #fbe98c;
+  --color-pink-700: #9e3576;
+  --color-pink-500: #dc6aab;
+  --color-pink-300: #f4b3d6;
+  --color-violet-800: #36215f;
+  --color-violet-600: #6641a3;
+  --color-violet-400: #9a78d4;
+  --color-skin-800: #55301f;
+  --color-skin-700: #86502f;
+  --color-skin-600: #ac6c3d;
+  --color-skin-500: #cc915b;
+  --color-skin-400: #e6b688;
+  --color-hair: #2b1e17;
 }
 
 /*
- * Hero portrait palette (spec 002 US-1) → fill-skin, fill-skin-shade.
- * Warm skin tones mixed from the tokens above — no new hex values.
+ * Pixel size: one art pixel of every sprite and pixel frame, in CSS px.
+ * Integer sizes keep every pixel crisp (3px on phones, 4px from 768px).
  */
-@theme static {
-  --color-skin: color-mix(in oklab, var(--color-bark) 40%, var(--color-parchment));
-  --color-skin-shade: color-mix(in oklab, var(--color-bark) 62%, var(--color-parchment));
+:root {
+  --px: 3px;
+  /* The same size without a unit, for SVG transforms (pixel patterns). */
+  --px-scale: 3;
+}
+@media (min-width: 48rem) {
+  :root {
+    --px: 4px;
+    --px-scale: 4;
+  }
 }
 
 /*
- * Metallic silver for the hero's enchanted mirror (spec 002 US-2) →
- * fill-silver, from-silver-light, … Mixed from ink and chalk — no new hex values.
+ * Pixel frames (manifest §6): single-element, Stardew-style UI boxes made with
+ * stacked box-shadows. The outer outline sits one pixel outside the box on each
+ * side, which leaves the corner pixel empty — the classic notched pixel corner.
+ * Inner bands give the frame its bevel. Content padding is up to the component.
  */
-@theme static {
-  --color-silver-light: color-mix(in oklab, var(--color-ink) 8%, var(--color-chalk));
-  --color-silver: color-mix(in oklab, var(--color-ink) 30%, var(--color-chalk));
-  --color-silver-shade: color-mix(in oklab, var(--color-ink) 52%, var(--color-chalk));
+@utility pixel-frame-paper {
+  background-color: var(--color-paper-200);
+  box-shadow:
+    0 calc(var(--px) * -1) 0 0 var(--color-wood-800),
+    0 var(--px) 0 0 var(--color-wood-800),
+    calc(var(--px) * -1) 0 0 0 var(--color-wood-800),
+    var(--px) 0 0 0 var(--color-wood-800),
+    0 calc(var(--px) * 3) 0 0 color-mix(in oklab, var(--color-ink) 35%, transparent),
+    inset 0 0 0 var(--px) var(--color-wood-400),
+    inset 0 0 0 calc(var(--px) * 2) var(--color-wood-300),
+    inset 0 0 0 calc(var(--px) * 3) var(--color-wood-500),
+    inset 0 0 0 calc(var(--px) * 4) var(--color-paper-400);
+}
+
+@utility pixel-frame-wood {
+  background-color: var(--color-wood-300);
+  /* Horizontal boards: a darker seam every 5 pixels. */
+  background-image: repeating-linear-gradient(
+    to bottom,
+    transparent 0 calc(var(--px) * 5),
+    var(--color-wood-400) calc(var(--px) * 5) calc(var(--px) * 6)
+  );
+  box-shadow:
+    0 calc(var(--px) * -1) 0 0 var(--color-wood-900),
+    0 var(--px) 0 0 var(--color-wood-900),
+    calc(var(--px) * -1) 0 0 0 var(--color-wood-900),
+    var(--px) 0 0 0 var(--color-wood-900),
+    0 calc(var(--px) * 3) 0 0 color-mix(in oklab, var(--color-ink) 35%, transparent),
+    inset 0 var(--px) 0 0 var(--color-wood-200),
+    inset 0 calc(var(--px) * -2) 0 0 var(--color-wood-500),
+    inset var(--px) 0 0 0 var(--color-wood-400),
+    inset calc(var(--px) * -1) 0 0 0 var(--color-wood-500);
+}
+
+@utility pixel-frame-stone {
+  background-color: var(--color-mint);
+  box-shadow:
+    0 calc(var(--px) * -1) 0 0 var(--color-stone-900),
+    0 var(--px) 0 0 var(--color-stone-900),
+    calc(var(--px) * -1) 0 0 0 var(--color-stone-900),
+    var(--px) 0 0 0 var(--color-stone-900),
+    0 calc(var(--px) * 3) 0 0 color-mix(in oklab, var(--color-ink) 35%, transparent),
+    inset 0 0 0 var(--px) var(--color-stone-200),
+    inset 0 0 0 calc(var(--px) * 2) var(--color-stone-400),
+    inset 0 0 0 calc(var(--px) * 3) var(--color-stone-500),
+    inset 0 0 0 calc(var(--px) * 4) var(--color-stone-700),
+    inset 0 0 0 calc(var(--px) * 5) var(--color-stone-900);
+}
+
+@utility pixel-frame-board {
+  background-color: var(--color-grass-800);
+  box-shadow:
+    0 calc(var(--px) * -1) 0 0 var(--color-wood-900),
+    0 var(--px) 0 0 var(--color-wood-900),
+    calc(var(--px) * -1) 0 0 0 var(--color-wood-900),
+    var(--px) 0 0 0 var(--color-wood-900),
+    0 calc(var(--px) * 3) 0 0 color-mix(in oklab, var(--color-ink) 35%, transparent),
+    inset 0 var(--px) 0 0 var(--color-wood-300),
+    inset 0 0 0 calc(var(--px) * 3) var(--color-wood-500),
+    inset 0 calc(var(--px) * -1) 0 calc(var(--px) * 3) var(--color-wood-700),
+    inset 0 0 0 calc(var(--px) * 4) var(--color-wood-900);
+}
+
+/* A small pixel button / pill: notched outline, light top bevel, dark bottom bevel. */
+@utility pixel-button {
+  box-shadow:
+    0 calc(var(--px) * -1) 0 0 var(--color-wood-900),
+    0 var(--px) 0 0 var(--color-wood-900),
+    calc(var(--px) * -1) 0 0 0 var(--color-wood-900),
+    var(--px) 0 0 0 var(--color-wood-900),
+    0 calc(var(--px) * 2) 0 0 color-mix(in oklab, var(--color-ink) 35%, transparent),
+    inset 0 var(--px) 0 0 color-mix(in oklab, var(--color-chalk) 55%, transparent),
+    inset 0 calc(var(--px) * -1) 0 0 color-mix(in oklab, var(--color-ink) 30%, transparent);
+}
+
+/* Crisp 1-pixel drop shadow for pixel-font text on light surfaces. */
+@utility pixel-text-shadow {
+  text-shadow: calc(var(--px) * 0.5) calc(var(--px) * 0.5) 0
+    color-mix(in oklab, var(--color-ink) 22%, transparent);
 }
 
 /*
  * The easter egg's waterfall (spec 900 US-1): the one animated illustration
- * (manifest §6 Motion exception). Used with `motion-safe:` so the water stands
- * still with prefers-reduced-motion. Pure CSS, no JavaScript loop.
+ * (manifest §6 Motion exception). Pixel-stepped (`steps()`), so the water moves
+ * one art pixel at a time, like a sprite animation. Used with `motion-safe:`
+ * so the water stands still with prefers-reduced-motion. Pure CSS, no JavaScript.
+ * Distances are in SVG user units (art pixels).
  */
 @theme {
-  --animate-water-drift: water-drift 3.2s ease-in-out infinite alternate;
-  --animate-water-dash: water-dash 0.7s linear infinite;
-  --animate-droplet: droplet 1.2s ease-out infinite;
+  --animate-water-fall: water-fall 0.9s steps(16) infinite;
+  --animate-water-flow: water-flow 2.4s steps(16) infinite;
+  --animate-foam: foam 0.5s steps(1) infinite;
+  --animate-float: float 3.6s steps(6) infinite alternate;
 
-  @keyframes water-drift {
-    from { transform: translateX(-1.5rem); }
-    to { transform: translateX(1.5rem); }
+  @keyframes water-fall {
+    to { transform: translateY(16px); }
   }
-  @keyframes water-dash {
-    to { stroke-dashoffset: -48; }
+  @keyframes water-flow {
+    to { transform: translateX(16px); }
   }
-  @keyframes droplet {
-    0% { transform: translate(0, 0); opacity: 0; }
-    25% { opacity: 1; }
-    100% { transform: translate(var(--dx, 0px), -26px); opacity: 0; }
+  @keyframes foam {
+    50% { transform: translateX(2px); }
+  }
+  @keyframes float {
+    to { transform: translateX(6px); }
   }
 }
 
@@ -126,19 +274,12 @@
   }
 }
 
-/*
- * Mowing stripes on the soccer field (spec 001 US-3): horizontal bands of slightly
- * lighter grass over `bg-pitch` / `bg-pitch-dark`. Lightening keeps text contrast up.
- */
-@utility bg-mowing {
-  background-image: repeating-linear-gradient(
-    to bottom,
-    transparent 0 3rem,
-    color-mix(in oklab, var(--color-chalk) 8%, transparent) 3rem 6rem
-  );
-}
-
 @layer base {
+  /* The Kick off overlay (spec 900) only shows on the first load of a session. */
+  html[data-kicked-off] [data-kickoff] {
+    display: none;
+  }
+
   html {
     scroll-padding-top: var(--header-offset);
   }
@@ -151,7 +292,7 @@
   }
 
   body {
-    background-color: var(--color-parchment);
+    background-color: var(--color-leaf-800);
     color: var(--color-ink);
     font-family: var(--font-body);
   }

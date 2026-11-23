@@ -1,13 +1,15 @@
 "use client";
 
 import Image from "next/image";
+import PixelArt from "../pixel/PixelArt";
+import { CLOSE_ICON } from "../sprites/icons";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { projects as allProjects, type Project } from "@/content/projects";
 
 const HASH_PREFIX = "#project-";
 
 const link =
-  "rounded-pill border-outline border-ink bg-parchment px-4 py-1.5 font-heading text-ink hover:bg-cartoon-yellow focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-cartoon-yellow";
+  "pixel-button bg-gold-500 px-4 py-0.5 font-heading text-2xl leading-tight tracking-wide uppercase text-ink hover:bg-gold-400 focus-visible:outline-3 focus-visible:outline-offset-4 focus-visible:outline-red-600";
 
 /** The project whose detail is asked for in the URL (`#project-<slug>`), if any. */
 function projectFromHash(list: Project[]): Project | undefined {
@@ -103,36 +105,25 @@ export default function ProjectModal({
       {project && (
         <div
           data-modal-panel=""
-          className="relative max-h-[min(90dvh,56rem)] overflow-y-auto overscroll-contain rounded-card border-outline-lg border-ink bg-mint text-ink shadow-[6px_7px_0_var(--color-ink)]"
+          className="relative m-[var(--px)] max-h-[calc(min(90dvh,56rem)-2*var(--px))] overflow-y-auto overscroll-contain pixel-frame-paper text-ink"
         >
           <button
             ref={closeRef}
             type="button"
             onClick={close}
             aria-label="Close"
-            className="sticky top-3 z-10 float-right mt-3 mr-3 grid size-11 place-items-center rounded-full border-outline border-ink bg-parchment shadow-[2px_3px_0_var(--color-ink)] hover:bg-cartoon-yellow focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-cartoon-yellow"
+            className="sticky top-[calc(6*var(--px))] z-10 float-right mt-[calc(6*var(--px))] mr-[calc(6*var(--px))] grid size-11 place-items-center pixel-button bg-red-400 hover:bg-gold-500 focus-visible:outline-3 focus-visible:outline-offset-4 focus-visible:outline-ink"
           >
-            <svg
-              viewBox="0 0 24 24"
-              aria-hidden="true"
-              focusable="false"
-              className="size-5"
-            >
-              <path
-                d="M5 5L19 19M19 5L5 19"
-                className="fill-none stroke-ink [stroke-width:calc(var(--stroke-width-outline)*1.2)]"
-                strokeLinecap="round"
-              />
-            </svg>
+            <PixelArt art={CLOSE_ICON} />
           </button>
 
-          <div className="px-5 pt-5 pb-7 md:px-8 md:pt-7">
-            <p className="font-heading text-sm tracking-wide">
+          <div className="px-[calc(7*var(--px))] pt-[calc(7*var(--px))] pb-[calc(8*var(--px))]">
+            <p className="font-heading text-xl tracking-wide text-wood-700 uppercase">
               {project.category}
             </p>
             <h2
               id={titleId}
-              className="mt-1 pr-14 font-heading text-3xl md:text-4xl"
+              className="mt-1 pr-14 font-heading text-5xl leading-none tracking-wide md:text-6xl"
             >
               {project.title}
             </h2>
@@ -152,7 +143,7 @@ export default function ProjectModal({
               {project.tech.map((t) => (
                 <li
                   key={t}
-                  className="rounded-pill border-2 border-ink bg-chalk px-2.5 py-0.5 font-body text-sm font-semibold"
+                  className="bg-paper-300 px-2 font-body text-base shadow-[0_0_0_calc(var(--px)*0.5)_var(--color-wood-500)]"
                 >
                   {t}
                 </li>
@@ -194,7 +185,7 @@ export default function ProjectModal({
                   width={image.width}
                   height={image.height}
                   sizes="(min-width: 768px) 44rem, 92vw"
-                  className="h-auto w-full rounded-card border-outline border-ink"
+                  className="h-auto w-full shadow-[0_0_0_var(--px)_var(--color-wood-700)]"
                 />
               ))}
             </div>

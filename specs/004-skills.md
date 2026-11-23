@@ -26,11 +26,11 @@ The technologies and tools Ricardo works with, shown as a soccer team: eleven sk
 **As a** visitor, **I want** each skill shown as a player's jersey with its name and logo, **so that** I recognise every technology at a glance.
 
 **Context**
-Each skill is a "player": a cartoon soccer jersey (manifest §6: skills as jerseys) with the skill's name in the middle of the chest and its logo below the name. Logos are the official brand marks, copied as inline SVG paths (for example from Simple Icons, CC0) and recoloured to manifest tokens; they identify the tools and are trademarks of their owners.
+Each skill is a "player": a pixel-art soccer jersey (manifest §6: skills as jerseys) with the skill's name in the middle of the chest and its logo below the name. Logos are the official brand marks, copied as SVG path data (for example from Simple Icons, CC0), rasterised to pixels at build time and drawn in manifest tokens; they identify the tools and are trademarks of their owners.
 
 **Acceptance criteria**
-- [ ] AC1 — A `SkillJersey` component renders one skill as a cartoon soccer jersey (inline SVG, bold `ink` outline, `pitch-dark` body per manifest §6), with the skill name centred on the chest and the skill's logo below the name.
-- [ ] AC2 — Every skill has its own logo: JavaScript, TypeScript, React, Angular, Node.js, HTML, CSS, SCSS, MongoDB, Kiro Code and Claude Code. Logos are inline SVG components (no raster images, no icon-font or icon-package dependency) in token colours only.
+- [ ] AC1 — A `SkillJersey` component renders one skill as a pixel-art soccer jersey (inline SVG sprite, `ink` outline, shaded `pitch-dark` body with chalk collar and cuffs per manifest §6), with the skill name centred on the chest and the skill's logo below the name.
+- [ ] AC2 — Every skill has its own logo: JavaScript, TypeScript, React, Angular, Node.js, HTML, CSS, SCSS, MongoDB, Kiro Code and Claude Code. Logos are rasterised to pixels on a round parchment badge and rendered as inline SVG (no raster images, no icon-font or icon-package dependency) in token colours only.
 - [ ] AC3 — The name is real text in `chalk` on `pitch-dark` (an allowed pair in manifest §6), stays ≥ 4.5:1 under the film overlay, and long names ("Claude Code", "TypeScript") fit inside the jersey without overflowing.
 - [ ] AC4 — The logo is decorative (`aria-hidden="true"`) because the name is already text; the jersey is not focusable and has no interactive behaviour.
 - [ ] AC5 — Skills (name, logo key, position) come from the typed data file `src/content/skills.ts`.
@@ -53,7 +53,7 @@ Lineup:
 | Goalkeeper (1) | HTML |
 
 **Acceptance criteria**
-- [ ] AC1 — A `TacticsBoard` component renders a framed tactics board (cartoon style: `ink` outline, wooden or metal frame from the existing `WoodPlank`/silver look, `pitch-dark` surface with `parchment` pitch markings: outline, halfway line, centre circle, penalty boxes).
+- [ ] AC1 — A `TacticsBoard` component renders a framed tactics board (pixel style: a bevelled wooden pixel frame with nails, a dark slate surface distinct from the jerseys, with chalky `parchment` pitch markings: outline, halfway line, centre circle, penalty boxes). Below 768px the board uses a smaller pixel size so the back four fit.
 - [ ] AC2 — The eleven skills from `src/content/skills.ts` stand on the board as `SkillJersey` players in a 1-4-3-3 formation, in the lineup above: 1 goalkeeper, 4 defenders, 3 midfielders and 3 forwards, each line evenly spaced and centred.
 - [ ] AC3 — The board replaces the skills placeholder card in `#skills`, below the "Skills" title banner.
 - [ ] AC4 — The formation stays a recognisable 1-4-3-3 and fits without horizontal scroll at 375px, 768px and 1280px+: all eleven jerseys visible, none overlapping, names readable (≥ 0.75rem on mobile, ≥ 0.875rem from 768px).
@@ -91,7 +91,7 @@ export const skills: Skill[] = [
 ```
 
 ## Design notes
-- Matches the design guidelines in `manifest.md` §6: hand-coded SVG, rubber-hose style, bold ink outlines, token palette. Brand logos are the one exception to "original artwork" (see manifest §6 "Skill logos").
+- Matches the design guidelines in `manifest.md` §6: hand-coded pixel art, 1-pixel outlines, token ramps. Brand logos are the one exception to "original artwork" (see manifest §6 "Skill logos").
 - Jerseys follow the "skills as jerseys in a team lineup" idea from `design/main.jpg`.
 - Text sits on surfaces (manifest §6): names are on the jerseys, never directly on the board or grass.
 - The board sits on the field inside `#skills`; it reuses existing pieces where they fit (`WoodPlank`, silver tokens, field-marking style from `SoccerField`).

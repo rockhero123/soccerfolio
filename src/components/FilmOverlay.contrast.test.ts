@@ -2,14 +2,13 @@ import { readFileSync } from "node:fs";
 import { join } from "node:path";
 import { describe, expect, it } from "vitest";
 import { contrast, overlay, token, type RGB } from "@/test/contrast";
-import { GRAIN, VIGNETTE } from "./FilmOverlay";
+import { VIGNETTE } from "./FilmOverlay";
 
 /**
- * AC2 (spec 001 US-5): the film overlay does not reduce text contrast below WCAG AA.
+ * AC2 (spec 001 US-5): the vignette does not reduce text contrast below WCAG AA.
  * The overlay sits on top of text and background alike, so it lowers every pair.
- * This checks every text/background pair the manifest §6 allows, at the overlay's
- * darkest point (full corner vignette plus a dark grain speck) and where a light
- * grain speck lands on the vignette.
+ * This checks every text/background pair the manifest §6 allows, under the
+ * vignette's darkest band.
  */
 const manifest = readFileSync(join(process.cwd(), "specs/manifest.md"), "utf8");
 const rules = manifest
@@ -27,17 +26,10 @@ const pairs = rules.flatMap(({ backgrounds, texts }) =>
   backgrounds.flatMap((bg) => texts.map((text) => [text, bg] as const)),
 );
 
-/** Text and background seen through the overlay, in its two worst cases. */
+/** Text and background seen through the vignette's darkest band. */
 function throughOverlay(text: RGB, bg: RGB) {
-  const ink = token("ink");
-  const parchment = token("parchment");
-  const darkest = (c: RGB) => overlay(c, ink, VIGNETTE + GRAIN);
-  const lightSpeck = (c: RGB) =>
-    overlay(overlay(c, ink, VIGNETTE), parchment, GRAIN);
-  return Math.min(
-    contrast(darkest(text), darkest(bg)),
-    contrast(lightSpeck(text), lightSpeck(bg)),
-  );
+  const darkest = (c: RGB) => overlay(c, token("ink"), VIGNETTE);
+  return contrast(darkest(text), darkest(bg));
 }
 
 describe("FilmOverlay — AC2: text contrast stays WCAG AA under the overlay", () => {
@@ -45,6 +37,7 @@ describe("FilmOverlay — AC2: text contrast stays WCAG AA under the overlay", (
     expect(pairs.length).toBeGreaterThanOrEqual(10);
     expect(pairs).toContainEqual(["ink", "pitch"]);
     expect(pairs).toContainEqual(["parchment", "bark"]);
+    expect(pairs).toContainEqual(["ink", "wood-400"]);
   });
 
   it.each(pairs)(

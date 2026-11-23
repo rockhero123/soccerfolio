@@ -3,37 +3,41 @@ import { renderToStaticMarkup } from "react-dom/server";
 import { describe, expect, it, vi } from "vitest";
 
 const fontCalls = vi.hoisted(() => ({
-  lilita: [] as unknown[],
-  sourceSans: [] as unknown[],
+  jersey: [] as unknown[],
+  pixelify: [] as unknown[],
 }));
 
 vi.mock("next/font/google", () => ({
-  Lilita_One: (options: { variable: string }) => {
-    fontCalls.lilita.push(options);
-    return { className: "lilita", variable: "lilita-variable", style: {} };
+  Jersey_10: (options: { variable: string }) => {
+    fontCalls.jersey.push(options);
+    return { className: "jersey", variable: "jersey-variable", style: {} };
   },
-  Source_Sans_3: (options: { variable: string }) => {
-    fontCalls.sourceSans.push(options);
-    return { className: "source", variable: "source-variable", style: {} };
+  Pixelify_Sans: (options: { variable: string }) => {
+    fontCalls.pixelify.push(options);
+    return { className: "pixelify", variable: "pixelify-variable", style: {} };
   },
 }));
 
 const { default: RootLayout, metadata } = await import("./layout");
 
-type HtmlProps = { lang: string; className: string; children: ReactElement };
+type HtmlProps = {
+  lang: string;
+  className: string;
+  children: ReactElement | ReactElement[];
+};
 
 describe("RootLayout fonts (AC2)", () => {
-  it("loads Lilita One and Source Sans 3 via next/font/google with swap", () => {
-    expect(fontCalls.lilita).toEqual([
+  it("loads Jersey 10 and Pixelify Sans via next/font/google with swap", () => {
+    expect(fontCalls.jersey).toEqual([
       expect.objectContaining({
         weight: "400",
-        variable: "--font-lilita-one",
+        variable: "--font-jersey-10",
         display: "swap",
       }),
     ]);
-    expect(fontCalls.sourceSans).toEqual([
+    expect(fontCalls.pixelify).toEqual([
       expect.objectContaining({
-        variable: "--font-source-sans-3",
+        variable: "--font-pixelify-sans",
         display: "swap",
       }),
     ]);
@@ -48,9 +52,13 @@ describe("RootLayout fonts (AC2)", () => {
     const html = tree as ReactElement<HtmlProps>;
     expect(html.type).toBe("html");
     expect(html.props.lang).toBe("en");
-    expect(html.props.className).toContain("lilita-variable");
-    expect(html.props.className).toContain("source-variable");
-    const body = html.props.children as ReactElement<{ className: string }>;
+    expect(html.props.className).toContain("jersey-variable");
+    expect(html.props.className).toContain("pixelify-variable");
+    // <html> holds <head> (the Kick off script) and <body>.
+    const children = [html.props.children].flat() as ReactElement<{
+      className: string;
+    }>[];
+    const body = children.find((child) => child.type === "body")!;
     expect(body.props.className).toContain("font-body");
   });
 });
@@ -84,9 +92,9 @@ describe("RootLayout page shell (US-6 AC2)", () => {
     );
   });
 
-  it("closes the page with a footer sign on a parchment surface", () => {
+  it("closes the page with a footer sign: a pixel button on parchment paper", () => {
     expect(markup()).toMatch(
-      /<footer[^>]*><p class="[^"]*bg-parchment[^"]*text-ink/,
+      /<footer[^>]*><p class="[^"]*pixel-button[^"]*bg-paper-200[^"]*text-ink/,
     );
   });
 });

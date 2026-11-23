@@ -1,7 +1,7 @@
 import AxeBuilder from "@axe-core/playwright";
 import { expect, test } from "@playwright/test";
 
-const label = /Cartoon portrait of Ricardo Martinez/;
+const label = /Pixel-art portrait of Ricardo Martinez/;
 
 for (const width of [375, 1280]) {
   test(`AC3 — at ${width}px the hair breaks out above the portrait circle`, async ({
@@ -11,20 +11,30 @@ for (const width of [375, 1280]) {
     await page.goto("/");
     const portrait = page.getByRole("img", { name: label });
     await expect(portrait).toBeVisible();
-    const frame = (await portrait
-      .locator('[data-portrait-part="frame"]')
-      .boundingBox())!;
-    const hair = (await portrait
-      .locator('[data-portrait-part="hair"]')
-      .boundingBox())!;
+    // The pixel sprite draws the circle's dark ring in wood-900 and the hair
+    // in the hair colour: compare their extents, in the sprite's own pixels.
+    const { ring, hair, height } = await portrait.evaluate((el) => {
+      const svg = el.querySelector("svg")!;
+      const bbox = (token: string) => {
+        const { x, y, width, height } = (
+          svg.querySelector(`path[fill="var(--color-${token})"]`) as SVGPathElement
+        ).getBBox();
+        return { x, y, width, height };
+      };
+      return {
+        ring: bbox("wood-900"),
+        hair: bbox("hair"),
+        height: svg.viewBox.baseVal.height,
+      };
+    });
     // The hair rises clearly above the circle and stays centred on it.
-    expect(hair.y).toBeLessThan(frame.y - 8);
+    expect(hair.y).toBeLessThan(ring.y - 2);
     expect(
-      Math.abs(hair.x + hair.width / 2 - (frame.x + frame.width / 2)),
+      Math.abs(hair.x + hair.width / 2 - (ring.x + ring.width / 2)),
     ).toBeLessThan(2);
-    // The portrait stays inside its container.
-    const card = (await portrait.locator("xpath=..").boundingBox())!;
-    expect(hair.y).toBeGreaterThanOrEqual(card.y);
+    // The portrait stays inside its own box.
+    expect(hair.y).toBeGreaterThanOrEqual(0);
+    expect(ring.y + ring.height).toBeLessThanOrEqual(height);
   });
 }
 
@@ -33,17 +43,17 @@ test("AC4 — the portrait is announced as one image with its label", async ({
 }) => {
   await page.goto("/");
   await expect(page.locator("main")).toMatchAriaSnapshot(
-    `- img /Cartoon portrait of Ricardo Martinez/`,
+    `- img /Pixel-art portrait of Ricardo Martinez/`,
   );
 });
 
 test("AC2 — he wears the yellow Colombia shirt", async ({ page }) => {
   await page.goto("/");
   const portrait = page.getByRole("img", { name: label });
-  await expect(portrait.locator('[data-portrait-part="shirt"]')).toHaveCSS(
-    "fill",
-    "rgb(232, 182, 48)",
-  );
+  // The shirt is shaded in the gold ramp around cartoon-yellow.
+  await expect(
+    portrait.locator('path[fill="var(--color-gold-600)"]'),
+  ).toHaveCSS("fill", "rgb(232, 182, 48)");
 });
 
 test("an axe scan finds no serious issues with the portrait", async ({

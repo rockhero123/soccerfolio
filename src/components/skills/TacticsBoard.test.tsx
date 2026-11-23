@@ -2,6 +2,7 @@ import { cleanup, render, screen, within } from "@testing-library/react";
 import { renderToStaticMarkup } from "react-dom/server";
 import { afterEach, describe, expect, it } from "vitest";
 import { skills } from "@/content/skills";
+import { expectTokensOnly } from "@/test/pixel";
 import TacticsBoard from "./TacticsBoard";
 
 afterEach(cleanup);
@@ -19,17 +20,17 @@ function renderBoard() {
   return { container, frame };
 }
 
-describe("TacticsBoard — AC1: a framed board with pitch markings", () => {
-  it("has a wooden frame with an ink outline and a slate surface distinct from the jerseys", () => {
+describe("TacticsBoard — AC1: a framed pixel board with pitch markings", () => {
+  it("has a bevelled wooden pixel frame with nails and a slate surface distinct from the jerseys", () => {
     const { frame } = renderBoard();
-    expect(frame).toHaveClass("bg-bark", "border-ink", "border-outline-lg");
+    expect(frame).toHaveClass("pixel-frame-board");
     expect(frame.querySelectorAll('[data-board="nail"]')).toHaveLength(4);
     const surface = frame.querySelector('[data-board="surface"]')!;
-    expect(surface).toHaveClass("bg-forest-deep-shade");
+    expect(surface).toHaveClass("bg-stone-800");
     expect(surface).not.toHaveClass("bg-pitch-dark");
   });
 
-  it("draws the boundary, halfway line, centre circle and both penalty boxes in parchment", () => {
+  it("draws the boundary, halfway line, centre circle and both penalty boxes in chalk", () => {
     const { frame } = renderBoard();
     for (const name of [
       "boundary",
@@ -40,7 +41,7 @@ describe("TacticsBoard — AC1: a framed board with pitch markings", () => {
     ]) {
       const marking = frame.querySelector(`[data-board-marking="${name}"]`)!;
       expect(marking, name).not.toBeNull();
-      expect(marking).toHaveClass("border-parchment");
+      expect(marking).toHaveClass("border-paper-100/70", "border-[length:var(--px)]");
     }
   });
 
@@ -60,11 +61,22 @@ describe("TacticsBoard — AC1: a framed board with pitch markings", () => {
     ).toBeTruthy();
   });
 
+  it("draws the chalk strategy as un-smoothed, pixel-wide strokes", () => {
+    const { frame } = renderBoard();
+    const strategy = frame.querySelector('[data-board="strategy"]')!;
+    expect(strategy).toHaveAttribute("shape-rendering", "crispEdges");
+    expect(strategy.querySelector("[class*='stroke-width:var(--px)']")).not.toBeNull();
+  });
+
+  it("uses a smaller pixel size on phones, so the back four fit", () => {
+    const { frame } = renderBoard();
+    expect(frame).toHaveClass("[--px:2px]", "sm:[--px:3px]", "md:[--px:4px]");
+  });
+
   it("uses tokens only and no raster images", () => {
     const html = renderToStaticMarkup(<TacticsBoard />);
-    expect(html).not.toMatch(/#[0-9a-fA-F]{3,8}\b(?![-\w])/);
-    expect(html).not.toMatch(/(fill|stroke)="(?!url\(|none)/);
-    expect(html).not.toMatch(/<img|<image|data:image/);
+    expect(html).not.toMatch(/data:image/);
+    expectTokensOnly(html);
   });
 });
 

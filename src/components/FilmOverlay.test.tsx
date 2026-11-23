@@ -1,7 +1,8 @@
 import { cleanup, render } from "@testing-library/react";
 import { renderToStaticMarkup } from "react-dom/server";
 import { afterEach, describe, expect, it } from "vitest";
-import FilmOverlay, { GRAIN, VIGNETTE } from "./FilmOverlay";
+import { expectTokensOnly } from "@/test/pixel";
+import FilmOverlay, { BANDS, VIGNETTE } from "./FilmOverlay";
 
 afterEach(cleanup);
 
@@ -10,49 +11,35 @@ function renderOverlay() {
   return container.querySelector('[data-testid="film-overlay"]') as HTMLElement;
 }
 
-describe("FilmOverlay — AC1: fixed full-screen film grain and soft vignette", () => {
+describe("FilmOverlay — AC1: a fixed, full-screen, banded vignette", () => {
   it("covers the whole screen, fixed, above the page", () => {
     expect(renderOverlay()).toHaveClass("fixed", "inset-0", "z-50");
   });
 
-  it("adds fine film grain from a static noise tile", () => {
-    const overlay = renderOverlay();
-    const grain = overlay.querySelector('[data-film="grain"]')!;
-    const noise = grain.querySelector("feTurbulence")!;
-    expect(noise).toHaveAttribute("stitchTiles", "stitch");
-    // Dark ink and light parchment specks, both at the GRAIN opacity.
-    const floods = [...grain.querySelectorAll("feFlood")];
-    expect(floods.map((f) => f.getAttribute("class"))).toEqual([
-      "[flood-color:var(--color-ink)]",
-      "[flood-color:var(--color-parchment)]",
-    ]);
-    floods.forEach((f) =>
-      expect(Number(f.getAttribute("flood-opacity"))).toBe(GRAIN),
-    );
-    expect(
-      grain.querySelector('rect[fill="url(#film-grain-tile)"]'),
-    ).not.toBeNull();
+  it("is clear in the centre and darkens towards the edges in hard-edged bands", () => {
+    const style = renderOverlay()
+      .querySelector('[data-film="vignette"]')!
+      .getAttribute("style")!;
+    expect(style).toContain("radial-gradient(ellipse at center, transparent 0");
+    // Each band starts where the previous one ends: hard edges, no smooth fade.
+    for (let i = 0; i < BANDS.length; i++) {
+      const [at] = BANDS[i];
+      const end = BANDS[i + 1]?.[0] ?? 100;
+      expect(style).toContain(`${at}% ${end}%`);
+    }
+    // Bands get darker towards the edge, up to VIGNETTE.
+    const alphas = BANDS.map(([, alpha]) => alpha);
+    expect([...alphas].sort((a, b) => a - b)).toEqual(alphas);
+    expect(alphas.at(-1)).toBe(VIGNETTE);
   });
 
-  it("adds a soft ink vignette that is clear in the centre and VIGNETTE strong at the corners", () => {
-    const vignette = renderOverlay().querySelector('[data-film="vignette"]')!;
-    expect(vignette.className).toContain(
-      "radial-gradient(ellipse_at_center,transparent_",
-    );
-    expect(vignette.className).toContain(
-      `var(--color-ink)_${Math.round(VIGNETTE * 100)}%,transparent)_100%`,
-    );
-  });
-
-  it("keeps the effect subtle", () => {
+  it("keeps the effect subtle and has no film grain", () => {
     expect(VIGNETTE).toBeLessThanOrEqual(0.15);
-    expect(GRAIN).toBeLessThanOrEqual(0.06);
+    expect(renderOverlay().querySelector("feTurbulence")).toBeNull();
   });
 
   it("uses design tokens only", () => {
-    const html = renderToStaticMarkup(<FilmOverlay />);
-    expect(html).not.toMatch(/#[0-9a-fA-F]{3,8}\b(?![-\w])/);
-    expect(html).not.toMatch(/(fill|stroke)="(?!url\(|none)/);
+    expectTokensOnly(renderToStaticMarkup(<FilmOverlay />));
   });
 });
 
@@ -62,9 +49,6 @@ describe("FilmOverlay — AC2: never blocks the page", () => {
     expect(overlay).toHaveClass("pointer-events-none");
     expect(overlay).toHaveAttribute("aria-hidden", "true");
     expect(overlay.textContent).toBe("");
-    overlay
-      .querySelectorAll("svg")
-      .forEach((svg) => expect(svg).toHaveAttribute("focusable", "false"));
   });
 });
 
@@ -75,7 +59,7 @@ describe("FilmOverlay — AC3: respects prefers-reduced-motion", () => {
 });
 
 describe("FilmOverlay — AC4: no scroll jank", () => {
-  it("is static CSS and SVG: no animation, transition or script", () => {
+  it("is static CSS: no animation, transition or script", () => {
     const html = renderToStaticMarkup(<FilmOverlay />);
     expect(html).not.toMatch(/<animate|<set\b|<script|animate-|transition/);
   });

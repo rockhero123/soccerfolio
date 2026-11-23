@@ -51,11 +51,13 @@ describe("Home page — AC1: sections on the soccer field", () => {
     expect(document.getElementById("hero")).toContainElement(h1s[0]);
   });
 
-  it("puts placeholder text on surfaces, never straight on the grass (manifest §6)", () => {
+  it("puts text on surfaces, never straight on the grass (manifest §6)", () => {
     const { field } = renderHome();
     field.querySelectorAll("section p:not(.sr-only), section h1").forEach((text) => {
       expect(
-        text.closest(".bg-mint, [data-title-banner], [data-intro-sign]"),
+        text.closest(
+          ".pixel-frame-paper, .pixel-frame-stone, .pixel-frame-board, .pixel-button, [data-title-banner], [data-intro-sign], [data-contact-board]",
+        ),
       ).not.toBeNull();
     });
   });
