@@ -87,7 +87,7 @@ export const hero = {
 - Playwright: at 1280px the hair breaks out above the portrait circle; the mirror and sign sit side by side at 1280px and stack at 375px; the page title contains "Software Engineer"; an axe check finds no serious issues.
 
 ## Open questions
-- [x] Final introduction text (US-3): the professional profile from the owner's CV (`cv_source_data/`), condensed for the sign.
+- [x] Final introduction text (US-3): the first paragraph of the profile in the owner's CV, now in `hero.intro`.
 - [x] Profile photo? A hand-coded SVG cartoon portrait instead of a photo (owner decision).
 - [x] Name and role: "Richi" shown, "Ricardo Martinez (Richi)" as the `<h1>` name; role "Software Engineer" (owner decision).
 - [x] CTA buttons and social links: dropped from the hero (owner decision).
