@@ -56,7 +56,7 @@ describe("Home page — AC1: sections on the soccer field", () => {
     field.querySelectorAll("section p:not(.sr-only), section h1").forEach((text) => {
       expect(
         text.closest(
-          ".pixel-frame-paper, .pixel-frame-stone, .pixel-frame-board, .pixel-button, [data-title-banner], [data-intro-sign], [data-contact-board]",
+          ".pixel-frame-paper, .pixel-frame-stone, .pixel-frame-board, .pixel-button, [data-title-banner], [data-intro-sign], [data-contact-lineup] a, [data-grass-paint]",
         ),
       ).not.toBeNull();
     });
