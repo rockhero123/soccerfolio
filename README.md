@@ -2,6 +2,8 @@
 
 The personal portfolio of **Ricardo Martinez**, software developer, presented as a soccer match.
 
+**Live site:** https://rockhero123.github.io/soccerfolio/
+
 All content sits on a soccer field in the middle of an enchanted forest, drawn in a 1930s rubber-hose cartoon style. Skills are jerseys in a team lineup, projects are on a filterable grid, and the contact zone ends at the goal.
 
 ## Features
@@ -24,7 +26,7 @@ All artwork is original, hand-coded SVG. The only exceptions are the official te
 | Unit and component tests | Vitest + React Testing Library |
 | End-to-end tests | Playwright + axe-core |
 | Lint | ESLint (`eslint-config-next`) |
-| Hosting | Vercel |
+| Hosting | GitHub Pages (static export, deployed by `.github/workflows/deploy-pages.yml`) |
 
 ## Getting started
 
@@ -52,6 +54,20 @@ Then open [http://localhost:3000](http://localhost:3000).
 | `npm run check` | Lint, type-check, unit tests and build in one go |
 
 Before the first end-to-end run, install the Playwright browsers with `npx playwright install`.
+
+## Deployment
+
+Every push to `main` deploys the site to GitHub Pages through [`.github/workflows/deploy-pages.yml`](./.github/workflows/deploy-pages.yml).
+
+The workflow builds a static export served from `/soccerfolio/`. It sets `GITHUB_PAGES=true`, which turns on `output: "export"`, the base path and unoptimized images in `next.config.ts`. Local development and tests keep the default config.
+
+To preview the Pages build locally:
+
+```bash
+GITHUB_PAGES=true PAGES_BASE_PATH=/soccerfolio npm run build
+```
+
+The files land in `out/`.
 
 ## Project structure
 

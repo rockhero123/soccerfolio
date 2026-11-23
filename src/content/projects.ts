@@ -55,7 +55,9 @@ const SIZES: Record<string, [number, number]> = {
 
 const img = (file: string, alt: string): ProjectImage => {
   const [width, height] = SIZES[file];
-  return { src: `/images/projects/${file}`, alt, width, height };
+  // Prefixed with the GitHub Pages sub-path; empty everywhere else.
+  const base = process.env.NEXT_PUBLIC_BASE_PATH ?? "";
+  return { src: `${base}/images/projects/${file}`, alt, width, height };
 };
 
 export const projects: Project[] = [
