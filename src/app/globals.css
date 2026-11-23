@@ -275,8 +275,8 @@
 }
 
 @layer base {
-  /* The Kick off overlay (spec 900) only shows on the first load of a session. */
-  html[data-kicked-off] [data-kickoff] {
+  /* The theater (spec 900) shows on every load, unless tests skip it. */
+  html[data-skip-theater] [data-theater] {
     display: none;
   }
 

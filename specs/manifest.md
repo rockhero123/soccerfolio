@@ -72,7 +72,7 @@ The main idea is a soccer field surrounded by enchanted forest. All the portfoli
 - **Skill logos:** the skills section (spec 004) shows the official logos of the technologies, copied as SVG path data (e.g. Simple Icons, CC0) and **rasterised to pixels** at build time, in token colours. They are the only non-original artwork, identify the tools, and remain trademarks of their owners.
 - **Style:** Stardew-like detail: 4–8 shade colour ramps per material, light from the top left, a 1-pixel outline in the darkest shade of the material (`wood-900`, `leaf-900`, `stone-900`, `ink`), hand-placed highlights and sparkles, checkered dithering where two shades meet. Characters keep big, exaggerated faces (large eyes with a "pie-cut" notch in the pupil, brows, toothy grins).
 - **UI surfaces:** Stardew-style pixel frames (`pixel-frame-paper`, `-wood`, `-stone`, `-board`) and pixel buttons (`pixel-button`): notched pixel corners, bevel bands, a crisp drop shadow. No rounded corners.
-- **Motion:** illustrations are **static**. No character animation. The one exception is the easter egg's waterfall (spec 900), whose water moves with pixel-stepped CSS animations (`steps()`) and stands still with `prefers-reduced-motion`.
+- **Motion:** illustrations are **static**. No character animation. Two exceptions, both in the easter egg (spec 900): the waterfall, whose water moves with pixel-stepped CSS animations (`steps()`), and the theater curtain, which rises once with a smooth eased transition when the visitor begins the match (owner decision). Both stand still with `prefers-reduced-motion`.
 - **Scene light:** a subtle vignette in hard-edged bands covers the whole page (replacing the cartoon film grain). It never blocks clicks (`pointer-events: none`) and is removed when the user has `prefers-reduced-motion` set.
 - **Composition:** the enchanted forest is the page background. A soccer field sits in the middle of it and contains all the content sections. On mobile the forest shrinks to a decorative frame around the field.
 
@@ -109,6 +109,7 @@ Defined once as Tailwind theme tokens in `src/app/globals.css`. Components must 
 - **Never put `chalk` (white) text on `pitch` (bright green).** It is only about 2.7:1 and fails WCAG AA.
 - Signs are **light wood with `ink` text** (burned-in lettering), like the reference signs.
 - **Text on the field always sits on a surface** (a title banner, card, button or wooden sign), never directly on the grass. Every pair above stays ≥ 4.5:1 under the vignette's darkest band.
+  - One exception (owner decision, spec 007): the contact invitation is **painted on the dark grass** of the contact zone, in `chalk` (`paper-100`) heading text with a crisp `grass-900` pixel edge, like field paint. It stays ≥ 4.5:1 on both contact-zone stripes (`grass-800`, `grass-700`), and the dark edge keeps it readable over lighter speckles. Never paint text on the bright `pitch` grass.
 
 ## 7. Spec index
 

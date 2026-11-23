@@ -6,9 +6,11 @@ import TacticsBoard from "@/components/skills/TacticsBoard";
 import ProjectBrowser from "@/components/projects/ProjectBrowser";
 import ProjectModal from "@/components/projects/ProjectModal";
 import MusicWaterfall from "@/components/easter-egg/MusicWaterfall";
+import TheaterDrapes from "@/components/easter-egg/TheaterDrapes";
+import TheaterStalls from "@/components/easter-egg/TheaterStalls";
 import Waterfall from "@/components/easter-egg/Waterfall";
 import SoccerField from "@/components/SoccerField";
-import ContactBoard from "@/components/contact/ContactBoard";
+import ContactLineup from "@/components/contact/ContactLineup";
 import { site } from "@/content/site";
 
 const [hero, skills, projects, contact] = site.sections;
@@ -20,10 +22,15 @@ const [hero, skills, projects, contact] = site.sections;
 export default function Home() {
   return (
     <SoccerField
-      crown={<MusicWaterfall scene={<Waterfall />} />}
+      crown={
+        <MusicWaterfall
+          scene={<Waterfall />}
+          theater={{ drapes: <TheaterDrapes />, stalls: <TheaterStalls /> }}
+        />
+      }
       contact={
         <PageSection id={contact.id} title={contact.title}>
-          <ContactBoard />
+          <ContactLineup />
         </PageSection>
       }
     >

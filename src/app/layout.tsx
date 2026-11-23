@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { Jersey_10, Pixelify_Sans } from "next/font/google";
 import FilmOverlay from "@/components/FilmOverlay";
-import { KICKOFF_INIT_SCRIPT } from "@/components/easter-egg/kickoffChoice";
+import { SKIP_THEATER_SCRIPT } from "@/components/easter-egg/theaterSkip";
 import ForestBackground from "@/components/ForestBackground";
 import SiteHeader from "@/components/SiteHeader";
 import { site } from "@/content/site";
@@ -32,12 +32,12 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
     <html
       lang="en"
       className={`${jersey10.variable} ${pixelifySans.variable} h-full`}
-      // The Kick off script below may set data-kicked-off before React hydrates.
+      // The script below may set data-skip-theater before React hydrates.
       suppressHydrationWarning
     >
       <head>
-        {/* Hides the Kick off overlay (when enabled) before paint on later loads of the session (spec 900). */}
-        <script dangerouslySetInnerHTML={{ __html: KICKOFF_INIT_SCRIPT }} />
+        {/* Hides the theater before paint when tests skip it (spec 900, theaterSkip.ts). */}
+        <script dangerouslySetInnerHTML={{ __html: SKIP_THEATER_SCRIPT }} />
       </head>
       <body className="relative isolate min-h-full flex flex-col font-body">
         <ForestBackground />

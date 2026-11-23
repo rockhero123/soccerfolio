@@ -1,6 +1,7 @@
 "use client";
 
 import {
+  useCallback,
   useEffect,
   useRef,
   useState,
@@ -8,8 +9,8 @@ import {
   type ReactNode,
 } from "react";
 import { easterEgg } from "@/content/easterEgg";
-import KickOff from "./KickOff";
-import { readChoice, saveChoice } from "./kickoffChoice";
+import { theaterSkipped } from "./theaterSkip";
+import TheaterCurtain from "./TheaterCurtain";
 import { SCENE_H } from "./waterfallSize";
 import {
   loadYouTube,
@@ -33,46 +34,56 @@ const button =
  * The easter egg (spec 900 US-2): the waterfall with a music video hidden
  * behind it (only the music is heard), from YouTube's privacy-enhanced embed.
  *
- * - First load of a session, when `easterEgg.kickOff.enabled`: the "Kick off!" overlay (AC6). Kicking off is a
- *   real click, so the music starts with sound right away; "Enter without
- *   music" leaves it silent.
- * - Later loads (AC2): it tries to play with sound; if the browser blocks that,
- *   it plays muted and turns the sound on at the first click, tap or key press,
- *   with a "Sound on" button. Visitors who chose no music stay silent.
+ * - Every load, when `easterEgg.theater.enabled`: the theater with its curtain
+ *   closed covers the page while the video loads, without playing (AC6).
+ *   "Start" is a real click, so the music starts with sound right away as the
+ *   curtain rises; Escape enters silently.
+ * - With the theater off (AC2): it tries to play with sound; if the browser
+ *   blocks that, it plays muted and turns the sound on at the first click, tap
+ *   or key press, with a "Sound on" button.
  * - With prefers-reduced-motion it never starts by itself (AC4).
  * Play/pause and mute controls are always available; if YouTube cannot load,
  * the waterfall simply shows on its own.
  *
- * `scene` is the waterfall artwork, rendered on the server, so its pixel art is
- * never bundled for the browser.
+ * `scene` (the waterfall) and `theater` (the curtain, stage and seats) are
+ * artwork rendered on the server, so their pixel art is never bundled for the
+ * browser.
  */
-export default function MusicWaterfall({ scene }: { scene: ReactNode }) {
+export default function MusicWaterfall({
+  scene,
+  theater,
+}: {
+  scene: ReactNode;
+  theater?: { drapes: ReactNode; stalls: ReactNode };
+}) {
   const hostRef = useRef<HTMLDivElement>(null);
   const playerRef = useRef<YTPlayer | null>(null);
   const ytRef = useRef<YTNamespace | null>(null);
-  /** Kick off was pressed before the player was ready: play with sound when it is. */
+  /** "Start" was pressed before the player was ready: play with sound when it is. */
   const pendingKickRef = useRef(false);
   const [status, setStatus] = useState<Status>("loading");
-  // The stored choice; on the server and during hydration there is none (null).
-  const storedChoice = useSyncExternalStore(
+  // Skipped by tests (see theaterSkip.ts); never on the server or during hydration.
+  const skipped = useSyncExternalStore(
     subscribeNever,
-    readChoice,
-    () => null,
+    theaterSkipped,
+    () => false,
   );
-  const [entered, setEntered] = useState(false);
-  const showKickOff =
-    easterEgg.kickOff.enabled && storedChoice === null && !entered;
+  // closed → rising (the visitor chose) → up (removed).
+  const [curtain, setCurtain] = useState<"closed" | "rising" | "up">("closed");
+  const showTheater =
+    easterEgg.theater.enabled && theater && curtain !== "up" && !skipped;
+  const curtainUp = useCallback(() => setCurtain("up"), []);
   const [playing, setPlaying] = useState(false);
   const [muted, setMuted] = useState(false);
   const [needsSound, setNeedsSound] = useState(false);
 
   useEffect(() => {
-    // With the Kick off overlay off, every load follows AC2 (as if the visitor kicked off).
-    const choice = easterEgg.kickOff.enabled ? readChoice() : "music";
+    // With the theater on, the video loads but waits for "Start" (or, when the
+    // theater is skipped, stays silent). With it off, every load follows AC2.
     const reduceMotion = window.matchMedia(
       "(prefers-reduced-motion: reduce)",
     ).matches;
-    const autoplay = choice === "music" && !reduceMotion;
+    const autoplay = !easterEgg.theater.enabled && !reduceMotion;
     let cancelled = false;
     let check: ReturnType<typeof setTimeout> | undefined;
 
@@ -145,9 +156,8 @@ export default function MusicWaterfall({ scene }: { scene: ReactNode }) {
     };
   }, []);
 
-  const kickOff = () => {
-    saveChoice("music");
-    setEntered(true);
+  const begin = () => {
+    setCurtain("rising");
     const player = playerRef.current;
     if (player && status === "ready") {
       player.unMute();
@@ -158,10 +168,7 @@ export default function MusicWaterfall({ scene }: { scene: ReactNode }) {
     }
   };
 
-  const skip = () => {
-    saveChoice("silent");
-    setEntered(true);
-  };
+  const skip = () => setCurtain("rising");
 
   const togglePlay = () => {
     const player = playerRef.current;
@@ -200,7 +207,15 @@ export default function MusicWaterfall({ scene }: { scene: ReactNode }) {
           />
         </div>
       </div>
-      {showKickOff && <KickOff onKickOff={kickOff} onSkip={skip} />}
+      {showTheater && (
+        <TheaterCurtain
+          drapes={theater.drapes}
+          stalls={theater.stalls}
+          onBegin={begin}
+          onSkip={skip}
+          onDone={curtainUp}
+        />
+      )}
       {status === "ready" && (
         <div
           role="group"
