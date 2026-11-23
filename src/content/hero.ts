@@ -7,10 +7,9 @@ export const hero = {
   name: site.name,
   nickname: "Richi",
   role: site.role,
-  // TODO(owner): placeholder introduction, cleaned up from the first draft in
-  // spec 002 — replace with the final copy (spec 002 open question).
+  // Final copy from the owner: first paragraph of the profile in his CV.
   intro:
-    "Student in the ninth semester of Interactive Media Design at Icesi University, interested in design and development, human–computer interaction (HCI) projects and mobile design.",
+    "Software Engineer with seven years of experience crafting intuitive, user-centered interfaces across the logistics, entertainment, and tourism industries. At a leading software development consultancy, he contributed to projects for clients including Disney, delivering creative solutions that balance aesthetics with usability.",
   portrait: {
     label:
       "Cartoon portrait of Ricardo Martinez as a speedy vintage soccer player in a yellow Colombia shirt, with a roguish grin",
