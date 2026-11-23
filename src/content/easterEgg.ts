@@ -4,6 +4,6 @@ export const easterEgg = {
     id: "Yq2HC4_Zxgo",
     title: "Music video behind the waterfall",
   },
-  /** The "Kick off!" overlay (spec 900 US-2 AC6). Off for now (owner decision). */
-  kickOff: { enabled: false },
+  /** The theater with its curtain closed before the page (spec 900 US-2 AC6). */
+  theater: { enabled: true },
 } as const;

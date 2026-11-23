@@ -1,4 +1,4 @@
-import { expect, test } from "@playwright/test";
+import { expect, test } from "./fixtures";
 
 /** Measured gaps between the playing-zone sections, and from each title banner to its content. */
 async function spacing(page: import("@playwright/test").Page) {

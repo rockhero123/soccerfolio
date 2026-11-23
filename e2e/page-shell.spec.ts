@@ -1,5 +1,5 @@
 import AxeBuilder from "@axe-core/playwright";
-import { expect, test } from "@playwright/test";
+import { expect, test } from "./fixtures";
 
 const field = '[data-testid="soccer-field"]';
 const sections = ["hero", "skills", "projects", "contact"];

@@ -1,4 +1,4 @@
-import { expect, test, type Page } from "@playwright/test";
+import { expect, test, type Page } from "./fixtures";
 
 const forest = '[data-testid="forest-background"]';
 const part = (name: string) => `${forest} [data-forest-part="${name}"]`;
@@ -24,6 +24,9 @@ for (const width of [375, 768, 1280]) {
     test.beforeEach(async ({ page }) => {
       await page.setViewportSize({ width, height: 800 });
       await page.goto("/");
+      // Web fonts reflow the text when they arrive, which changes the page
+      // height; measure only after they have loaded.
+      await page.evaluate(() => document.fonts.ready.then(() => undefined));
     });
 
     test("AC2 — the forest fills the full page height behind the content", async ({

@@ -9,7 +9,14 @@ export const social = {
   github: "https://github.com/rockhero123",
 } as const;
 
+/** The invitation painted on the grass above the contact signs. */
+export const contactInvite =
+  "Want to build something together, or just talk football?";
+
 export type ContactKind = "phone" | "email" | "linkedin" | "github";
+
+/** Where a sign stands in the lineup: two midfielders, then two forwards. */
+export type ContactLine = "midfielders" | "forwards";
 
 export type ContactItem = {
   kind: ContactKind;
@@ -20,9 +27,14 @@ export type ContactItem = {
   href: string;
   /** Opens in a new tab. */
   external: boolean;
+  line: ContactLine;
 };
 
-/** The contact items on the board, in order (spec 007 US-1). */
+/**
+ * The contact signs, in order (spec 007 US-1): phone and email are the
+ * midfielders (top row, close together), LinkedIn and GitHub the forwards
+ * (bottom row, wide apart). Within a line, the first one is on the left.
+ */
 export const contactItems: readonly ContactItem[] = [
   {
     kind: "phone",
@@ -30,6 +42,7 @@ export const contactItems: readonly ContactItem[] = [
     value: social.phone.label,
     href: social.phone.href,
     external: false,
+    line: "midfielders",
   },
   {
     kind: "email",
@@ -37,6 +50,7 @@ export const contactItems: readonly ContactItem[] = [
     value: social.email,
     href: `mailto:${social.email}`,
     external: false,
+    line: "midfielders",
   },
   {
     kind: "linkedin",
@@ -44,6 +58,7 @@ export const contactItems: readonly ContactItem[] = [
     value: social.linkedin.replace(/^https:\/\/www\./, ""),
     href: social.linkedin,
     external: true,
+    line: "forwards",
   },
   {
     kind: "github",
@@ -51,5 +66,6 @@ export const contactItems: readonly ContactItem[] = [
     value: social.github.replace(/^https:\/\//, ""),
     href: social.github,
     external: true,
+    line: "forwards",
   },
 ];

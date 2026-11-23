@@ -1,5 +1,5 @@
 import AxeBuilder from "@axe-core/playwright";
-import { expect, test, type Page } from "@playwright/test";
+import { expect, test, type Page } from "./fixtures";
 
 const field = '[data-testid="soccer-field"]';
 const zone = (name: "play" | "contact") =>

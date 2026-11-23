@@ -54,7 +54,7 @@ describe("RootLayout fonts (AC2)", () => {
     expect(html.props.lang).toBe("en");
     expect(html.props.className).toContain("jersey-variable");
     expect(html.props.className).toContain("pixelify-variable");
-    // <html> holds <head> (the Kick off script) and <body>.
+    // <html> holds <head> (the theater script) and <body>.
     const children = [html.props.children].flat() as ReactElement<{
       className: string;
     }>[];
