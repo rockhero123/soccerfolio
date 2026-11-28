@@ -68,7 +68,7 @@ The forest has fantastic pixel-art characters with exaggerated expressions: plan
 
 **Acceptance criteria**
 - [ ] AC1 — At least 15 original static pixel-art characters, each with an exaggerated face (big eyes with a pie-cut notch in the pupil, brows, grins): a tree with a face, a mushroom, a flower with eyes, a big-eyed bird, an owl, and a plant.
-- [ ] AC2 — Characters are placed in the forest around the field, are visible at desktop widths, and never overlap the field content. The side-panel characters are spread evenly down the whole height of the page, with plenty of space between them (owner decision).
+- [ ] AC2 — Characters are placed in the forest around the field, are visible at desktop widths, and never overlap the field content. The side-panel characters are spread down the whole height of the page, with plenty of space between them, and the top-band and side-panel characters are scattered rather than lined up: uneven gaps, different heights, the two side panels staggered against each other; the bottom-band characters stand in an evenly spaced row on the ground (owner decisions).
 - [ ] AC3 — On mobile, at least 10 characters remain visible in the top and bottom forest bands.
 - [ ] AC4 — Each character is its own component in `src/components/forest/`, so it can be reused or replaced.
 - [ ] AC5 — Characters are decorative (`aria-hidden="true"`).

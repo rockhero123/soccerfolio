@@ -127,6 +127,27 @@ describe("Forest characters — AC2/AC3: placed in the forest around the field",
     }
   });
 
+  it("scatters the top band and side panels; the bottom band stands in a row", () => {
+    const container = renderAll();
+    const offsets = (band: string) =>
+      [...container.querySelectorAll(`[data-forest-characters="${band}"] [data-character]`)].map(
+        (c) => c.getAttribute("class")!.match(/(^|\s)mb-\S+/)?.[0].trim() ?? "mb-0",
+      );
+    const top = offsets("top");
+    expect(new Set(top).size).toBe(top.length);
+    expect(new Set(offsets("bottom"))).toEqual(new Set(["mb-0"]));
+    expect(container.querySelector('[data-forest-characters="bottom"]')).toHaveClass("items-end", "justify-evenly");
+    for (const side of ["left", "right"]) {
+      const tops = [...container.querySelectorAll(`[data-forest-characters="${side}"] [data-character]`)].map(
+        (c) => c.getAttribute("class")!.match(/-?top-\S+/)?.[0],
+      );
+      expect(new Set(tops).size, side).toBe(tops.length);
+    }
+    const left = container.querySelector('[data-forest-characters="left"]')!.className;
+    const right = container.querySelector('[data-forest-characters="right"]')!.className;
+    expect(left).not.toBe(right.replace("right-0", "left-0"));
+  });
+
   it("lives inside the forest background", () => {
     const { container } = render(<ForestBackground />);
     const forest = container.querySelector(
