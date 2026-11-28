@@ -56,7 +56,7 @@ Art brief, adapted from the owner's prompt: draw the person in `design/profile_r
 - [ ] AC1 — An introduction paragraph is shown on a pixel wooden plank in the same style as the section title banners (`WoodPlank`), with the text burned into the light wood (`ink` on light wood, manifest §6).
 - [ ] AC2 — The text comes from `src/content/hero.ts` (`intro`).
 - [ ] AC3 — From 768px the sign sits next to the enchanted mirror. Below 768px it stacks under the mirror. Nothing overflows at 375px, 768px or 1280px+.
-- [ ] AC4 — The engraved text is readable: at least 1.125rem, line height ≥ 1.5, and WCAG AA contrast on every part of the plank. It stays ≥ 4.5:1 under the film overlay.
+- [ ] AC4 — The engraved text is readable: at least 1.125rem, line height ≥ 1.5, and WCAG AA contrast on every part of the plank. It stays ≥ 4.5:1 under the film overlay. Each letter has a thin light-wood (`wood-200`) halo, so the darker board seams never run through the strokes (owner feedback: the text merged with the seams).
 
 **Jira:** [SOC-13](https://soccerfolio.atlassian.net/browse/SOC-13)
 
