@@ -122,6 +122,8 @@ describe("Forest characters — AC2/AC3: placed in the forest around the field",
         "w-(--forest-side)",
         "top-(--forest-band)",
       );
+      // Spread evenly down the whole height of the page, not bunched at the top.
+      expect(group).toHaveClass("bottom-(--forest-band)", "justify-around");
     }
   });
 

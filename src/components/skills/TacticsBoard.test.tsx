@@ -73,6 +73,14 @@ describe("TacticsBoard — AC1: a framed pixel board with pitch markings", () =>
     expect(frame).toHaveClass("[--px:2px]", "sm:[--px:3px]", "md:[--px:4px]");
   });
 
+  it("is a portrait rectangle like a pitch: generous room above, between and below the lines", () => {
+    const { container } = render(<TacticsBoard />);
+    const surface = container.querySelector('[data-board="surface"]')!;
+    expect(surface).toHaveClass("py-10", "md:py-20");
+    const lines = container.querySelector('ul[aria-label^="The team"]')!;
+    expect(lines).toHaveClass("gap-8", "md:gap-20");
+  });
+
   it("uses tokens only and no raster images", () => {
     const html = renderToStaticMarkup(<TacticsBoard />);
     expect(html).not.toMatch(/data:image/);

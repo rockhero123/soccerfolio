@@ -18,7 +18,8 @@ export default function SkillJersey({ skill }: { skill: Skill }) {
   return (
     <div
       data-skill={skill.name}
-      className="relative"
+      // Smaller than the board's pixels (owner decision): 2 px, 3 px from 768px.
+      className="relative [--px:2px] md:[--px:3px]"
       style={{
         width: `calc(${JERSEY.width} * var(--px))`,
         height: `calc(${JERSEY.height} * var(--px))`,

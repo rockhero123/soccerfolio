@@ -20,7 +20,8 @@ import Tulip from "./forest/Tulip";
  * The pixel-art characters living in the forest around the field (spec 001 US-4).
  * - Top band (canopy) and bottom band (ground): ten characters, at every width,
  *   so at least ten stay visible on mobile.
- * - Side panels (≥ 1024px): six more, stacked in the forest beside the field.
+ * - Side panels (≥ 1024px): six more, spread evenly down the whole height of
+ *   the page beside the field.
  * Every group sits inside its forest area (sized by `--forest-band` /
  * `--forest-side`), so characters never overlap the field.
  * Rendered inside `ForestBackground`, so they are decorative and hidden too.
@@ -53,7 +54,7 @@ export default function ForestCharacters() {
 
       <div
         data-forest-characters="left"
-        className="absolute top-(--forest-band) left-0 hidden w-(--forest-side) flex-col items-center gap-10 pt-8 lg:flex"
+        className="absolute top-(--forest-band) bottom-(--forest-band) left-0 hidden w-(--forest-side) flex-col items-center justify-around py-24 lg:flex"
       >
         <FaceTree />
         <Hedgehog />
@@ -62,7 +63,7 @@ export default function ForestCharacters() {
 
       <div
         data-forest-characters="right"
-        className="absolute top-(--forest-band) right-0 hidden w-(--forest-side) flex-col items-center gap-10 pt-8 lg:flex"
+        className="absolute top-(--forest-band) bottom-(--forest-band) right-0 hidden w-(--forest-side) flex-col items-center justify-around py-24 lg:flex"
       >
         <Stump />
         <Tulip />
