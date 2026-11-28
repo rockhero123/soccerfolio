@@ -60,11 +60,18 @@ test("'Start' lifts the curtain smoothly and reveals the portfolio", async ({
   const drapes = page.locator(`${theater} [data-theater-drapes]`);
   const startBottom = (await drapes.boundingBox())!.y + (await drapes.boundingBox())!.height;
   await page.getByRole("button", { name: begin }).click();
-  // Mid-way the curtain is on its way up: higher than it was, not gone.
-  await page.waitForTimeout(600);
-  const mid = await drapes.boundingBox();
-  expect(mid).not.toBeNull();
-  expect(mid!.y + mid!.height).toBeLessThan(startBottom - 50);
+  // On its way up: the curtain is seen higher than it was before it is removed.
+  // (It eases in slowly, so wait for the movement rather than a fixed time.)
+  await expect
+    .poll(
+      async () => {
+        const box = await drapes.boundingBox();
+        return box ? box.y + box.height : null;
+      },
+      { intervals: [50], timeout: 1700 },
+    )
+    .toBeLessThan(startBottom - 50);
+  await expect(page.locator(theater)).toBeAttached();
   // Then the theater is removed and the page is usable.
   await expect(page.locator(theater)).toHaveCount(0, { timeout: 4000 });
   await expect(page.locator("header")).toBeInViewport();

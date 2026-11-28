@@ -12,6 +12,15 @@ export const engraved =
 /** The same lettering for running text (no highlight, for small sizes). */
 export const engravedText = "text-ink";
 
+/**
+ * Running text on a large plank: `ink` letters with a thin light-wood
+ * (`wood-200`) halo all around, so the darker board seams stop at the letter
+ * edges instead of running through the strokes. Written out in full so
+ * Tailwind generates it.
+ */
+export const engravedReadable =
+  "text-ink [text-shadow:calc(var(--px)*0.5)_0_0_var(--color-wood-200),calc(var(--px)*-0.5)_0_0_var(--color-wood-200),0_calc(var(--px)*0.5)_0_var(--color-wood-200),0_calc(var(--px)*-0.5)_0_var(--color-wood-200),calc(var(--px)*0.5)_calc(var(--px)*0.5)_0_var(--color-wood-200),calc(var(--px)*-0.5)_calc(var(--px)*-0.5)_0_var(--color-wood-200),calc(var(--px)*0.5)_calc(var(--px)*-0.5)_0_var(--color-wood-200),calc(var(--px)*-0.5)_calc(var(--px)*0.5)_0_var(--color-wood-200)]";
+
 type WoodPlankProps = {
   /** Extra decoration drawn with the wood, e.g. grass at its foot. */
   children?: ReactNode;

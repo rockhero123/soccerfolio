@@ -13,7 +13,8 @@ async function spacing(page: import("@playwright/test").Page) {
       const prevContent = sections[i].lastElementChild!.getBoundingClientRect();
       return nextBanner.top - prevContent.bottom;
     });
-    const titleToBody = [...document.querySelectorAll("main section")].map(
+    // The contact section has no banner (spec 900 US-3), so it is left out.
+    const titleToBody = [...document.querySelectorAll("main section:not(#contact)")].map(
       (el) => {
         const banner = el
           .querySelector("[data-title-banner]")!
@@ -36,7 +37,7 @@ for (const [width, minBetween, minTitle] of [
     await page.goto("/");
     const { between, titleToBody } = await spacing(page);
     between.forEach((gap) => expect(gap).toBeGreaterThanOrEqual(minBetween));
-    expect(titleToBody).toHaveLength(4);
+    expect(titleToBody).toHaveLength(3);
     titleToBody.forEach((gap) => expect(gap).toBeGreaterThanOrEqual(minTitle));
   });
 }

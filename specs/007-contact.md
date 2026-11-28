@@ -18,6 +18,8 @@ An easy way to get in touch: Ricardo's phone, email, LinkedIn and GitHub, each o
 - A contact form with a backend (v1 uses direct links; a form is possible in v2).
 - A CV download (manifest G4). It comes later, when the owner publishes the PDF.
 
+> **Easter egg (spec 900 US-3):** the contact signs below are hidden behind a CONTACT gold-ingot button and revealed by winning a short soccer game (or with "Skip the game").
+
 ## User stories
 
 ### US-1: Contact board

@@ -29,6 +29,14 @@ describe("IntroSign — AC1: the intro burned into a pixel wooden plank", () => 
     expect(text).toHaveClass("text-ink");
   });
 
+  it("rings every letter with a light-wood halo, so the board seams never cross the strokes", () => {
+    const { text } = renderSign();
+    const shadow = [...text.classList].find((c) => c.startsWith("[text-shadow:"))!;
+    // Eight directions, all in wood-200 (lighter than the wood-400 seams).
+    expect(shadow.match(/var\(--color-wood-200\)/g)).toHaveLength(8);
+    expect(shadow).not.toMatch(/wood-[3-9]00/);
+  });
+
   it("uses tokens only", () => {
     expectTokensOnly(renderToStaticMarkup(<IntroSign />));
   });

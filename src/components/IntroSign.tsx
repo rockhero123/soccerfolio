@@ -1,11 +1,12 @@
 import { hero } from "@/content/hero";
-import WoodPlank, { engravedText } from "./WoodPlank";
+import WoodPlank, { engravedReadable } from "./WoodPlank";
 
 /**
  * The hero's introduction sign (spec 002 US-3): a pixel-art wooden plank like
  * the section title banners, coming out from behind the enchanted mirror, with
  * the introduction burned into the light wood — `ink` on light wood, ≥ 6:1 —
- * at a comfortable reading size.
+ * at a comfortable reading size, with a light-wood halo around each letter so
+ * the board seams never cross the strokes.
  */
 export default function IntroSign() {
   return (
@@ -15,7 +16,7 @@ export default function IntroSign() {
     >
       <WoodPlank />
       <p
-        className={`relative font-body text-xl leading-relaxed font-medium md:text-2xl ${engravedText}`}
+        className={`relative font-body text-xl leading-relaxed font-medium md:text-2xl ${engravedReadable}`}
       >
         {hero.intro}
       </p>

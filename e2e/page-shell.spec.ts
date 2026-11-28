@@ -1,5 +1,5 @@
 import AxeBuilder from "@axe-core/playwright";
-import { expect, test } from "./fixtures";
+import { expect, test, sectionTitle } from "./fixtures";
 
 const field = '[data-testid="soccer-field"]';
 const sections = ["hero", "skills", "projects", "contact"];
@@ -15,9 +15,16 @@ test("AC1 — the four sections sit on the field in order, each with a grassy ti
   let previousBottom = 0;
   for (const id of sections) {
     const section = page.locator(`section#${id}`);
-    const banner = section.locator("[data-title-banner]");
-    await expect(banner.getByRole("heading", { level: 2 })).toBeVisible();
-    await expect(banner.locator("[data-grass-strip]")).toBeVisible();
+    if (id === "contact") {
+      // No wooden banner: the CONTACT ingot (spec 900 US-3) or the contact
+      // signs stand in, and the <h2> is for screen readers.
+      await expect(section.locator("[data-title-banner]")).toHaveCount(0);
+      await expect(section.getByRole("heading", { level: 2, name: "Contact" })).toBeAttached();
+    } else {
+      const banner = section.locator("[data-title-banner]");
+      await expect(banner.getByRole("heading", { level: 2 })).toBeVisible();
+      await expect(banner.locator("[data-grass-strip]")).toBeVisible();
+    }
     const box = (await section.boundingBox())!;
     expect(box.y).toBeGreaterThanOrEqual(previousBottom);
     previousBottom = box.y + box.height;
@@ -89,8 +96,7 @@ for (const width of [375, 1280]) {
       // A deep link: open the page fresh at each #hash.
       await page.goto("about:blank");
       await page.goto(`/#${id}`);
-      const heading = page.locator(`section#${id} h2`);
-      await expect(heading).toBeInViewport();
+      await expect(sectionTitle(page, id)).toBeInViewport();
     }
   });
 }
