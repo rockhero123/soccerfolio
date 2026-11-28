@@ -52,7 +52,7 @@ export default function Home() {
           </div>
         </PageSection>
         <PageSection id={skills.id} title={skills.title}>
-          <div className="mx-auto w-full max-w-3xl">
+          <div className="mx-auto w-full max-w-2xl">
             <TacticsBoard />
           </div>
         </PageSection>

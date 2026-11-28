@@ -52,7 +52,7 @@ export default function TacticsBoard({ team = skills }: { team?: Skill[] }) {
 
       <div
         data-board="surface"
-        className="relative overflow-hidden bg-stone-800 px-0 py-6 md:px-6 md:py-10"
+        className="relative overflow-hidden bg-stone-800 px-0 py-10 md:px-6 md:py-20"
       >
         {/* Pitch markings, in chalky parchment. */}
         <div
@@ -86,7 +86,7 @@ export default function TacticsBoard({ team = skills }: { team?: Skill[] }) {
 
         <ul
           aria-label="The team, in a 1-4-3-3 formation"
-          className="relative flex flex-col gap-3 md:gap-6"
+          className="relative flex flex-col gap-8 md:gap-20"
         >
           {LINES.map(({ line, label }) => {
             const players = team.filter((skill) => skill.line === line);

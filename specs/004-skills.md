@@ -29,7 +29,7 @@ The technologies and tools Ricardo works with, shown as a soccer team: eleven sk
 Each skill is a "player": a pixel-art soccer jersey (manifest §6: skills as jerseys) with the skill's name in the middle of the chest and its logo below the name. Logos are the official brand marks, copied as SVG path data (for example from Simple Icons, CC0), rasterised to pixels at build time and drawn in manifest tokens; they identify the tools and are trademarks of their owners.
 
 **Acceptance criteria**
-- [ ] AC1 — A `SkillJersey` component renders one skill as a pixel-art soccer jersey (inline SVG sprite, `ink` outline, shaded `pitch-dark` body with chalk collar and cuffs per manifest §6), with the skill name centred on the chest and the skill's logo below the name.
+- [ ] AC1 — A `SkillJersey` component renders one skill as a pixel-art soccer jersey, drawn smaller than the board (2 px art pixels, 3 px from 768px; owner decision) (inline SVG sprite, `ink` outline, shaded `pitch-dark` body with chalk collar and cuffs per manifest §6), with the skill name centred on the chest and the skill's logo below the name.
 - [ ] AC2 — Every skill has its own logo: JavaScript, TypeScript, React, Angular, Node.js, HTML, CSS, SCSS, MongoDB, Kiro Code and Claude Code. Logos are rasterised to pixels on a round parchment badge and rendered as inline SVG (no raster images, no icon-font or icon-package dependency) in token colours only.
 - [ ] AC3 — The name is real text in `chalk` on `pitch-dark` (an allowed pair in manifest §6), stays ≥ 4.5:1 under the film overlay, and long names ("Claude Code", "TypeScript") fit inside the jersey without overflowing.
 - [ ] AC4 — The logo is decorative (`aria-hidden="true"`) because the name is already text; the jersey is not focusable and has no interactive behaviour.
@@ -54,7 +54,7 @@ Lineup:
 
 **Acceptance criteria**
 - [ ] AC1 — A `TacticsBoard` component renders a framed tactics board (pixel style: a bevelled wooden pixel frame with nails, a dark slate surface distinct from the jerseys, with chalky `parchment` pitch markings: outline, halfway line, centre circle, penalty boxes). Below 768px the board uses a smaller pixel size so the back four fit.
-- [ ] AC2 — The eleven skills from `src/content/skills.ts` stand on the board as `SkillJersey` players in a 1-4-3-3 formation, in the lineup above: 1 goalkeeper, 4 defenders, 3 midfielders and 3 forwards, each line evenly spaced and centred.
+- [ ] AC2 — The eleven skills from `src/content/skills.ts` stand on the board as `SkillJersey` players in a 1-4-3-3 formation, in the lineup above: 1 goalkeeper, 4 defenders, 3 midfielders and 3 forwards, each line evenly spaced and centred. The board is a portrait rectangle like a pitch seen from above, taller than wide (owner decision): at most `max-w-2xl` wide, with generous room above, between and below the lines.
 - [ ] AC3 — The board replaces the skills placeholder card in `#skills`, below the "Skills" title banner.
 - [ ] AC4 — The formation stays a recognisable 1-4-3-3 and fits without horizontal scroll at 375px, 768px and 1280px+: all eleven jerseys visible, none overlapping, names readable (≥ 0.75rem on mobile, ≥ 0.875rem from 768px).
 - [ ] AC5 — For screen readers the team is a list grouped by line ("Forwards", "Midfielders", "Defenders", "Goalkeeper"), each line listing its skill names; the board artwork is decorative.

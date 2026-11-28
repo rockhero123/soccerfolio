@@ -72,6 +72,12 @@ describe("Home page — AC1: sections on the soccer field", () => {
     expect(section).toHaveAttribute("aria-labelledby", heading.id);
   });
 
+  it("keeps the skills board narrower than the field content, so it stands as a portrait rectangle", () => {
+    renderHome();
+    const board = document.querySelector('#skills [data-board="frame"]')!;
+    expect(board.parentElement).toHaveClass("mx-auto", "max-w-2xl");
+  });
+
   it("takes section titles from src/content/site.ts", () => {
     expect(site.sections.map((s) => s.id)).toEqual([
       "hero",

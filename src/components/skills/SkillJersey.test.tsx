@@ -16,6 +16,13 @@ function renderJersey(index = 0) {
   return container.querySelector("[data-skill]") as HTMLElement;
 }
 
+describe("SkillJersey — size (owner decision)", () => {
+  it("is drawn smaller than the board: 2 px art pixels, 3 px from 768px", () => {
+    const { container } = render(<SkillJersey skill={skills[0]} />);
+    expect(container.querySelector("[data-skill]")).toHaveClass("[--px:2px]", "md:[--px:3px]");
+  });
+});
+
 describe("SkillJersey — AC1: a pixel jersey with the name and the logo below", () => {
   it("draws a shaded pitch-dark pixel shirt with chalk collar and cuffs and an ink outline", () => {
     const jersey = renderJersey();
