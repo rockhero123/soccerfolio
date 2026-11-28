@@ -11,6 +11,8 @@ import TheaterStalls from "@/components/easter-egg/TheaterStalls";
 import Waterfall from "@/components/easter-egg/Waterfall";
 import SoccerField from "@/components/SoccerField";
 import ContactLineup from "@/components/contact/ContactLineup";
+import ContactGate from "@/components/contact-game/ContactGate";
+import GoldIngot from "@/components/contact-game/GoldIngot";
 import { site } from "@/content/site";
 
 const [hero, skills, projects, contact] = site.sections;
@@ -29,8 +31,10 @@ export default function Home() {
         />
       }
       contact={
-        <PageSection id={contact.id} title={contact.title}>
-          <ContactLineup />
+        <PageSection id={contact.id} title={contact.title} titleHidden>
+          <ContactGate ingot={<GoldIngot />}>
+            <ContactLineup />
+          </ContactGate>
         </PageSection>
       }
     >

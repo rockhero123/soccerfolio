@@ -92,7 +92,7 @@ The forest has fantastic pixel-art characters with exaggerated expressions: plan
 Use placeholders for future page sections.
 
 **Acceptance criteria**
-- [ ] AC1 — `page.tsx` renders the sections inside `SoccerField` in this order: hero, skills, projects, contact. Each is a placeholder `<section id="…">` with an `<h2>` on a title banner that uses `GrassStrip`.
+- [ ] AC1 — `page.tsx` renders the sections inside `SoccerField` in this order: hero, skills, projects, contact. Each is a placeholder `<section id="…">` with an `<h2>` on a title banner that uses `GrassStrip`. Exception (owner decision, spec 900 US-3): `#contact` keeps its `<h2>` for screen readers only; the CONTACT gold ingot takes the banner's place.
 - [ ] AC2 — `layout.tsx` uses semantic `<header>`, `<main>` and `<footer>`, and sets `lang="en"`.
 - [ ] AC3 — Content width inside the field is constrained (max ~1100px) and centered, with responsive padding.
 

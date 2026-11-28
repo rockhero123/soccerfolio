@@ -1,5 +1,5 @@
 import AxeBuilder from "@axe-core/playwright";
-import { expect, test, type Page } from "./fixtures";
+import { expect, test, type Page, sectionTitle } from "./fixtures";
 
 const sign = '[data-site-header] nav[aria-label="Main"]';
 const links = [
@@ -34,7 +34,7 @@ async function settle(page: Page) {
 /** Checks the section is on screen with its heading fully below the header sign. */
 async function expectSectionUnderSign(page: Page, id: string) {
   const header = (await page.locator(sign).boundingBox())!;
-  const heading = page.locator(`section#${id} h2`);
+  const heading = sectionTitle(page, id);
   await expect(heading).toBeInViewport();
   const box = (await heading.boundingBox())!;
   expect(box.y).toBeGreaterThanOrEqual(header.y + header.height);

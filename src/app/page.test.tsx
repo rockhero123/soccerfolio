@@ -28,7 +28,7 @@ describe("Home page — AC1: sections on the soccer field", () => {
     expect(contact.querySelector("section#contact")).not.toBeNull();
   });
 
-  it.each(site.sections)(
+  it.each(site.sections.filter((s) => s.id !== "contact"))(
     "section #$id starts with its <h2> on a title banner with grass, and is labelled by it",
     ({ id, title }) => {
       renderHome();
@@ -60,6 +60,16 @@ describe("Home page — AC1: sections on the soccer field", () => {
         ),
       ).not.toBeNull();
     });
+  });
+
+  it("#contact has no wooden banner: its <h2> is for screen readers, the CONTACT ingot stands in (spec 900 US-3)", () => {
+    renderHome();
+    const section = document.getElementById("contact")!;
+    expect(section.querySelector("[data-title-banner]")).toBeNull();
+    const heading = within(section).getByRole("heading", { level: 2 });
+    expect(heading).toHaveTextContent("Contact");
+    expect(heading).toHaveClass("sr-only");
+    expect(section).toHaveAttribute("aria-labelledby", heading.id);
   });
 
   it("takes section titles from src/content/site.ts", () => {

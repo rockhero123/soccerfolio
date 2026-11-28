@@ -1,7 +1,9 @@
 import type { Metadata } from "next";
 import { Jersey_10, Pixelify_Sans } from "next/font/google";
+import Analytics from "@/components/Analytics";
 import FilmOverlay from "@/components/FilmOverlay";
 import { SKIP_THEATER_SCRIPT } from "@/components/easter-egg/theaterSkip";
+import { CONTACT_UNLOCKED_SCRIPT } from "@/components/contact-game/unlock";
 import ForestBackground from "@/components/ForestBackground";
 import SiteHeader from "@/components/SiteHeader";
 import { site } from "@/content/site";
@@ -38,6 +40,8 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       <head>
         {/* Hides the theater before paint when tests skip it (spec 900, theaterSkip.ts). */}
         <script dangerouslySetInnerHTML={{ __html: SKIP_THEATER_SCRIPT }} />
+        {/* Shows unlocked contact signs before paint later in the session (spec 900 US-3). */}
+        <script dangerouslySetInnerHTML={{ __html: CONTACT_UNLOCKED_SCRIPT }} />
       </head>
       <body className="relative isolate min-h-full flex flex-col font-body">
         <ForestBackground />
@@ -66,6 +70,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
           </footer>
         </div>
         <FilmOverlay />
+        <Analytics />
       </body>
     </html>
   );

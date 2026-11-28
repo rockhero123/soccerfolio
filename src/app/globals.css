@@ -306,3 +306,15 @@
     font-family: var(--font-heading);
   }
 }
+
+/*
+ * The contact game (spec 900 US-3): once the contact signs are unlocked this
+ * session, show them (and hide the CONTACT button) before React hydrates.
+ * Unlayered, so it wins over the `hidden` utility.
+ */
+html[data-contact-unlocked] [data-contact-gate-button] {
+  display: none;
+}
+html[data-contact-unlocked] [data-contact-gate-content] {
+  display: block;
+}

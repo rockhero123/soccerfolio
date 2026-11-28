@@ -27,6 +27,12 @@ for (const width of [375, 768, 1280]) {
       // Web fonts reflow the text when they arrive, which changes the page
       // height; measure only after they have loaded.
       await page.evaluate(() => document.fonts.ready.then(() => undefined));
+      // Wait for React to hydrate (the contact gate, unlocked by the fixtures,
+      // switches from "locked" to "unlocked"): hydration may replace nodes the
+      // test adds to the page.
+      await page.waitForFunction(
+        () => document.querySelector("[data-contact-gate]")?.getAttribute("data-contact-gate") === "unlocked",
+      );
     });
 
     test("AC2 — the forest fills the full page height behind the content", async ({
